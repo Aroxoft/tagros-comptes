@@ -277,20 +277,23 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                               children: <Widget>[
                                 Checkbox(value: infoEntry.poignees != null &&
                                     infoEntry.poignees.isNotEmpty &&
-                                    infoEntry.poignees[0] != null,
+                                    infoEntry.poignees[0] != null &&
+                                    infoEntry.poignees[0] != PoigneeType.NONE,
                                     onChanged: (bool value) {
                                       setState(() {
                                         if (infoEntry.poignees == null ||
-                                            infoEntry.poignees.isEmpty &&
-                                                value) {
+                                            infoEntry.poignees.isEmpty) {
                                           infoEntry.poignees =
                                           [PoigneeType.SIMPLE];
                                         }
-
-//                                        else {
-//                                          infoEntry.poignees[0] =
-//                                          null;
-//                                        }
+                                        if (value) {
+                                          infoEntry.poignees[0] =
+                                              PoigneeType.SIMPLE;
+                                        }
+                                        if (!value) {
+                                          infoEntry.poignees[0] =
+                                              PoigneeType.NONE;
+                                        }
                                       });
                                     }),
                                 Text("Poignée "),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
+import 'package:tagros_comptes/widget/selectable_tag.dart';
 
 class AddModifyEntry extends StatefulWidget {
   static String routeName = "/addModify";
@@ -76,21 +77,40 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text("Preneur"),
-                    DropdownButton(
-                        value: infoEntry.player,
-                        items: players.map((e) =>
-                            DropdownMenuItem<String>(
-                                key: UniqueKey(),
-                                value: e,
-                                child: Text(e))).toList(),
-                        onChanged: (String value) {
-                          print("selected $value");
-                          setState(() {
-                            infoEntry.player = value;
-                            print(infoEntry);
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: players.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return SelectableTag(
+                              initialSelected: infoEntry.player == players[index],
+                              text: players[index], onPressed: () {
+                            setState(() {
+                              if (infoEntry.player == players[index]) {
+                                infoEntry.player = null;
+                              } else {
+                                infoEntry.player = players[index];
+                              }
+                            });
                           });
-                        })
+                        },),
+                    ),
+//                    DropdownButton(
+//                        value: infoEntry.player,
+//                        items: players.map((e) =>
+//                            DropdownMenuItem<String>(
+//                                key: UniqueKey(),
+//                                value: e,
+//                                child: Text(e))).toList(),
+//                        onChanged: (String value) {
+//                          print("selected $value");
+//                          setState(() {
+//                            infoEntry.player = value;
+//                            print(infoEntry);
+//                          });
+//                        })
                   ],),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,

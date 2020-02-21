@@ -105,7 +105,7 @@ HashMap<String, int> calculateGains(InfoEntry infoEntry,
     gains[player] = 0;
   }
 
-  if(!gros) {
+  if (!gros) {
     if (nbPlayers < 5 || infoEntry.player == infoEntry.withPlayers[0]) {
       // one player against the others
       for (var player in players) {

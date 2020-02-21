@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/calculous/calculous.dart';
+import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
 
 class Tableau extends StatelessWidget {
@@ -61,7 +61,8 @@ class _TableauBodyState extends State<TableauBody> {
                 (index) {
               HashMap<String, int> calculateGain = calculateGains(
                   entries[index], widget.players);
-              var gains = transformGainsToList(calculateGain, widget.players);
+              var gains = transformGainsToList(
+                  calculateGain, widget.players);
               return Row(
                 children: List.generate(
                     gains.length, (index) =>

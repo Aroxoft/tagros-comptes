@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:tagros_comptes/calculous/calculus.dart';
+import 'package:tagros_comptes/calculous/camp.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
 import 'package:tagros_comptes/calculous/prise.dart';
 import 'package:test/test.dart';
@@ -50,9 +51,18 @@ void main() {
     });
     test("Garde-sans faite de 0", () {
       final entry = InfoEntry(
-        player: "A", points: 55, nbBouts: 0, prise: Prise.GARDE_SANS,);
+        player: "A", points: 56, nbBouts: 0, prise: Prise.GARDE_SANS,);
       expect(calculateGains(entry, players),
           HashMap.from({"A": 300, "B": -100, "C": -100, "D": -100}));
+    });
+    test("Garde faite de 0, petit au bout attaque", () {
+      final entry = InfoEntry(player: "A",
+          points: 36,
+          nbBouts: 3,
+          prise: Prise.GARDE,
+          petitsAuBout: [Camp.ATTACK]);
+      expect(calculateGains(entry, players),
+          HashMap.from({"A": 70 * 3, "B": -70, "C": -70, "D": -70}));
     });
   });
 }

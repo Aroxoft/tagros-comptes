@@ -6,7 +6,7 @@ import 'package:tagros_comptes/calculous/poignee.dart';
 import 'package:tagros_comptes/calculous/prise.dart';
 
 HashMap<String, int> calculateGains(InfoEntry infoEntry,
-    HashSet<String> players) {
+    List<String> players) {
   // Assert that players in entry exist in the list of players
   assert(players.contains(infoEntry.player));
   if (infoEntry.withPlayers != null) {
@@ -130,4 +130,14 @@ HashMap<String, int> calculateGains(InfoEntry infoEntry,
   }
 
   return gains;
+}
+
+List<int> transformGainsToList(HashMap<String, int> gains,
+    List<String> players) {
+  var res = List<int>(players.length);
+  for (int i = 0; i < players.length; i++) {
+    res[i] = gains[players[i]];
+  }
+
+  return res;
 }

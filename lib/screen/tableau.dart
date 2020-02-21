@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
+import 'package:tagros_comptes/screen/add_modify.dart';
 
 class Tableau extends StatelessWidget {
   static const String routeName = "/tableau";
@@ -16,6 +17,17 @@ class Tableau extends StatelessWidget {
       appBar: AppBar(
         title: Text("${args.players.length} joueurs"),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            Navigator.of(context).pushNamed<InfoEntry>(
+                AddModifyEntry.routeName,
+                arguments: AddModifyArguments(infoEntry: null)).then(
+                    (InfoEntry value) {
+                  // TODO
+                  print(value);
+                });
+          }),
       body: TableauBody(args.players),
     );
   }

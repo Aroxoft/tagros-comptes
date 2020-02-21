@@ -25,15 +25,20 @@ HashMap<String, int> calculateGains(InfoEntry infoEntry,
 
   var gros = nbPlayers > 5;
   var totalPoints = 91;
+  var totalBouts = 3;
   if (gros) {
     totalPoints *= 2;
+    totalBouts *= 2;
   }
   var pointsForAttack = infoEntry.pointsForAttack
       ? infoEntry.points
       : totalPoints - infoEntry.points;
+  var boutsForAttack = infoEntry.pointsForAttack
+      ? infoEntry.nbBouts
+      : totalBouts - infoEntry.nbBouts;
   int wonBy;
   if (!gros) {
-    switch (infoEntry.nbBouts) {
+    switch (boutsForAttack) {
       case 0:
         wonBy = pointsForAttack - 56;
         break;

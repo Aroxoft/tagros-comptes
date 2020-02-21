@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   var players = ["A", "B", "C", "D"];
   group('Calcul à 4', () {
-    test('Simple case is not correct', () {
+    test('Petite faite de 0', () {
       final entry = InfoEntry(
           points: 36,
           pointsForAttack: true,
@@ -26,6 +26,33 @@ void main() {
       );
       expect(calculateGains(entry, players),
           HashMap.from({"A": 28, "B": -28 * 3, "C": 28, "D": 28}));
+    });
+    test("Garde faite de 1", () {
+      final entry = InfoEntry(
+        player: "C",
+        points: 52,
+        nbBouts: 1,
+        prise: Prise.GARDE,
+      );
+      expect(calculateGains(entry, players),
+          HashMap.from({"A": -52, "B": -52, "C": 52 * 3, "D": -52}));
+    });
+    test("Garde chutée de 1, points de la défense", () {
+      final entry = InfoEntry(
+        player: "D",
+        points: 51,
+        nbBouts: 1,
+        pointsForAttack: false,
+        prise: Prise.GARDE,
+      );
+      expect(calculateGains(entry, players),
+          HashMap.from({"A": 52, "B": 52, "C": 52, "D": -52 * 3}));
+    });
+    test("Garde-sans faite de 0", () {
+      final entry = InfoEntry(
+        player: "A", points: 55, nbBouts: 0, prise: Prise.GARDE_SANS,);
+      expect(calculateGains(entry, players),
+          HashMap.from({"A": 300, "B": -100, "C": -100, "D": -100}));
     });
   });
 }

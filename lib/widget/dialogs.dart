@@ -5,6 +5,7 @@ showDialogPlayers(BuildContext context, int nbPlayers, DoAfterChosen doAfter) {
   final formKey = GlobalKey<FormState>();
   List<String> players = List(nbPlayers);
   showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return AlertDialog(

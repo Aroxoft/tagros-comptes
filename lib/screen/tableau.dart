@@ -80,12 +80,17 @@ class _TableauBodyState extends State<TableauBody> {
               return Center(child: Text("Error: ${snapshot.error}"),);
             }
             var sums = snapshot.data;
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(sums.length, (index) {
-                return Text(sums[widget.players[index]].toString());
-              }),);
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(sums.length, (index) {
+                  var sum = sums[widget.players[index]];
+                  return Text(sum.toString(), style: TextStyle(
+                      color: sum < 0 ? Colors.red : Colors.green),);
+                }),),
+            );
           },),
         Container(constraints: BoxConstraints.expand(height: 10),
           color: Colors.red,
@@ -132,8 +137,9 @@ class _TableauBodyState extends State<TableauBody> {
                           children: List.generate(
                               gains.length, (index) =>
                               Text(gains[index].toString(), style: TextStyle(
-                                  color: gains[index] > 0 ? Colors.grey : Colors
-                                      .red),)),
+                                  color: gains[index] >= 0
+                                      ? Colors.grey
+                                      : Colors.red),)),
                         ),
                       );
                     }),

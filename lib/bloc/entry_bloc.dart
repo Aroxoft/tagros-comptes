@@ -28,6 +28,7 @@ class EntryBloc implements Bloc {
 
   setPlayers(List<String> players) {
     _players.add(players);
+    _entries.add([]);
   }
 
   add(InfoEntry infoEntry) {

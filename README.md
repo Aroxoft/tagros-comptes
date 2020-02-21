@@ -1,16 +1,3 @@
-# tagros_comptes
+# Tagros comptes
 
-Pour compter les points au tagros
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Application to count points at Tagros, a variation of the classical game Tarot, but with 2 decks of cards, and for 7 to 10 players;

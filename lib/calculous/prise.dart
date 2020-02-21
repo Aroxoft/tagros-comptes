@@ -12,3 +12,16 @@ getCoeff(Prise prise) {
       return 6;
   }
 }
+
+getNomPrise(Prise prise) {
+  switch (prise) {
+    case Prise.PETITE:
+      return "Prise";
+    case Prise.GARDE:
+      return "Garde";
+    case Prise.GARDE_SANS:
+      return "Garde-sans";
+    case Prise.GARDE_CONTRE:
+      return "Garde-contre";
+  }
+}

@@ -137,6 +137,21 @@ HashMap<String, int> calculateGains(InfoEntry infoEntry,
   return gains;
 }
 
+Map<String, int> calculateSum(List<InfoEntry> entries, List<String> players) {
+  Map<String, int> sums = {};
+  for (var player in players) {
+    sums[player] = 0;
+  }
+
+  for (var entry in entries) {
+    var gains = calculateGains(entry, players);
+    for (var gain in gains.entries) {
+      sums[gain.key] += sums[gain.value];
+    }
+  }
+  return sums;
+}
+
 List<int> transformGainsToList(HashMap<String, int> gains,
     List<String> players) {
   var res = List<int>(players.length);

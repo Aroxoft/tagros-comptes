@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/bloc/entry_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
@@ -12,7 +13,7 @@ class Tableau extends StatelessWidget {
   Widget build(BuildContext context) {
     // extract players
     final TableauArguments args = ModalRoute.of(context).settings.arguments;
-
+    entryBloc().setPlayers(args.players);
     return Scaffold(
       appBar: AppBar(
         title: Text("${args.players.length} joueurs"),
@@ -22,7 +23,10 @@ class Tableau extends StatelessWidget {
           onPressed: () async {
             final res = await Navigator.of(context).pushNamed(
                 AddModifyEntry.routeName,
-                arguments: AddModifyArguments(infoEntry: null));
+                arguments: AddModifyArguments(
+                    infoEntry: null, players: args.players));
+            entryBloc().add(res);
+
             print(res);
           }),
       body: TableauBody(args.players),
@@ -46,40 +50,96 @@ class TableauBody extends StatefulWidget {
 }
 
 class _TableauBodyState extends State<TableauBody> {
-  List<InfoEntry> entries;
 
   @override
   void initState() {
     super.initState();
-    entries = [];
   }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        [Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: List.generate(
-              widget.players.length, (index) => Text(widget.players[index])),
-        )
-        ],
-        List.generate(
-            entries.length,
-                (index) {
-              HashMap<String, int> calculateGain = calculateGains(
-                  entries[index], widget.players);
-              var gains = transformGainsToList(
-                  calculateGain, widget.players);
-              return Row(
-                children: List.generate(
-                    gains.length, (index) =>
-                    Text(gains[index].toString(), style: TextStyle(
-                        color: gains[index] > 0 ? Colors.grey : Colors.red),)),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: List.generate(
+                widget.players.length, (index) =>
+                Text(widget.players[index].toUpperCase())),
+          ),
+        ),
+        Container(constraints: BoxConstraints.expand(height: 10),
+          color: Colors.red,
+        ),
+
+        StreamBuilder(
+          stream: entryBloc().sum,
+          builder: (context, AsyncSnapshot<Map<String, int>> snapshot) {
+            if (snapshot.hasError || !snapshot.hasData) {
+              return Center(child: Text("Error: ${snapshot.error}"),);
+            }
+            var sums = snapshot.data;
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(sums.length, (index) {
+                return Text(sums[widget.players[index]].toString());
+              }),);
+          },),
+        Container(constraints: BoxConstraints.expand(height: 10),
+          color: Colors.red,
+        ),
+
+        StreamBuilder(
+            stream: entryBloc().entries,
+            builder: (BuildContext context,
+                AsyncSnapshot<List<InfoEntry>> snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("ERROR"),
+                  ),);
+              }
+              if (!snapshot.hasData) {
+                return Center(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("No data"),
+                ),);
+              }
+              var entries = snapshot.data;
+              if (entries == null || entries.isEmpty) {
+                return Center(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("No data"),
+                ),);
+              }
+              return Expanded(
+                child: ListView.builder(
+                    itemCount: entries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      HashMap<String, int> calculateGain = calculateGains(
+                          entries[index], widget.players);
+                      var gains = transformGainsToList(
+                          calculateGain, widget.players);
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(
+                              gains.length, (index) =>
+                              Text(gains[index].toString(), style: TextStyle(
+                                  color: gains[index] > 0 ? Colors.grey : Colors
+                                      .red),)),
+                        ),
+                      );
+                    }),
               );
-            })
-      ].expand((e) => e).toList(),
+            }),
+      ],
     );
   }
 }

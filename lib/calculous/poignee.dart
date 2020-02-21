@@ -13,27 +13,64 @@ getPoigneePoints(PoigneeType poigneeType) {
   }
 }
 
-getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
+int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
   switch (poigneeType) {
     case PoigneeType.SIMPLE:
       switch (nbPlayers) {
         case 3:
-          return 12;
+          return 13;
         case 4:
           return 10;
         case 5:
           return 8;
+        case 7:
+          return 11;
+        case 8:
+          return 9;
+        case 9:
+          return 7;
+        case 10:
+          return 7;
       }
       break;
     case PoigneeType.DOUBLE:
-    // TODO: Handle this case.
+      switch (nbPlayers) {
+        case 3:
+          return 15;
+        case 4:
+          return 13;
+        case 5:
+          return 10;
+        case 7:
+          return 13;
+        case 8:
+          return 11;
+        case 9:
+          return 9;
+        case 10:
+          return 9;
+      }
       break;
     case PoigneeType.TRIPLE:
-    // TODO: Handle this case.
+      switch (nbPlayers) {
+        case 3:
+          return 18;
+        case 4:
+          return 15;
+        case 5:
+          return 13;
+        case 7:
+          return 15;
+        case 8:
+          return 13;
+        case 9:
+          return 12;
+        case 10:
+          return 11;
+      }
       break;
     case PoigneeType.NONE:
-    // TODO: Handle this case.
-      break;
+      return 0;
   }
   return 0;
 }

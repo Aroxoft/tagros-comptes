@@ -75,7 +75,7 @@ class _TableauBodyState extends State<TableauBody> {
 
         StreamBuilder(
           stream: entryBloc().sum,
-          builder: (context, AsyncSnapshot<Map<String, int>> snapshot) {
+          builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
             if (snapshot.hasError || !snapshot.hasData) {
               return Center(child: Text("Error: ${snapshot.error}"),);
             }
@@ -87,7 +87,7 @@ class _TableauBodyState extends State<TableauBody> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(sums.length, (index) {
                   var sum = sums[widget.players[index]];
-                  return Text(sum.toString(), style: TextStyle(
+                  return Text(sum.toStringAsFixed(1), style: TextStyle(
                       color: sum < 0 ? Colors.red : Colors.green),);
                 }),),
             );
@@ -124,7 +124,7 @@ class _TableauBodyState extends State<TableauBody> {
                 child: ListView.builder(
                     itemCount: entries.length,
                     itemBuilder: (BuildContext context, int index) {
-                      HashMap<String, int> calculateGain = calculateGains(
+                      HashMap<String, double> calculateGain = calculateGains(
                           entries[index], widget.players);
                       var gains = transformGainsToList(
                           calculateGain, widget.players);

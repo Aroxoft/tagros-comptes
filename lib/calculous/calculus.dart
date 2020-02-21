@@ -5,7 +5,7 @@ import 'package:tagros_comptes/calculous/info_entry.dart';
 import 'package:tagros_comptes/calculous/poignee.dart';
 import 'package:tagros_comptes/calculous/prise.dart';
 
-HashMap<String, int> calculateGains(InfoEntry infoEntry,
+HashMap<String, double> calculateGains(InfoEntry infoEntry,
     List<String> players) {
   // Assert that players in entry exist in the list of players
   assert(players.contains(infoEntry.player));
@@ -36,7 +36,7 @@ HashMap<String, int> calculateGains(InfoEntry infoEntry,
   var boutsForAttack = infoEntry.pointsForAttack
       ? infoEntry.nbBouts
       : totalBouts - infoEntry.nbBouts;
-  int wonBy;
+  double wonBy;
   if (!gros) {
     switch (boutsForAttack) {
       case 0:
@@ -100,11 +100,11 @@ HashMap<String, int> calculateGains(InfoEntry infoEntry,
     pointsForPoignee += getPoigneePoints(poignee);
   }
 
-  int mise = (wonBy.abs() + 25 + petitPoints) * getCoeff(infoEntry.prise) +
+  double mise = (wonBy.abs() + 25 + petitPoints) * getCoeff(infoEntry.prise) +
       pointsForPoignee;
   if (!won) mise = -mise;
 
-  var gains = HashMap<String, int>();
+  var gains = HashMap<String, double>();
   // init gains to 0
   for (var player in players) {
     gains[player] = 0;
@@ -131,14 +131,34 @@ HashMap<String, int> calculateGains(InfoEntry infoEntry,
     }
   } else {
     // TAGROS
-
+    // Common for every tagros
+    for (var player in players) {
+      if (player == infoEntry.player) {
+        // taker
+        gains[player] = mise * 2;
+      } else if (infoEntry.withPlayers.contains(player)) {
+        // Attackers with taker
+        gains[player] = mise;
+      } else {
+        gains[player] = -mise * 4 / (nbPlayers - 3);
+      }
+    }
   }
 
   return gains;
 }
 
-Map<String, int> calculateSum(List<InfoEntry> entries, List<String> players) {
-  Map<String, int> sums = {};
+bool checkSum(Map<String, double> gains) {
+  double sum = 0;
+  for (var entry in gains.entries) {
+    sum += entry.value;
+  }
+  return sum == 0;
+}
+
+Map<String, double> calculateSum(List<InfoEntry> entries,
+    List<String> players) {
+  Map<String, double> sums = {};
   for (var player in players) {
     sums[player] = 0;
   }
@@ -152,9 +172,9 @@ Map<String, int> calculateSum(List<InfoEntry> entries, List<String> players) {
   return sums;
 }
 
-List<int> transformGainsToList(HashMap<String, int> gains,
+List<double> transformGainsToList(HashMap<String, double> gains,
     List<String> players) {
-  var res = List<int>(players.length);
+  var res = List<double>(players.length);
   for (int i = 0; i < players.length; i++) {
     res[i] = gains[players[i]];
   }

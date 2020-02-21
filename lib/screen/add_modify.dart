@@ -220,7 +220,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             child: TextFormField(
                               initialValue: infoEntry.points.toString(),
                               onChanged: (String value) {
-                                infoEntry.points = int.tryParse(value);
+                                infoEntry.points = double.tryParse(value);
                               },
                               keyboardType: TextInputType.numberWithOptions(
                                   decimal: true),

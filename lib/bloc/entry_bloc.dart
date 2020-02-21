@@ -11,7 +11,7 @@ class EntryBloc implements Bloc {
 
   Stream<List<InfoEntry>> get entries => _entries.stream;
 
-  Stream<Map<String, int>> get sum =>
+  Stream<Map<String, double>> get sum =>
       entries.map((event) => calculateSum(event, _players.value));
 
   factory EntryBloc() {

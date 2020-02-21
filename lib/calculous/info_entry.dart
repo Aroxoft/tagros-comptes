@@ -9,7 +9,7 @@ class InfoEntry {
   String player;
   List<String> withPlayers;
   Prise prise;
-  int points;
+  double points;
   int nbBouts;
 
   /// are the points for the attack?

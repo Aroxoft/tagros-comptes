@@ -13,19 +13,18 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
   bool add;
 
   @override
-  void initState() {
-    super.initState();
-    final AddModifyArguments args = ModalRoute.of(context).settings.arguments;
+  Widget build(BuildContext context) {
+    final AddModifyArguments args = ModalRoute
+        .of(context)
+        .settings
+        .arguments;
     infoEntry = args.infoEntry;
     add = false;
     if (infoEntry == null) {
       add = true;
       infoEntry = InfoEntry(player: "", points: 0, nbBouts: 0);
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("${(add ? "Ajout" : "Modification")} d'une partie"),
@@ -37,10 +36,10 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
           }),
       body: Form(
           child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[],
-        ),
-      )),
+            child: Column(
+              children: <Widget>[],
+            ),
+          )),
     );
   }
 }

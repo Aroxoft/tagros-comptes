@@ -19,14 +19,11 @@ class Tableau extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () {
-            Navigator.of(context).pushNamed<InfoEntry>(
+          onPressed: () async {
+            final res = await Navigator.of(context).pushNamed(
                 AddModifyEntry.routeName,
-                arguments: AddModifyArguments(infoEntry: null)).then(
-                    (InfoEntry value) {
-                  // TODO
-                  print(value);
-                });
+                arguments: AddModifyArguments(infoEntry: null));
+            print(res);
           }),
       body: TableauBody(args.players),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
 import 'package:tagros_comptes/screen/tableau.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         Tableau.routeName: (context) => Tableau(),
         MenuScreen.routeName: (context) => MenuScreen(),
+        AddModifyEntry.routeName: (context) => AddModifyEntry(),
       },
     );
   }

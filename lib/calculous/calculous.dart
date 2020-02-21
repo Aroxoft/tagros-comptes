@@ -5,8 +5,8 @@ import 'package:tagros_comptes/calculous/info_entry.dart';
 import 'package:tagros_comptes/calculous/poignee.dart';
 import 'package:tagros_comptes/calculous/prise.dart';
 
-HashMap<String, int> calculateGains(
-    InfoEntry infoEntry, HashSet<String> players) {
+HashMap<String, int> calculateGains(InfoEntry infoEntry,
+    HashSet<String> players) {
   // Assert that players in entry exist in the list of players
   assert(players.contains(infoEntry.player));
   if (infoEntry.withPlayers != null) {
@@ -16,9 +16,15 @@ HashMap<String, int> calculateGains(
   }
 
   var nbPlayers = players.length;
+
+  if (nbPlayers > 5) {
+    assert (infoEntry.withPlayers.length == 2);
+  } else if (nbPlayers == 5) {
+    assert (infoEntry.withPlayers.length == 1);
+  }
+
   var gros = nbPlayers > 5;
   var totalPoints = 91;
-  int nbBouts;
   if (gros) {
     totalPoints *= 2;
   }
@@ -44,25 +50,25 @@ HashMap<String, int> calculateGains(
   } else {
     switch (infoEntry.nbBouts) {
       case 0:
-        wonBy = pointsForAttack - 112;
+        wonBy = pointsForAttack - 106;
         break;
       case 1:
-        wonBy = pointsForAttack - 102;
+        wonBy = pointsForAttack - 101;
         break;
       case 2:
-        wonBy = pointsForAttack - 82;
+        wonBy = pointsForAttack - 96;
         break;
       case 3:
-        wonBy = pointsForAttack - 72;
+        wonBy = pointsForAttack - 91;
         break;
       case 4:
-        wonBy = pointsForAttack - 102;
+        wonBy = pointsForAttack - 86;
         break;
       case 5:
-        wonBy = pointsForAttack - 102;
+        wonBy = pointsForAttack - 81;
         break;
       case 6:
-        wonBy = pointsForAttack - 102;
+        wonBy = pointsForAttack - 75;
         break;
     }
   }
@@ -91,11 +97,37 @@ HashMap<String, int> calculateGains(
 
   int mise = (wonBy.abs() + 25 + petitPoints) * getCoeff(infoEntry.prise) +
       pointsForPoignee;
+  if (!won) mise = -mise;
 
-  var res = HashMap<String, int>();
+  var gains = HashMap<String, int>();
+  // init gains to 0
+  for (var player in players) {
+    gains[player] = 0;
+  }
+
   if(!gros) {
+    if (nbPlayers < 5 || infoEntry.player == infoEntry.withPlayers[0]) {
+      // one player against the others
+      for (var player in players) {
+        gains[player] =
+        infoEntry.player == player ? mise * (nbPlayers - 1) : -mise;
+      }
+    } else {
+      // with 5 players, 2 vs 3
+      for (var player in players) {
+        if (player == infoEntry.player) {
+          gains[player] = mise * 2;
+        } else if (player == infoEntry.withPlayers[0]) {
+          gains[player] = mise;
+        } else {
+          gains[player] = -mise;
+        }
+      }
+    }
+  } else {
+    // TAGROS
 
   }
 
-  return res;
+  return gains;
 }

@@ -146,7 +146,7 @@ Map<String, int> calculateSum(List<InfoEntry> entries, List<String> players) {
   for (var entry in entries) {
     var gains = calculateGains(entry, players);
     for (var gain in gains.entries) {
-      sums[gain.key] += sums[gain.value];
+      sums[gain.key] += gain.value;
     }
   }
   return sums;

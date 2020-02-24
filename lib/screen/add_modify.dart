@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/calculous/camp.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
 import 'package:tagros_comptes/calculous/poignee.dart';
 import 'package:tagros_comptes/widget/selectable_tag.dart';
@@ -79,28 +78,33 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text("Preneur"),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 2),
-                              child: Wrap(
-                                alignment: WrapAlignment.end,
-                                runSpacing: 8,
-                                spacing: 4,
-                                children: List.generate(
-                                  players.length, (index) {
-                                  return SelectableTag(
-                                      selected: infoEntry.player ==
-                                          players[index],
-                                      text: players[index], onPressed: () {
-                                    setState(() {
-                                      if (infoEntry.player == players[index]) {
-                                        infoEntry.player = null;
-                                      } else {
-                                        infoEntry.player = players[index];
-                                      }
+                            Expanded(
+                                flex: 2,
+                                child: Text("Preneur")),
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(vertical: 2),
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: players.length,
+                                  itemBuilder: (BuildContext context,
+                                      int index) {
+                                    return SelectableTag(
+                                        selected: infoEntry.player ==
+                                            players[index],
+                                        text: players[index], onPressed: () {
+                                      setState(() {
+                                        if (infoEntry.player ==
+                                            players[index]) {
+                                          infoEntry.player = null;
+                                        } else {
+                                          infoEntry.player = players[index];
+                                        }
+                                      });
                                     });
-                                  });
-                                },),
+                                  },),
                               ),
                             ),
                           ]),
@@ -109,16 +113,24 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(
-                                "Partenaire${players.length > 5
-                                    ? " numéro 1"
-                                    : ""}"),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 2),
-                              child: Wrap(alignment: WrapAlignment.end,
-                                runSpacing: 8, spacing: 4,
-                                children: List.generate(
-                                    players.length, (index) =>
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                  "Partenaire${players.length > 5
+                                      ? " numéro 1"
+                                      : ""}"),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(vertical: 2),
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                    players.length,
+                                    itemBuilder: (BuildContext context,
+                                        int index) =>
                                     SelectableTag(
                                         selected: infoEntry.withPlayers[0] ==
                                             players[index],
@@ -134,40 +146,58 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                       });
                                     })),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          ])
+                        ,
                         if(players.length > 5) Row(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(
-                                "Partenaire numéro 2"),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: 2),
-                              child: Wrap(alignment: WrapAlignment.end,
-                                runSpacing: 8, spacing: 4,
-                                children: List.generate(
-                                    players.length, (index) =>
-                                    SelectableTag(
-                                        selected: infoEntry.withPlayers[1] ==
-                                            players[index],
-                                        text: players[index], onPressed: () {
-                                      setState(() {
-                                        if (infoEntry.withPlayers[1] ==
-                                            players[index]) {
-                                          infoEntry.withPlayers[1] = null;
-                                        } else {
-                                          infoEntry.withPlayers[1] =
-                                          players[index];
-                                        }
-                                      });
-                                    })),
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                  "Partenaire numéro 2"),
+                            ),
+                            Expanded(
+                              flex: 5,
+                              child: Container(
+                                height: 35,
+                                padding: EdgeInsets.symmetric(vertical: 2),
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: players.length,
+                                    itemBuilder: (BuildContext context,
+                                        int index) =>
+                                        SelectableTag(
+                                            selected: infoEntry
+                                                .withPlayers[1] ==
+                                                players[index],
+                                            text: players[index],
+                                            onPressed: () {
+                                              setState(() {
+                                                if (infoEntry.withPlayers[1] ==
+                                                    players[index]) {
+                                                  infoEntry.withPlayers[1] =
+                                                  null;
+                                                } else {
+                                                  infoEntry.withPlayers[1] =
+                                                  players[index];
+                                                }
+                                              });
+                                            })),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          ]),
+                        Row(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                            ]),
+//                        Container(width: 10,
+//                          height: 1,
+//                        ),
                       ],
                     ),
                   ),

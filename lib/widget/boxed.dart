@@ -9,17 +9,18 @@ class Boxed extends StatelessWidget {
   final Widget child;
 
   final String title;
-  final TextStyle textStyle;
+
+  final FontWeight titleWeight;
+  final double titleSize;
 
   const Boxed(
       {Key key,
       this.fillColor = Colors.white,
       this.color = Colors.green,
-      this.borderWidth = 2,
+      this.borderWidth = 3,
       this.radius = 20,
       @required this.child,
-      @required this.title,
-      this.textStyle})
+      @required this.title, this.titleWeight = FontWeight.w700, this.titleSize = 18})
       : super(key: key);
 
   @override
@@ -48,7 +49,8 @@ class Boxed extends StatelessWidget {
               color: fillColor,
               child: Text(
                 title,
-                style: textStyle,
+                style: TextStyle(
+                    fontSize: titleSize, fontWeight: titleWeight, color: color),
               ),
             ))
       ],

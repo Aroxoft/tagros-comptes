@@ -205,9 +205,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
               ],
             ),
               title: "Attaque",
-              textStyle: TextStyle(fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.green),),
+            ),
             Boxed(
                 child: Column(children: <Widget>[
                   Row(

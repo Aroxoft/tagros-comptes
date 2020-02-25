@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/entry_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
@@ -125,7 +123,7 @@ class _TableauBodyState extends State<TableauBody> {
                 child: ListView.builder(
                     itemCount: entries.length,
                     itemBuilder: (BuildContext context, int index) {
-                      HashMap<String, double> calculateGain = calculateGains(
+                      Map<String, double> calculateGain = calculateGains(
                           entries[index], widget.players);
                       var gains = transformGainsToList(
                           calculateGain, widget.players);

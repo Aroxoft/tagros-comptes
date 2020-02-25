@@ -1,11 +1,9 @@
-import 'dart:collection';
-
 import 'package:tagros_comptes/calculous/camp.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
 import 'package:tagros_comptes/calculous/poignee.dart';
 import 'package:tagros_comptes/calculous/prise.dart';
 
-HashMap<String, double> calculateGains(InfoEntry infoEntry,
+Map<String, double> calculateGains(InfoEntry infoEntry,
     List<String> players) {
   // Assert that players in entry exist in the list of players
   assert(players.contains(infoEntry.player));
@@ -104,7 +102,7 @@ HashMap<String, double> calculateGains(InfoEntry infoEntry,
       pointsForPoignee;
   if (!won) mise = -mise;
 
-  var gains = HashMap<String, double>();
+  var gains = Map<String, double>();
   // init gains to 0
   for (var player in players) {
     gains[player] = 0;
@@ -148,12 +146,12 @@ HashMap<String, double> calculateGains(InfoEntry infoEntry,
   return gains;
 }
 
-bool checkSum(Map<String, double> gains) {
+double checkSum(Map<String, double> gains) {
   double sum = 0;
   for (var entry in gains.entries) {
     sum += entry.value;
   }
-  return sum == 0;
+  return sum;
 }
 
 Map<String, double> calculateSum(List<InfoEntry> entries,
@@ -172,7 +170,7 @@ Map<String, double> calculateSum(List<InfoEntry> entries,
   return sums;
 }
 
-List<double> transformGainsToList(HashMap<String, double> gains,
+List<double> transformGainsToList(Map<String, double> gains,
     List<String> players) {
   var res = List<double>(players.length);
   for (int i = 0; i < players.length; i++) {

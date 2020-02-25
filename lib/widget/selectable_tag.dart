@@ -15,16 +15,19 @@ class SelectableTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onPressed(),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: selected ? color : Colors.transparent,
-            border: Border.all(
-                color: color, style: BorderStyle.solid, width: 2)),
-        child: Text(text),
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
+      child: GestureDetector(
+        onTap: () => onPressed(),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: selected ? color : Colors.transparent,
+              border: Border.all(
+                  color: color, style: BorderStyle.solid, width: 2)),
+          child: Text(text),
+        ),
       ),
     );
   }

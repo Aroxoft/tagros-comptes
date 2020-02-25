@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
 import 'package:tagros_comptes/calculous/poignee.dart';
+import 'package:tagros_comptes/calculous/prise.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 import 'package:tagros_comptes/widget/boxed.dart';
 import 'package:tagros_comptes/widget/selectable_tag.dart';
@@ -77,6 +78,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                         height: 35,
                         padding: EdgeInsets.symmetric(vertical: 2),
                         child: ListView.builder(
+                          reverse: true,
                           scrollDirection: Axis.horizontal,
                           itemCount: players.length,
                           itemBuilder: (BuildContext context,
@@ -184,6 +186,18 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
+                      Text("Type"),
+                      DropdownButton(
+                          value: infoEntry.prise,
+                          items: Prise.values.map((e) =>
+                              DropdownMenuItem<Prise>(
+                                  value: e,
+                                  child: Text(getNomPrise(e)))).toList(),
+                          onChanged: (Prise p) {
+                            setState(() {
+                              infoEntry.prise = p;
+                            });
+                          })
                     ]),
 //                        Container(width: 10,
 //                          height: 1,

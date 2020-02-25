@@ -25,9 +25,10 @@ class Tableau extends StatelessWidget {
                 AddModifyEntry.routeName,
                 arguments: AddModifyArguments(
                     infoEntry: null, players: args.players));
-            entryBloc().add(res);
-
-            print(res);
+            if (res != null) {
+              entryBloc().add(res);
+              print(res);
+            }
           }),
       body: TableauBody(args.players),
     );

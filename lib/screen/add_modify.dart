@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tagros_comptes/calculous/info_entry.dart';
-import 'package:tagros_comptes/calculous/poignee.dart';
-import 'package:tagros_comptes/calculous/prise.dart';
+import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/poignee.dart';
+import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 import 'package:tagros_comptes/widget/boxed.dart';
 import 'package:tagros_comptes/widget/selectable_tag.dart';

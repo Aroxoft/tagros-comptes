@@ -1,7 +1,7 @@
 import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/calculous/camp.dart';
-import 'package:tagros_comptes/calculous/info_entry.dart';
-import 'package:tagros_comptes/calculous/prise.dart';
+import 'package:tagros_comptes/model/camp.dart';
+import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/prise.dart';
 import 'package:test/test.dart';
 
 void main() {

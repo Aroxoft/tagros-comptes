@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/entry_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/calculous/info_entry.dart';
+import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 
 class Tableau extends StatelessWidget {

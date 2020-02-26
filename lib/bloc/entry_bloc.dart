@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/calculous/info_entry.dart';
+import 'package:tagros_comptes/model/info_entry.dart';
 
 class EntryBloc implements BlocBase {
   static final EntryBloc _bloc = EntryBloc._internal();

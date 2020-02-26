@@ -139,8 +139,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                   })),
                         ),
                       ),
-                    ])
-                ,
+                    ]),
                 if(players.length > 5) Row(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,9 +1,9 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:tagros_comptes/bloc/bloc.dart';
+import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/calculous/info_entry.dart';
 
-class EntryBloc implements Bloc {
+class EntryBloc implements BlocBase {
   static final EntryBloc _bloc = EntryBloc._internal();
 
   BehaviorSubject<List<InfoEntry>> _entries = BehaviorSubject();

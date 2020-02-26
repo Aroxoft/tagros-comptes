@@ -25,7 +25,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MenuScreen(),
+      home: BlocProvider(
+        bloc: EntriesDbBloc(),
+        child: MenuScreen(),
+      ),
       routes: <String, WidgetBuilder>{
 //        Tableau.routeName: (context) => Tableau(),
         MenuScreen.routeName: (context) => MenuScreen(),

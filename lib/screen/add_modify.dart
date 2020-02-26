@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
@@ -295,14 +296,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             infoEntry.poignees =
                             [PoigneeType.SIMPLE];
                           }
-                          if (value) {
-                            infoEntry.poignees[0] =
-                                PoigneeType.SIMPLE;
-                          }
-                          if (!value) {
-                            infoEntry.poignees[0] =
-                                PoigneeType.NONE;
-                          }
+                          infoEntry.poignees[0] =
+                          value ? PoigneeType.SIMPLE : PoigneeType.NONE;
                         });
                       }),
                   Text("Poignée "),
@@ -329,6 +324,41 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                           players.length)}+ atouts)")
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Checkbox(value: infoEntry.petitsAuBout != null &&
+                      infoEntry.petitsAuBout.isNotEmpty &&
+                      infoEntry.petitsAuBout[0] != null &&
+                      infoEntry.petitsAuBout[0] != Camp.NONE,
+                      onChanged: (bool value) {
+                        setState(() {
+                          if (infoEntry.petitsAuBout == null ||
+                              infoEntry.petitsAuBout.isEmpty) {
+                            infoEntry.petitsAuBout = [Camp.ATTACK];
+                          }
+                          infoEntry.petitsAuBout[0] =
+                          value ? Camp.ATTACK : Camp.NONE;
+                        });
+                      }),
+                  Text("Petit au bout"),
+                  if(infoEntry.petitsAuBout != null &&
+                      infoEntry.petitsAuBout.isNotEmpty) DropdownButton(
+                      value: infoEntry.petitsAuBout[0],
+                      items: Camp.values.map((e) =>
+                          DropdownMenuItem(
+                            child: Text(getNameCamp(e)),
+                            value: e,
+                          )
+                      ).toList(),
+                      onChanged: (petit) {
+                        setState(() {
+                          infoEntry.petitsAuBout[0] = petit;
+                        });
+                      })
+                ],
+              )
             ]), title: "Bonus"),
 
           ],

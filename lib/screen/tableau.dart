@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_bloc.dart';
+import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 
 class Tableau extends StatelessWidget {
-  static const String routeName = "/tableau";
+//  static const String routeName = "/tableau";
 
+  final List<String> players;
+
+  const Tableau({Key key, this.players}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     // extract players
-    final TableauArguments args = ModalRoute.of(context).settings.arguments;
-    entryBloc().setPlayers(args.players);
+    entryBloc().setPlayers(players);
     return Scaffold(
       appBar: AppBar(
-        title: Text("${args.players.length} joueurs"),
+        title: Text("${players.length} joueurs"),
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
@@ -22,13 +26,13 @@ class Tableau extends StatelessWidget {
             final res = await Navigator.of(context).pushNamed(
                 AddModifyEntry.routeName,
                 arguments: AddModifyArguments(
-                    infoEntry: null, players: args.players));
+                    infoEntry: null, players: players));
             if (res != null) {
               entryBloc().add(res);
               print(res);
             }
           }),
-      body: TableauBody(args.players),
+      body: TableauBody(players),
     );
   }
 }
@@ -49,11 +53,14 @@ class TableauBody extends StatefulWidget {
 }
 
 class _TableauBodyState extends State<TableauBody> {
+  EntriesDbBloc _entriesDbBloc;
 
   @override
   void initState() {
     super.initState();
+    _entriesDbBloc = BlocProvider.of<EntriesDbBloc>(context);
   }
+
   @override
   Widget build(BuildContext context) {
     return Column(

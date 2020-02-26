@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/bloc/bloc_provider.dart';
+import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
 import 'package:tagros_comptes/screen/tableau.dart';
@@ -25,10 +27,21 @@ class MyApp extends StatelessWidget {
       ),
       home: MenuScreen(),
       routes: <String, WidgetBuilder>{
-        Tableau.routeName: (context) => Tableau(),
+//        Tableau.routeName: (context) => Tableau(),
         MenuScreen.routeName: (context) => MenuScreen(),
         AddModifyEntry.routeName: (context) => AddModifyEntry(),
       },
     );
   }
+}
+
+Future<T> navigateToTableau<T>(BuildContext context,
+    List<String> players) {
+  return Navigator
+      .of(context)
+      .push(
+      MaterialPageRoute(builder: (context) =>
+          BlocProvider(
+            bloc: EntriesDbBloc(), child: Tableau(players: players,),))
+  );
 }

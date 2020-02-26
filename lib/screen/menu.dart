@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/players.dart';
-import 'package:tagros_comptes/screen/tableau.dart';
 import 'package:tagros_comptes/widget/dialogs.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -44,9 +44,7 @@ class MenuBody extends StatelessWidget {
                         context, getNumber(Players.values[index]),
                             (List<String> players) {
                           print("chose: $players");
-                          Navigator.of(context).pushNamed(
-                              Tableau.routeName, arguments: TableauArguments(
-                              players));
+                          navigateToTableau(context, players);
                         });
                   },
                   child: Text("${getNumber(Players.values[index])} players")),

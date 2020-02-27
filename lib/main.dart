@@ -3,7 +3,7 @@ import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
-import 'package:tagros_comptes/screen/tableau.dart';
+import 'package:tagros_comptes/screen/tableau_bis.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,10 +25,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: BlocProvider(
-        bloc: EntriesDbBloc(),
-        child: MenuScreen(),
-      ),
+      home: MenuScreen(),
       routes: <String, WidgetBuilder>{
 //        Tableau.routeName: (context) => Tableau(),
         MenuScreen.routeName: (context) => MenuScreen(),
@@ -45,6 +42,7 @@ Future<T> navigateToTableau<T>(BuildContext context,
       .push(
       MaterialPageRoute(builder: (context) =>
           BlocProvider(
-            bloc: EntriesDbBloc(), child: Tableau(players: players,),))
+            bloc: EntriesDbBloc(players),
+            child: TableauPage(players: players,),))
   );
 }

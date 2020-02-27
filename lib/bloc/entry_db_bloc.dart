@@ -1,16 +1,15 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
-import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/data/database.dart';
+import 'package:tagros_comptes/model/info_entry.dart';
 
 class EntriesDbBloc implements BlocBase {
   // Create a broadcast controller that allows this stream to be listened
   // to multiple times. This is the primary, if not only, type of stream we'll be using.
   final _entriesController = StreamController<List<InfoEntry>>.broadcast();
 
-  BehaviorSubject<List<String>> _players = BehaviorSubject();
+//  BehaviorSubject<List<String>> _players = BehaviorSubject();
 
   // Input stream. We add our entries to the stream using this variable
   StreamSink<List<InfoEntry>> get _inEntries => _entriesController.sink;
@@ -26,10 +25,13 @@ class EntriesDbBloc implements BlocBase {
 
   StreamSink<InfoEntry> get inAddEntry => _addEntryController.sink;
 
-  EntriesDbBloc() {
+  List<String> players;
+
+  EntriesDbBloc(List<String> players) {
     // Retrieve all the entries on initialization
     getEntries();
-    _players.add(["A", "B", "C", "D"]);
+    this.players = players;
+//    _players.add(["A", "B", "C", "D"]);
     // Listens for changes to the addEntryController and
     // calls _handleAddEntry on change
     _addEntryController.stream.listen(_handleAddEntry);
@@ -39,7 +41,7 @@ class EntriesDbBloc implements BlocBase {
   void dispose() {
     _entriesController.close();
     _addEntryController.close();
-    _players.close();
+//    _players.close();
   }
 
   void _handleAddEntry(InfoEntry entry) async {
@@ -59,8 +61,8 @@ class EntriesDbBloc implements BlocBase {
     // Add all of the entries to the stream so we can grab them later from our pages
     _inEntries.add(entries);
   }
+}
 
-  setPlayers(List<String> players) {
-    _players.add(players);
-  }
+addEntry(EntriesDbBloc bloc, InfoEntry entry) {
+  bloc.inAddEntry.add(entry);
 }

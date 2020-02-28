@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/main.dart';
-import 'package:tagros_comptes/model/players.dart';
+import 'package:tagros_comptes/model/nb_players.dart';
 import 'package:tagros_comptes/widget/dialogs.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -30,7 +30,7 @@ class MenuBody extends StatelessWidget {
     return Center(
       child: ListView.builder(
           scrollDirection: Axis.vertical,
-          itemCount: Players.values.length,
+          itemCount: NbPlayers.values.length,
           itemBuilder: (context, index) {
             return Container(
               width: 200,
@@ -41,13 +41,13 @@ class MenuBody extends StatelessWidget {
                   onPressed: () {
                     print("show dialog");
                     showDialogPlayers(
-                        context, getNumber(Players.values[index]),
+                        context, getNumber(NbPlayers.values[index]),
                             (List<String> players) {
                           print("chose: $players");
                           navigateToTableau(context, players);
                         });
                   },
-                  child: Text("${getNumber(Players.values[index])} players")),
+                  child: Text("${getNumber(NbPlayers.values[index])} players")),
             );
           }),
     );

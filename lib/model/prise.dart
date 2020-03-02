@@ -25,3 +25,36 @@ getNomPrise(Prise prise) {
       return "Garde-contre";
   }
 }
+
+const String _petite = "PETITE",
+    _garde = "GARDE",
+    _garde_sans = "GARDE-SANS",
+    _garde_contre = "GARDE-CONTRE";
+
+Prise fromDbPrise(String prise) {
+  switch (prise) {
+    case _petite:
+      return Prise.PETITE;
+    case _garde:
+      return Prise.GARDE;
+    case _garde_sans:
+      return Prise.GARDE_SANS;
+    case _garde_contre:
+      return Prise.GARDE_CONTRE;
+  }
+  return null;
+}
+
+String toDbPrise(Prise prise) {
+  switch (prise) {
+    case Prise.PETITE:
+      return _petite;
+    case Prise.GARDE:
+      return _garde;
+    case Prise.GARDE_SANS:
+      return _garde_sans;
+    case Prise.GARDE_CONTRE:
+      return _garde_contre;
+  }
+  return null;
+}

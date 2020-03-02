@@ -87,3 +87,43 @@ getNamePoignee(PoigneeType poigneeType) {
       return "pas de poignée";
   }
 }
+
+const String _simple = "SIMPLE";
+const String _double = "DOUBLE";
+const String _triple = "TRIPLE";
+const String _none = "NONE";
+
+String toDbPoignees(List<PoigneeType> poignees) =>
+    poignees == null ? null :
+    (poignees.map((e) {
+      switch (e) {
+        case PoigneeType.SIMPLE:
+          return _simple;
+        case PoigneeType.DOUBLE:
+          return _double;
+        case PoigneeType.TRIPLE:
+          return _triple;
+        case PoigneeType.NONE:
+          return null;
+      }
+      return null;
+    })
+      ..where((element) => element != null)).join(",");
+
+List<PoigneeType> fromDbPoignee(String poignees) {
+  if (poignees == null || poignees.isEmpty) return null;
+  return (poignees.split(",").map((e) {
+    switch (e) {
+      case _simple:
+        return PoigneeType.SIMPLE;
+      case _double:
+        return PoigneeType.DOUBLE;
+      case _triple:
+        return PoigneeType.TRIPLE;
+      case _none:
+        return null;
+    }
+    return null;
+  })
+    ..where((element) => element != null)).toList();
+}

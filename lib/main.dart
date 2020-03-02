@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
+import 'package:tagros_comptes/model/game.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
 import 'package:tagros_comptes/screen/tableau_bis.dart';
@@ -35,14 +36,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<T> navigateToTableau<T>(BuildContext context,
-    List<String> players) {
+Future<T> navigateToTableau<T>(BuildContext context, {
+  Game game}) {
   return Navigator
       .of(context)
       .push(
       MaterialPageRoute(builder: (context) =>
           BlocProvider(
-            bloc: EntriesDbBloc(players),
-            child: TableauPage(players: players,),))
+            bloc: EntriesDbBloc(game),
+            child: TableauPage(game: game,),))
   );
 }

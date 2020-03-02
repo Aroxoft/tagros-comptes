@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:tagros_comptes/model/game.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/player.dart';
 
 class DBProvider {
   static const int DATABASE_VERSION = 1;
@@ -15,11 +17,13 @@ class DBProvider {
   static final String entryTable = 'infoEntry';
   static final String gameTable = 'game';
   static final String playerTable = 'player';
+  static final String playerGameTable = 'playerGame';
 
   static final String id = 'id';
 
   // game fields
   static final String nbPlayers = 'nbPlayers';
+  static final String dateTime = 'dateTime';
 
   // Player fields
   static final String name = 'name';
@@ -30,6 +34,10 @@ class DBProvider {
   static final String points = 'points';
   static final String game = 'game';
   static final String nbBouts = 'nbBouts';
+  static final String petitAuBout = 'petitAuBout';
+  static final String poignee = 'poignee';
+  static final String with1 = 'with1';
+  static final String with2 = 'with2';
 
   Database _database;
 
@@ -50,12 +58,14 @@ class DBProvider {
 
     return await openDatabase(path,
         version: DATABASE_VERSION,
-        onOpen: (db) async {}, onCreate: (Database db, int version) async {
+        onOpen: (db) async {},
+        onCreate: (Database db, int version) async {
           // TODO create the game table
           await db.execute('''
           CREATE TABLE $gameTable(
             $id INTEGER PRIMARY KEY,
-            $nbPlayers INTEGER
+            $nbPlayers INTEGER,
+            $dateTime INTEGER
           )
           ''');
 
@@ -69,34 +79,91 @@ class DBProvider {
           await db.execute('''
           CREATE TABLE $entryTable(
             $id INTEGER PRIMARY KEY,
-            $player TEXT NOT NULL,
-            $prise TEXT NOT NULL,
-            $points REAL,
             $game INTEGER,
-            $nbBouts INTEGER
+            $player INTEGER NOT NULL,
+            $with1 INTEGER,
+            $with2 INTEGER,
+            $points REAL,
+            $petitAuBout TEXT,
+            $poignee TEXT,
+            $prise TEXT NOT NULL,
+            $nbBouts INTEGER,
+            FOREIGN KEY ($game) REFERENCES $gameTable ($id) ON DELETE CASCADE,
+            FOREIGN KEY ($player) REFERENCES $playerTable ($id) ON DELETE CASCADE,
+            FOREIGN KEY ($with1) REFERENCES $playerTable ($id) ON DELETE CASCADE,
+            FOREIGN KEY ($with2) REFERENCES $playerTable ($id) ON DELETE CASCADE
+          )''');
+
+          // Create the association table playerGame
+          await db.execute('''
+          CREATE TABLE $playerGameTable(
+            $id INTEGER PRIMARY KEY AUTOINCREMENT,
+            $player INTEGER,
+            $game INTEGER,
+            FOREIGN KEY ($player) REFERENCES $playerTable ($id) ON DELETE CASCADE,
+            FOREIGN KEY ($game) REFERENCES $gameTable ($id) ON DELETE CASCADE
           )''');
     });
   }
 
   Future<int> newEntry(InfoEntry infoEntry) async {
     final db = await database;
-    var res = await db.insert(entryTable, infoEntry.toJson());
+    var res = await db.insert(entryTable, infoEntry.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return res;
   }
 
-  Future<List<InfoEntry>> getInfoEntries() async {
+  Future<List<InfoEntry>> getInfoEntries(int idGame) async {
+    if (idGame == null) {
+      return Future.value([]);
+    }
     final db = await database;
-    var res = await db.query(entryTable);
-    List<InfoEntry> entries = res.isNotEmpty
-        ? res.map((entry) => InfoEntry.fromJson(entry)).toList()
+    var res = await db.query(entryTable, where: "$id = ?", whereArgs: [idGame]);
+    List<Future<InfoEntry>> entries = res.isNotEmpty
+        ? res.map((entry) => InfoEntry.fromJson(entry, this)).toList()
         : [];
-    return entries;
+    return Future.wait(entries);
   }
 
-  Future<InfoEntry> getEntry(int id) async {
+  Future<int> newGame(Game game) async {
     final db = await database;
-    var res = await db.query(entryTable, where: '$id = ?', whereArgs: [id]);
-    return res.isNotEmpty ? InfoEntry.fromJson(res.first) : null;
+    var res = await db.insert(
+        gameTable, game.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+    // Update game with ID
+    game.id = res;
+
+    addPlayers(game.players, db: db);
+    return res;
+  }
+
+
+  Future<int> newPlayer(Player player, {Database db}) async {
+    if (db == null) db = await database;
+    var res = await db.insert(playerTable, player.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    // Update player with ID
+    player.id = res;
+    return res;
+  }
+
+  addPlayers(List<Player> players, {Database db}) async {
+    if (db == null) db = await database;
+    for (var playerSt in players) {
+      var query = await db.query(
+          playerTable, where: "$name = ?", whereArgs: [playerSt.name]);
+      if (query.isNotEmpty) {
+        playerSt = Player.fromJson(query.first);
+      } else {
+        await newPlayer(playerSt, db: db);
+      }
+    }
+  }
+
+  Future<InfoEntry> getEntry(int entryId) async {
+    final db = await database;
+    var res = await db.query(
+        entryTable, where: '$id = ?', whereArgs: [entryId]);
+    return res.isNotEmpty ? InfoEntry.fromJson(res.first, this) : null;
   }
 
   Future<int> updateEntry(InfoEntry entry) async {
@@ -106,9 +173,21 @@ class DBProvider {
     return res;
   }
 
-  Future<int> deleteEntry(int id) async {
+  Future<int> deleteEntry(int entryId) async {
     final db = await database;
-    var res = await db.delete(entryTable, where: '$id = ?', whereArgs: [id]);
+    var res = await db.delete(
+        entryTable, where: '$id = ?', whereArgs: [entryId]);
     return res;
   }
+
+  Future<Player> getPlayer(int playerId) async {
+    if(playerId == null) {
+      return Future.value(null);
+    }
+    final db = await database;
+    var res = await db.query(
+        playerTable, where: '$id = ?', whereArgs: [playerId]);
+    return res.isNotEmpty ? Player.fromJson(res.first) : null;
+  }
+
 }

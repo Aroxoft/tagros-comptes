@@ -1,15 +1,17 @@
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 
 Map<String, double> calculateGains(InfoEntry infoEntry,
-    List<String> players) {
+    List<Player> playersList) {
+  final players = playersList.map((e) => e.name).toList();
   // Assert that players in entry exist in the list of players
-  assert(players.contains(infoEntry.player));
+  assert(players.contains(infoEntry.player.name));
   if (infoEntry.withPlayers != null) {
     for (var withPlayer in infoEntry.withPlayers) {
-      assert(players.contains(withPlayer));
+      assert(players.contains(withPlayer.name));
     }
   }
 
@@ -113,14 +115,14 @@ Map<String, double> calculateGains(InfoEntry infoEntry,
       // one player against the others
       for (var player in players) {
         gains[player] =
-        infoEntry.player == player ? mise * (nbPlayers - 1) : -mise;
+        infoEntry.player.name == player ? mise * (nbPlayers - 1) : -mise;
       }
     } else {
       // with 5 players, 2 vs 3
       for (var player in players) {
-        if (player == infoEntry.player) {
+        if (player == infoEntry.player.name) {
           gains[player] = mise * 2;
-        } else if (player == infoEntry.withPlayers[0]) {
+        } else if (player == infoEntry.withPlayers[0].name) {
           gains[player] = mise;
         } else {
           gains[player] = -mise;
@@ -131,7 +133,7 @@ Map<String, double> calculateGains(InfoEntry infoEntry,
     // TAGROS
     // Common for every tagros
     for (var player in players) {
-      if (player == infoEntry.player) {
+      if (player == infoEntry.player.name) {
         // taker
         gains[player] = mise * 2;
       } else if (infoEntry.withPlayers.contains(player)) {
@@ -155,10 +157,10 @@ double checkSum(Map<String, double> gains) {
 }
 
 Map<String, double> calculateSum(List<InfoEntry> entries,
-    List<String> players) {
+    List<Player> players) {
   Map<String, double> sums = {};
   for (var player in players) {
-    sums[player] = 0;
+    sums[player.name] = 0;
   }
 
   for (var entry in entries) {
@@ -171,7 +173,7 @@ Map<String, double> calculateSum(List<InfoEntry> entries,
 }
 
 List<double> transformGainsToList(Map<String, double> gains,
-    List<String> players) {
+    List<Player> players) {
   var res = List<double>(players.length);
   for (int i = 0; i < players.length; i++) {
     res[i] = gains[players[i]];

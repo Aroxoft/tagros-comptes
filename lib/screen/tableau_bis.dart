@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
+import 'package:tagros_comptes/model/game.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/widget/tableau_body.dart';
 
 class TableauPage extends StatefulWidget {
-  final List<String> players;
+  final Game game;
 
-  const TableauPage({Key key, @required this.players}) : super(key: key);
+  const TableauPage({Key key, @required this.game}) : super(key: key);
 
   @override
   _TableauPageState createState() => _TableauPageState();
@@ -26,7 +27,7 @@ class _TableauPageState extends State<TableauPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.players.length} joueurs"),
+        title: Text("${widget.game.nbPlayers} joueurs"),
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
@@ -35,14 +36,14 @@ class _TableauPageState extends State<TableauPage> {
             final res = await Navigator.of(context).pushNamed(
                 AddModifyEntry.routeName,
                 arguments: AddModifyArguments(
-                    players: widget.players,
+                    players: widget.game.players,
                     infoEntry: null));
             if (res != null) {
               addEntry(_entriesDbBloc, res);
               print(res);
             }
           }),
-      body: TableauBody(players: widget.players),
+      body: TableauBody(players: widget.game.players),
     );
   }
 }

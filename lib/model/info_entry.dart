@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/data/database.dart';
 import 'package:tagros_comptes/model/camp.dart';
+import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 
 class InfoEntry {
-  static int allId = 0;
-  final int id;
-  String player;
-  List<String> withPlayers;
+  int id;
+  Player player;
+  List<Player> withPlayers;
   Prise prise;
   double points;
   int nbBouts;
@@ -17,25 +18,46 @@ class InfoEntry {
   List<Camp> petitsAuBout;
   List<PoigneeType> poignees;
 
-  factory InfoEntry.fromJson(Map<String, dynamic> json) =>
-      InfoEntry(player: json["player"],
+  static Future<InfoEntry> fromJson(Map<String, dynamic> json,
+      DBProvider dbProvider) async {
+    var player = await dbProvider.getPlayer(json["player"]);
+    var with1 = await dbProvider.getPlayer(json["with1"]);
+    var with2 = await dbProvider.getPlayer(json["with2"]);
+    List<Player> withP = [with1, with2]
+      ..retainWhere((element) =>
+      element != null);
+    var petitsAuBout = json["petitsAuBout"];
+    var poignees = json["poignee"];
+    return InfoEntry(
+      id: json["id"],
+      player: player,
+      withPlayers: withP,
+      petitsAuBout: fromDbPetit(petitsAuBout),
+      poignees: fromDbPoignee(poignees),
+      prise: fromDbPrise(json["prise"]),
         points: json["points"],
         nbBouts: json["nbBouts"],);
+  }
 
   Map<String, dynamic> toJson() =>
       {
-        "player": player,
+        "id": id,
+        "player": player.id,
+        "with1": withPlayers != null && withPlayers.length > 0 ? withPlayers[0]
+            .id : null,
+        "with2": withPlayers != null && withPlayers.length > 1 ? withPlayers[1]
+            .id : null,
         "points": points,
+        "petitAuBout": toDbPetits(petitsAuBout),
+        "poignee": toDbPoignees(poignees),
         "nbBouts": nbBouts,
-        "prise": prise.toString()
+        "prise": toDbPrise(prise)
       };
 
   InfoEntry({@required this.player, this.withPlayers, this.prise = Prise
       .PETITE, @required this.points,
     @required this.nbBouts, this.pointsForAttack = true, this.petitsAuBout = const[
-    ], this.poignees = const []}) : this.id = allId {
-    allId++;
-  }
+    ], this.poignees = const [], this.id});
 
   @override
   String toString() {

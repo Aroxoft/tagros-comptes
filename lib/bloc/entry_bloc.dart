@@ -2,12 +2,13 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/player.dart';
 
 class EntryBloc implements BlocBase {
   static final EntryBloc _bloc = EntryBloc._internal();
 
   BehaviorSubject<List<InfoEntry>> _entries = BehaviorSubject();
-  BehaviorSubject<List<String>> _players = BehaviorSubject();
+  BehaviorSubject<List<Player>> _players = BehaviorSubject();
 
   Stream<List<InfoEntry>> get entries => _entries.stream;
 
@@ -26,7 +27,7 @@ class EntryBloc implements BlocBase {
     _entries.add([]);
   }
 
-  setPlayers(List<String> players) {
+  setPlayers(List<Player> players) {
     _players.add(players);
     _entries.add([]);
   }

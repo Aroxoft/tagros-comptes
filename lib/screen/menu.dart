@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/main.dart';
+import 'package:tagros_comptes/model/game.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
 import 'package:tagros_comptes/widget/dialogs.dart';
 
@@ -44,7 +45,10 @@ class MenuBody extends StatelessWidget {
                         context, getNumber(NbPlayers.values[index]),
                             (List<String> players) {
                           print("chose: $players");
-                          navigateToTableau(context, players);
+                          navigateToTableau(context,
+                              game: Game(nbPlayers: getNumber(NbPlayers
+                              .values[index]),
+                              dateTime: DateTime.now(), players: players));
                         });
                   },
                   child: Text("${getNumber(NbPlayers.values[index])} players")),

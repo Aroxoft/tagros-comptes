@@ -1,12 +1,18 @@
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/prise.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('Calcul à 4', () {
-    var players = ["A", "B", "C", "D"];
+    var players = ["A", "B", "C", "D"].map((e) => Player(name: e)).toList();
+    final A = Player(name: "A");
+    final B = Player(name: "B");
+    final C = Player(name: "C");
+    final D = Player(name: "D");
+
     InfoEntry entry;
     Map<String, double> gains;
 
@@ -15,7 +21,7 @@ void main() {
           points: 36,
           pointsForAttack: true,
           nbBouts: 3,
-          player: "A",
+          player: A,
           prise: Prise.PETITE);
       gains = calculateGains(entry, players);
       expect(gains, {"A": 25 * 3, "B": -25, "C": -25, "D": -25});
@@ -26,7 +32,7 @@ void main() {
           points: 41,
           pointsForAttack: true,
           nbBouts: 2,
-          player: "A",
+          player: A,
           prise: Prise.PETITE);
       gains = calculateGains(entry, players);
       expect(gains, {"A": 25 * 3, "B": -25, "C": -25, "D": -25});
@@ -37,7 +43,7 @@ void main() {
           points: 51,
           pointsForAttack: true,
           nbBouts: 1,
-          player: "A",
+          player: A,
           prise: Prise.PETITE);
       gains = calculateGains(entry, players);
       expect(gains, {"A": 25 * 3, "B": -25, "C": -25, "D": -25});
@@ -48,7 +54,7 @@ void main() {
           points: 56,
           pointsForAttack: true,
           nbBouts: 0,
-          player: "A",
+          player: A,
           prise: Prise.PETITE);
       gains = calculateGains(entry, players);
       expect(gains, {"A": 25 * 3, "B": -25, "C": -25, "D": -25});
@@ -57,7 +63,7 @@ void main() {
 
     test('Petite chutée de 3 (1 bout)', () {
       entry = InfoEntry(
-        player: "B",
+        player: B,
         points: 48,
         nbBouts: 1,
       );
@@ -67,7 +73,7 @@ void main() {
     });
     test("Garde faite de 1", () {
       entry = InfoEntry(
-        player: "C",
+        player: C,
         points: 52,
         nbBouts: 1,
         prise: Prise.GARDE,
@@ -78,7 +84,7 @@ void main() {
     });
     test("Garde chutée de 1, points de la défense", () {
       entry = InfoEntry(
-        player: "D",
+        player: D,
         points: 51,
         nbBouts: 1,
         pointsForAttack: false,
@@ -90,13 +96,13 @@ void main() {
     });
     test("Garde-sans faite de 0", () {
       entry = InfoEntry(
-        player: "A", points: 56, nbBouts: 0, prise: Prise.GARDE_SANS,);
+        player: A, points: 56, nbBouts: 0, prise: Prise.GARDE_SANS,);
       gains = calculateGains(entry, players);
       expect(gains, {"A": 300, "B": -100, "C": -100, "D": -100});
       expect(checkSum(gains), 0, reason: "Failed checksum");
     });
     test("Garde faite de 0, petit au bout attaque", () {
-      entry = InfoEntry(player: "A",
+      entry = InfoEntry(player: A,
           points: 36,
           nbBouts: 3,
           prise: Prise.GARDE,
@@ -107,38 +113,44 @@ void main() {
     });
   });
   group('Calcul à 5', () {
-    var players = ["A", "B", "C", "D", "E"];
+    var players = ["A", "B", "C", "D", "E"].map((e) => Player(name: e)).toList();
+    final A = Player(name: "A");
+    final B = Player(name: "B");
+    final C = Player(name: "C");
+    final D = Player(name: "D");
+    final E = Player(name: "E");
+
     InfoEntry entry;
     Map<String, double> gains;
 
     test('Petite de A, appel de B, faite de 0', () {
       entry =
-          InfoEntry(player: 'A', points: 36, nbBouts: 3, withPlayers: ['B']);
+          InfoEntry(player: A, points: 36, nbBouts: 3, withPlayers: [B]);
       gains = calculateGains(entry, players);
       expect(gains, {"A": 50, "B": 25, "C": -25, "D": -25, "E": -25});
     });
     test('Petite de A, appel de B, chutée de 3 (1 bout)', () {
       entry =
-          InfoEntry(player: 'A', points: 48, nbBouts: 1, withPlayers: ['B']);
+          InfoEntry(player: A, points: 48, nbBouts: 1, withPlayers: [B]);
       gains = calculateGains(entry, players);
       expect(gains, {"A": -56, "B": -28, "C": 28, "D": 28, "E": 28});
     });
     test('Garde de D, appel de C, faite de 0 (2 bouts)', () {
       entry =
-          InfoEntry(player: 'D',
+          InfoEntry(player: D,
               points: 41,
               nbBouts: 2,
-              withPlayers: ['C'],
+              withPlayers: [C],
               prise: Prise.GARDE);
       gains = calculateGains(entry, players);
       expect(gains, {"A": -50, "B": -50, "C": 50, "D": 100, "E": -50});
     });
     test('Garde-sans de C, tout seul, faite de 0 (3 bouts)', () {
       entry =
-          InfoEntry(player: 'C',
+          InfoEntry(player: C,
               points: 36,
               nbBouts: 3,
-              withPlayers: ['C'],
+              withPlayers: [C],
               prise: Prise.GARDE_SANS);
       gains = calculateGains(entry, players);
       expect(gains, {"A": -100, "B": -100, "C": 400, "D": -100, "E": -100});

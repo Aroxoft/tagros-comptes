@@ -3,9 +3,10 @@ import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/player.dart';
 
 class TableauBody extends StatefulWidget {
-  final List<String> players;
+  final List<Player> players;
 
   const TableauBody({Key key, @required this.players}) : super(key: key);
 
@@ -31,7 +32,7 @@ class _TableauBodyState extends State<TableauBody> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: List.generate(widget.players.length,
-              (index) => Text(widget.players[index].toUpperCase())),
+                  (index) => Text(widget.players[index].name.toUpperCase())),
         ),
       ),
       Container(
@@ -39,11 +40,28 @@ class _TableauBodyState extends State<TableauBody> {
         color: Colors.pink,
       ),
       StreamBuilder(
+          stream: _entriesDbBloc.sum,
           builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
-        return Center(
-          child: Text("NOT IMPLEMENTED"),
-        );
-      }),
+            if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"),);
+            }
+            if (!snapshot.hasData) {
+              return Center(child: Text("No Data"),);
+            }
+            var sums = snapshot.data;
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(sums.length, (index) {
+                  print(widget.players[index].name);
+                  var sum = sums[widget.players[index].name];
+                  return Text(sum.toStringAsFixed(1), style: TextStyle(
+                      color: sum < 0 ? Colors.red : Colors.green),);
+                }),),
+            );
+          }),
       Container(
         constraints: BoxConstraints.expand(height: 4),
         color: Colors.pink,
@@ -81,8 +99,10 @@ class _TableauBodyState extends State<TableauBody> {
               itemCount: entries.length,
               itemBuilder: (BuildContext context, int index) {
                 Map<String, double> calculateGain =
-                    calculateGains(entries[index], widget.players);
-                var gains = transformGainsToList(calculateGain, widget.players);
+                calculateGains(
+                    entries[index], widget.players.toList());
+                var gains = transformGainsToList(
+                    calculateGain, widget.players.toList());
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(

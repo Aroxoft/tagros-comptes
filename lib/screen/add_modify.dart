@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
@@ -19,7 +20,7 @@ class AddModifyEntry extends StatefulWidget {
 class _AddModifyEntryState extends State<AddModifyEntry> {
   InfoEntry infoEntry;
   bool add;
-  List<String> players;
+  List<Player> players;
 
   @override
   void initState() {
@@ -87,7 +88,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             return SelectableTag(
                                 selected: infoEntry.player ==
                                     players[index],
-                                text: players[index], onPressed: () {
+                                text: players[index].name, onPressed: () {
                               setState(() {
                                 if (infoEntry.player ==
                                     players[index]) {
@@ -127,7 +128,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                   SelectableTag(
                                       selected: infoEntry.withPlayers[0] ==
                                           players[index],
-                                      text: players[index], onPressed: () {
+                                      text: players[index].name, onPressed: () {
                                     setState(() {
                                       if (infoEntry.withPlayers[0] ==
                                           players[index]) {
@@ -165,7 +166,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                       selected: infoEntry
                                           .withPlayers[1] ==
                                           players[index],
-                                      text: players[index],
+                                      text: players[index].name,
                                       onPressed: () {
                                         setState(() {
                                           if (infoEntry.withPlayers[1] ==
@@ -370,7 +371,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
 
 class AddModifyArguments {
   InfoEntry infoEntry;
-  List<String> players;
+  List<Player> players;
 
   AddModifyArguments({this.infoEntry, @required this.players});
 }

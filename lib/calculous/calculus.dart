@@ -81,23 +81,27 @@ Map<String, double> calculateGains(InfoEntry infoEntry,
   bool won = wonBy >= 0;
   // Petit au bout
   int petitPoints = 0;
-  for (var petitAuBout in infoEntry.petitsAuBout) {
-    switch (petitAuBout) {
-      case Camp.ATTACK:
-        petitPoints += won ? 10 : -10;
-        break;
-      case Camp.DEFENSE:
-        petitPoints += won ? -10 : 10;
-        break;
-      case Camp.NONE:
-        break;
+  if (infoEntry.petitsAuBout != null) {
+    for (var petitAuBout in infoEntry.petitsAuBout) {
+      switch (petitAuBout) {
+        case Camp.ATTACK:
+          petitPoints += won ? 10 : -10;
+          break;
+        case Camp.DEFENSE:
+          petitPoints += won ? -10 : 10;
+          break;
+        case Camp.NONE:
+          break;
+      }
     }
   }
 
   // Poignee
   var pointsForPoignee = 0;
-  for (var poignee in infoEntry.poignees) {
+  if (infoEntry.poignees != null) {
+    for (var poignee in infoEntry.poignees) {
     pointsForPoignee += getPoigneePoints(poignee);
+    }
   }
 
   double mise = (wonBy.abs() + 25 + petitPoints) * getCoeff(infoEntry.prise) +

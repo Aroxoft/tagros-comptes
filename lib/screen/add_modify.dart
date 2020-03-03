@@ -84,8 +84,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                           scrollDirection: Axis.horizontal,
                           itemCount: players.length,
                           itemBuilder: (BuildContext context,
-                              int index) {
-                            return SelectableTag(
+                              int index) =>
+                              SelectableTag(
                                 selected: infoEntry.player ==
                                     players[index],
                                 text: players[index].name, onPressed: () {
@@ -97,8 +97,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                   infoEntry.player = players[index];
                                 }
                               });
-                            });
-                          },),
+                              }),),
                       ),
                     ),
                   ]),

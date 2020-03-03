@@ -55,7 +55,7 @@ class _TableauBodyState extends State<TableauBody> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(sums.length, (index) {
-                  print(widget.players[index].name);
+                  print(widget.players[index]);
                   var sum = sums[widget.players[index].name];
                   return Text(sum.toStringAsFixed(1), style: TextStyle(
                       color: sum < 0 ? Colors.red : Colors.green),);

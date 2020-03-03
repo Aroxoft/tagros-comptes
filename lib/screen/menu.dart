@@ -40,7 +40,6 @@ class MenuBody extends StatelessWidget {
                   elevation: 4,
                   color: Colors.amber,
                   onPressed: () {
-                    print("show dialog");
                     showDialogPlayers(
                         context, getNumber(NbPlayers.values[index]),
                             (List<String> players) {

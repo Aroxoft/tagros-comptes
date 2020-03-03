@@ -272,7 +272,6 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                   value: e,
                                   child: Text(e.toString()))).toList(),
                           onChanged: (int value) {
-                            print("selected $value");
                             setState(() {
                               infoEntry.nbBouts = value;
                               print(infoEntry);

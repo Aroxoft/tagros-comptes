@@ -57,7 +57,7 @@ class EntriesDbBloc implements BlocBase {
 
   void _handleAddEntry(InfoEntry entry) async {
     // Create the entry in the database
-    await DBProvider.db.newEntry(entry);
+    await DBProvider.db.newEntry(entry, game);
 
     // Retrieve all the entries again after one is added
     // This allows our pages to update properly and display the

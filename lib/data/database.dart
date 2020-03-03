@@ -106,9 +106,9 @@ class DBProvider {
     });
   }
 
-  Future<int> newEntry(InfoEntry infoEntry) async {
+  Future<int> newEntry(InfoEntry infoEntry, Game game) async {
     final db = await database;
-    var res = await db.insert(entryTable, infoEntry.toJson(),
+    var res = await db.insert(entryTable, infoEntry.toJson(game),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return res;
   }
@@ -123,6 +123,14 @@ class DBProvider {
         ? res.map((entry) => InfoEntry.fromJson(entry, this)).toList()
         : [];
     return Future.wait(entries);
+  }
+
+  Future<List<Player>> getPlayers({Database db}) async {
+    if (db == null) db = await database;
+    var res = await db.query(playerTable);
+    List<Player> players = res.isNotEmpty ? res.map((e) => Player.fromJson(e,))
+        .toList() : [];
+    return players;
   }
 
   Future<int> newGame(Game game) async {
@@ -148,13 +156,13 @@ class DBProvider {
 
   addPlayers(List<Player> players, {Database db}) async {
     if (db == null) db = await database;
-    for (var playerSt in players) {
+    for (var player in players) {
       var query = await db.query(
-          playerTable, where: "$name = ?", whereArgs: [playerSt.name]);
+          playerTable, where: "$name = ?", whereArgs: [player.name]);
       if (query.isNotEmpty) {
-        playerSt = Player.fromJson(query.first);
+        player = Player.fromJson(query.first);
       } else {
-        await newPlayer(playerSt, db: db);
+        await newPlayer(player, db: db);
       }
     }
   }
@@ -166,9 +174,9 @@ class DBProvider {
     return res.isNotEmpty ? InfoEntry.fromJson(res.first, this) : null;
   }
 
-  Future<int> updateEntry(InfoEntry entry) async {
+  Future<int> updateEntry(InfoEntry entry, Game game) async {
     final db = await database;
-    var res = await db.update(entryTable, entry.toJson(),
+    var res = await db.update(entryTable, entry.toJson(game),
         where: 'id = ?', whereArgs: [entry.id]);
     return res;
   }

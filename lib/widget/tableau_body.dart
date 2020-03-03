@@ -95,32 +95,35 @@ class _TableauBodyState extends State<TableauBody> {
               ),
             );
           }
-          return ListView.builder(
-              itemCount: entries.length,
-              itemBuilder: (BuildContext context, int index) {
-                Map<String, double> calculateGain =
-                calculateGains(
-                    entries[index], widget.players.toList());
-                var gains = transformGainsToList(
-                    calculateGain, widget.players.toList());
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(
-                        gains.length,
-                        (index) => Text(
-                              gains[index].toString(),
-                              style: TextStyle(
-                                  color: gains[index] >= 0
-                                      ? Colors.grey
-                                      : Colors.red),
-                            )),
-                  ),
-                );
-              });
+          return Container(
+            constraints: BoxConstraints.expand(height: 700),
+            child: ListView.builder(
+                itemCount: entries.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Map<String, double> calculateGain =
+                  calculateGains(
+                      entries[index], widget.players.toList());
+                  var gains = transformGainsToList(
+                      calculateGain, widget.players.toList());
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(
+                          gains.length,
+                          (index) => Text(
+                                gains[index].toString(),
+                                style: TextStyle(
+                                    color: gains[index] >= 0
+                                        ? Colors.grey
+                                        : Colors.red),
+                              )),
+                    ),
+                  );
+                }),
+          );
         },
       ),
     ]);

@@ -17,4 +17,9 @@ class Player {
         "name": name,
         "id": id,
       };
+
+  @override
+  String toString() {
+    return "$name ($id)";
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/data/database.dart';
 import 'package:tagros_comptes/model/camp.dart';
+import 'package:tagros_comptes/model/game.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
@@ -39,9 +40,10 @@ class InfoEntry {
         nbBouts: json["nbBouts"],);
   }
 
-  Map<String, dynamic> toJson() =>
+  Map<String, dynamic> toJson(Game game) =>
       {
         "id": id,
+        "game": game.id,
         "player": player.id,
         "with1": withPlayers != null && withPlayers.length > 0 ? withPlayers[0]
             .id : null,

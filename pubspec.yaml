@@ -27,6 +27,7 @@ dependencies:
   sqflite: ^1.0.0
   path_provider: ^0.5.0+1
   autocomplete_textfield: ^1.7.3
+  appspector: ^0.1.0 #For viewing database
 
 dev_dependencies:
   flutter_test:

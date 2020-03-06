@@ -1,3 +1,4 @@
+import 'package:appspector/appspector.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
@@ -6,7 +7,17 @@ import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
 import 'package:tagros_comptes/screen/tableau_bis.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runAppSpector();
+  runApp(MyApp());
+}
+
+void runAppSpector() {
+  var config = Config();
+  config.androidApiKey = "android_YjE3ODM3ZDctZTdiMC00ZjRlLWJiMWMtZTJjOTg2ZjNjZjEz";
+  AppSpectorPlugin.run(config);
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

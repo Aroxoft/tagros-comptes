@@ -11,9 +11,7 @@ class Game {
       {@required this.nbPlayers,
       this.dateTime,
       this.id,
-      List<String> players}) {
-    this.players = players.map((e) => Player(name: e)).toList();
-  }
+        this.players});
 
   factory Game.fromJson(Map<String, dynamic> json) => Game(
         nbPlayers: json["nbPlayers"],

@@ -148,7 +148,7 @@ class DBProvider {
   Future<int> newPlayer(Player player, {Database db}) async {
     if (db == null) db = await database;
     var res = await db.insert(playerTable, player.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+        conflictAlgorithm: ConflictAlgorithm.ignore);
     // Update player with ID
     player.id = res;
     return res;

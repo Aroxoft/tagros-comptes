@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
@@ -40,6 +41,17 @@ class _TableauPageState extends State<TableauPage> {
                     infoEntry: null));
             if (res != null) {
               addEntry(_entriesDbBloc, res);
+              Flushbar(
+                flushbarStyle: FlushbarStyle.GROUNDED,
+                flushbarPosition: FlushbarPosition.BOTTOM,
+                title: "Partie ajoutée avec succès",
+                duration: Duration(seconds: 2),
+                message: res.toString(),
+                backgroundGradient: LinearGradient(
+                  colors: [Colors.blueGrey, Colors.teal],
+                ),
+              )
+                ..show(context);
               print(res);
             }
           }),

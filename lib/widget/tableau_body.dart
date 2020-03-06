@@ -113,13 +113,16 @@ class _TableauBodyState extends State<TableauBody> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: List.generate(
                           gains.length,
-                          (index) => Text(
+                              (index) {
+                            print("Gain[$index] = ${gains[index]}");
+                            return Text(
                                 gains[index].toString(),
                                 style: TextStyle(
                                     color: gains[index] >= 0
                                         ? Colors.grey
                                         : Colors.red),
-                              )),
+                            );
+                          }),
                     ),
                   );
                 }),

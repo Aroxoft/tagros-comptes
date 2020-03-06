@@ -28,6 +28,7 @@ dependencies:
   path_provider: ^0.5.0+1
   autocomplete_textfield: ^1.7.3
   appspector: ^0.1.0 #For viewing database
+  flushbar: ^1.9.1 #Substitute for toasts and snackbars
 
 dev_dependencies:
   flutter_test:

@@ -180,7 +180,7 @@ List<double> transformGainsToList(Map<String, double> gains,
     List<Player> players) {
   var res = List<double>(players.length);
   for (int i = 0; i < players.length; i++) {
-    res[i] = gains[players[i]];
+    res[i] = gains[players[i].name];
   }
 
   return res;

@@ -1,3 +1,4 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +38,9 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
           .arguments;
       infoEntry = args.infoEntry;
       players = args.players;
+      print("So we ${infoEntry == null
+          ? "add"
+          : "modify"} an entry, we have the players: $players");
       add = false;
       if (infoEntry == null) {
         add = true;
@@ -56,7 +60,14 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
-            Navigator.of(context).pop(infoEntry);
+            if (_validate(infoEntry)) {
+              Navigator.of(context).pop(infoEntry);
+            } else {
+              Flushbar(title: "Il manque des informations",
+                message: "Pour pouvoir valider, veuillez ajouter les informations manquantes",
+                duration: Duration(seconds: 3),)
+                ..show(context);
+            }
           }),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -86,17 +97,17 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                           itemBuilder: (BuildContext context,
                               int index) =>
                               SelectableTag(
-                                selected: infoEntry.player ==
-                                    players[index],
-                                text: players[index].name, onPressed: () {
-                              setState(() {
-                                if (infoEntry.player ==
-                                    players[index]) {
-                                  infoEntry.player = null;
-                                } else {
-                                  infoEntry.player = players[index];
-                                }
-                              });
+                                  selected: infoEntry.player.id ==
+                                      players[index].id,
+                                  text: players[index].name, onPressed: () {
+                                setState(() {
+                                  if (infoEntry.player.id ==
+                                      players[index].id) {
+                                    infoEntry.player = null;
+                                  } else {
+                                    infoEntry.player = players[index];
+                                  }
+                                });
                               }),),
                       ),
                     ),
@@ -364,6 +375,17 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
         ),
       ),
     );
+  }
+
+  bool _validate(InfoEntry infoEntry) {
+    if (infoEntry == null) return false;
+    if (infoEntry.player == null) return false;
+    if (players.length < 5) return true;
+    if (infoEntry.withPlayers == null || infoEntry.withPlayers.isEmpty)
+      return false;
+    if (players.length == 5) return true;
+    if (infoEntry.withPlayers.length != 2) return false;
+    return true;
   }
 }
 

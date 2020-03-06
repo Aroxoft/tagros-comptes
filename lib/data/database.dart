@@ -1,7 +1,5 @@
-import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:tagros_comptes/model/game.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
@@ -53,8 +51,8 @@ class DBProvider {
     // Get the location of our app directory. This is where files for our app,
     // and only our app, are stored. Files in this directory are deleted
     // when the app is deleted.
-    Directory documentsDir = await getApplicationDocumentsDirectory();
-    String path = join(documentsDir.path, 'app.db');
+    String documentsDir = await getDatabasesPath();
+    String path = join(documentsDir, 'app.db');
 
     return await openDatabase(path,
         version: DATABASE_VERSION,
@@ -140,7 +138,11 @@ class DBProvider {
     // Update game with ID
     game.id = res;
 
-    addPlayers(game.players, db: db);
+    var players = await addPlayers(game.players, db: db);
+    for (var playerId in players) {
+      addPlayerGame(playerId: playerId, gameId: res);
+    }
+
     return res;
   }
 
@@ -154,8 +156,9 @@ class DBProvider {
     return res;
   }
 
-  addPlayers(List<Player> players, {Database db}) async {
+  Future<List<int>> addPlayers(List<Player> players, {Database db}) async {
     if (db == null) db = await database;
+    List<int> playerIds = [];
     for (var player in players) {
       var query = await db.query(
           playerTable, where: "$name = ?", whereArgs: [player.name]);
@@ -164,7 +167,9 @@ class DBProvider {
       } else {
         await newPlayer(player, db: db);
       }
+      playerIds.add(player.id);
     }
+    return playerIds;
   }
 
   Future<InfoEntry> getEntry(int entryId) async {
@@ -196,6 +201,12 @@ class DBProvider {
     var res = await db.query(
         playerTable, where: '$id = ?', whereArgs: [playerId]);
     return res.isNotEmpty ? Player.fromJson(res.first) : null;
+  }
+
+  void addPlayerGame({@required int playerId, @required int gameId}) async {
+    // TODO
+    final db = await database;
+    await db.insert(playerGameTable, {"player": playerId, "game": gameId});
   }
 
 }

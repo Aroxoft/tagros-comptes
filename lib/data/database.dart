@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqlcool/sqlcool.dart';
 import 'package:tagros_comptes/model/game.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/model/player.dart';
@@ -17,97 +20,88 @@ class DBProvider {
   static final String playerTable = 'player';
   static final String playerGameTable = 'playerGame';
 
-  static final String id = 'id';
+  static final String idField = 'id';
 
   // game fields
-  static final String nbPlayers = 'nbPlayers';
-  static final String dateTime = 'dateTime';
+  static final String nbPlayersField = 'nbPlayers';
+  static final String dateTimeField = 'dateTime';
 
   // Player fields
-  static final String name = 'name';
+  static final String nameField = 'name';
 
   // infoEntry fields
-  static final String player = 'player';
-  static final String prise = 'prise';
-  static final String points = 'points';
-  static final String game = 'game';
-  static final String nbBouts = 'nbBouts';
-  static final String petitAuBout = 'petitAuBout';
-  static final String poignee = 'poignee';
-  static final String with1 = 'with1';
-  static final String with2 = 'with2';
+  static final String playerField = 'player';
+  static final String priseField = 'prise';
+  static final String pointsField = 'points';
+  static final String gameField = 'game';
+  static final String nbBoutsField = 'nbBouts';
+  static final String petitAuBoutField = 'petitAuBout';
+  static final String poigneeField = 'poignee';
+  static final String with1Field = 'with1';
+  static final String with2Field = 'with2';
 
-  Database _database;
+  Db _database;
 
-  Future<Database> get database async {
+  Future<Db> get database async {
     if (_database != null) {
       return _database;
     }
-    _database = await initDB();
+    _database = Db();
+
     return _database;
   }
 
-  initDB() async {
+  initDB({@required Db db}) async {
     // Get the location of our app directory. This is where files for our app,
     // and only our app, are stored. Files in this directory are deleted
     // when the app is deleted.
-    String documentsDir = await getDatabasesPath();
-    String path = join(documentsDir, 'app.db');
+    Directory documentsDir = await getApplicationDocumentsDirectory();
+    String path = join(documentsDir.parent.path, 'databases/app.db');
 
-    return await openDatabase(path,
-        version: DATABASE_VERSION,
-        onOpen: (db) async {},
-        onCreate: (Database db, int version) async {
-          // TODO create the game table
-          await db.execute('''
-          CREATE TABLE $gameTable(
-            $id INTEGER PRIMARY KEY,
-            $nbPlayers INTEGER,
-            $dateTime INTEGER
-          )
-          ''');
+    final game = DbTable(gameTable)
+      ..integer(idField, unique: true)
+      ..integer(nbPlayersField)
+      ..integer(dateTimeField);
 
-          await db.execute('''
-          CREATE TABLE $playerTable(
-            $id INTEGER PRIMARY KEY,
-            $name TEXT NOT NULL
-          )''');
+    final player = DbTable(playerTable)
+      ..integer(idField, unique: true)
+      ..varchar(nameField, nullable: false)
+      ..index(nameField);
 
-          // Create the entry table
-          await db.execute('''
-          CREATE TABLE $entryTable(
-            $id INTEGER PRIMARY KEY,
-            $game INTEGER,
-            $player INTEGER NOT NULL,
-            $with1 INTEGER,
-            $with2 INTEGER,
-            $points REAL,
-            $petitAuBout TEXT,
-            $poignee TEXT,
-            $prise TEXT NOT NULL,
-            $nbBouts INTEGER,
-            FOREIGN KEY ($game) REFERENCES $gameTable ($id) ON DELETE CASCADE,
-            FOREIGN KEY ($player) REFERENCES $playerTable ($id) ON DELETE CASCADE,
-            FOREIGN KEY ($with1) REFERENCES $playerTable ($id) ON DELETE CASCADE,
-            FOREIGN KEY ($with2) REFERENCES $playerTable ($id) ON DELETE CASCADE
-          )''');
+    final entry = DbTable(entryTable)
+      ..integer(idField, unique: true)
+      ..integer(gameField, nullable: false)
+      ..integer(playerField, nullable: false)
+      ..integer(with1Field)
+      ..integer(with2Field)
+      ..real(pointsField)
+      ..text(petitAuBoutField)
+      ..text(poigneeField)
+      ..text(priseField, nullable: false)
+      ..integer(nbBoutsField, nullable: false)
+      ..foreignKey(gameField, reference: gameTable, onDelete: OnDelete.cascade)
+      ..foreignKey(playerField,
+          reference: playerTable, onDelete: OnDelete.cascade)
+      ..foreignKey(with1Field,
+          reference: playerTable, onDelete: OnDelete.cascade)
+      ..foreignKey(with2Field,
+          reference: playerTable, onDelete: OnDelete.cascade);
 
-          // Create the association table playerGame
-          await db.execute('''
-          CREATE TABLE $playerGameTable(
-            $id INTEGER PRIMARY KEY AUTOINCREMENT,
-            $player INTEGER,
-            $game INTEGER,
-            FOREIGN KEY ($player) REFERENCES $playerTable ($id) ON DELETE CASCADE,
-            FOREIGN KEY ($game) REFERENCES $gameTable ($id) ON DELETE CASCADE
-          )''');
-    });
+    final playerGame = DbTable(playerGameTable)
+      ..integer(idField, unique: true)
+      ..integer(playerField, nullable: false)
+      ..integer(gameField, nullable: false)
+      ..foreignKey(playerField,
+          reference: playerTable, onDelete: OnDelete.cascade)
+      ..foreignKey(gameField, reference: gameTable, onDelete: OnDelete.cascade);
+
+    await db.init(path: path, schema: [game, player, entry, playerGame]);
+    db.schema.describe();
   }
 
   Future<int> newEntry(InfoEntry infoEntry, Game game) async {
     final db = await database;
-    var res = await db.insert(entryTable, infoEntry.toJson(game),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    var res = await db.insert(table: entryTable, row: infoEntry.toJson(game));
     return res;
   }
 
@@ -116,29 +110,33 @@ class DBProvider {
       return Future.value([]);
     }
     final db = await database;
-    var res = await db.query(entryTable, where: "$id = ?", whereArgs: [idGame]);
+    var res = await db.select(table: entryTable, where: "$idField = $idGame");
     List<Future<InfoEntry>> entries = res.isNotEmpty
         ? res.map((entry) => InfoEntry.fromJson(entry, this)).toList()
         : [];
     return Future.wait(entries);
   }
 
-  Future<List<Player>> getPlayers({Database db}) async {
+  Future<List<Player>> getPlayers({Db db}) async {
     if (db == null) db = await database;
-    var res = await db.query(playerTable);
-    List<Player> players = res.isNotEmpty ? res.map((e) => Player.fromJson(e,))
-        .toList() : [];
+    List<Map<String, dynamic>> res = await db.select(table: playerTable);
+    List<Player> players = res.isNotEmpty
+        ? res
+            .map((e) => Player.fromJson(
+                  e,
+                ))
+            .toList()
+        : [];
     return players;
   }
 
-  Stream<List<Player>> getPlayersStream({Database db}) {
+  Stream<List<Player>> getPlayersStream({Db db}) {
     // TODO Fix me how to get stream from database
   }
 
   Future<int> newGame(Game game) async {
     final db = await database;
-    var res = await db.insert(
-        gameTable, game.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
+    var res = await db.insert(table: gameTable, row: game.toJson());
     // Update game with ID
     game.id = res;
 
@@ -150,22 +148,20 @@ class DBProvider {
     return res;
   }
 
-
-  Future<int> newPlayer(Player player, {Database db}) async {
+  Future<int> newPlayer(Player player, {Db db}) async {
     if (db == null) db = await database;
-    var res = await db.insert(playerTable, player.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.ignore);
+    var res = await db.insert(table: playerTable, row: player.toJson());
     // Update player with ID
     player.id = res;
     return res;
   }
 
-  Future<List<int>> addPlayers(List<Player> players, {Database db}) async {
+  Future<List<int>> addPlayers(List<Player> players, {Db db}) async {
     if (db == null) db = await database;
     List<int> playerIds = [];
     for (var player in players) {
-      var query = await db.query(
-          playerTable, where: "$name = ?", whereArgs: [player.name]);
+      var query = await db.select(
+          table: playerTable, where: "$nameField = ${player.name}");
       if (query.isNotEmpty) {
         player = Player.fromJson(query.first);
       } else {
@@ -178,39 +174,38 @@ class DBProvider {
 
   Future<InfoEntry> getEntry(int entryId) async {
     final db = await database;
-    var res = await db.query(
-        entryTable, where: '$id = ?', whereArgs: [entryId]);
+    var res = await db.select(table: entryTable, where: '$idField = $entryId');
     return res.isNotEmpty ? InfoEntry.fromJson(res.first, this) : null;
   }
 
   Future<int> updateEntry(InfoEntry entry, Game game) async {
     final db = await database;
-    var res = await db.update(entryTable, entry.toJson(game),
-        where: 'id = ?', whereArgs: [entry.id]);
+    var res = await db.update(
+        where: 'id = ${entry.id}', row: entry.toJson(game), table: entryTable);
     return res;
   }
 
   Future<int> deleteEntry(int entryId) async {
     final db = await database;
-    var res = await db.delete(
-        entryTable, where: '$id = ?', whereArgs: [entryId]);
+    var res = await db.delete(where: '$idField = $entryId', table: entryTable);
     return res;
   }
 
   Future<Player> getPlayer(int playerId) async {
-    if(playerId == null) {
+    if (playerId == null) {
       return Future.value(null);
     }
     final db = await database;
-    var res = await db.query(
-        playerTable, where: '$id = ?', whereArgs: [playerId]);
+    var res =
+        await db.select(where: '$idField = $playerId', table: playerTable);
     return res.isNotEmpty ? Player.fromJson(res.first) : null;
   }
 
   void addPlayerGame({@required int playerId, @required int gameId}) async {
     // TODO
     final db = await database;
-    await db.insert(playerGameTable, {"player": playerId, "game": gameId});
+    await db.insert(
+        table: playerGameTable,
+        row: {"player": playerId.toString(), "game": gameId.toString()});
   }
-
 }

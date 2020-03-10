@@ -131,6 +131,10 @@ class DBProvider {
     return players;
   }
 
+  Stream<List<Player>> getPlayersStream({Database db}) {
+    // TODO Fix me how to get stream from database
+  }
+
   Future<int> newGame(Game game) async {
     final db = await database;
     var res = await db.insert(

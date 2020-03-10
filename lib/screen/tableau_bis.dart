@@ -40,7 +40,7 @@ class _TableauPageState extends State<TableauPage> {
                     players: widget.game.players,
                     infoEntry: null));
             if (res != null) {
-              addEntry(_entriesDbBloc, res);
+              _entriesDbBloc.addEntry(res);
               Flushbar(
                 flushbarStyle: FlushbarStyle.GROUNDED,
                 flushbarPosition: FlushbarPosition.BOTTOM,

@@ -41,7 +41,6 @@ class EntriesDbBloc implements BlocBase {
     // Retrieve all the entries on initialization
     getEntries();
 
-//    _players.add(["A", "B", "C", "D"]);
     // Listens for changes to the addEntryController and
     // calls _handleAddEntry on change
     _addEntryController.stream.listen(_handleAddEntry);
@@ -76,8 +75,8 @@ class EntriesDbBloc implements BlocBase {
   void _addNewGame(Game game) async {
     await DBProvider.db.newGame(game);
   }
-}
 
-addEntry(EntriesDbBloc bloc, InfoEntry entry) {
-  bloc.inAddEntry.add(entry);
+  void addEntry(InfoEntry entry) {
+    inAddEntry.add(entry);
+  }
 }

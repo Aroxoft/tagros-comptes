@@ -24,9 +24,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   rxdart: ^0.23.1
-  sqflite: ^1.0.0
-  sqlcool: ^4.3.1 # For reactive sql
-  path_provider: ^1.6.0
+#  sqflite: ^1.0.0
+  moor: ^2.4.2 # For reactive sql
+  moor_ffi: ^0.4.0 # Contains code that will run the actual queries
+  path_provider: ^1.6.5
+  path: ^1.6.4
   autocomplete_textfield: ^1.7.3
   appspector: ^0.1.0 #For viewing database
   flushbar: ^1.9.1 #Substitute for toasts and snackbars
@@ -35,6 +37,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   test: ^1.9.4
+  moor_generator: ^2.4.0
+  build_runner:
 
 
 # For information on the generic Dart part of this file, see the

@@ -3,12 +3,11 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqlcool/sqlcool.dart';
-import 'package:tagros_comptes/model/game.dart';
-import 'package:tagros_comptes/model/info_entry.dart';
-import 'package:tagros_comptes/model/player.dart';
+import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/data/database_moor.dart';
 
 class DBProvider {
+  /*
   static const int DATABASE_VERSION = 1;
 
   // Create a singleton
@@ -99,7 +98,7 @@ class DBProvider {
     db.schema.describe();
   }
 
-  Future<int> newEntry(InfoEntry infoEntry, Game game) async {
+  Future<int> newEntry(InfoEntry infoEntry, GameWithPlayers game) async {
     final db = await database;
     var res = await db.insert(table: entryTable, row: infoEntry.toJson(game));
     return res;
@@ -134,7 +133,7 @@ class DBProvider {
     // TODO Fix me how to get stream from database
   }
 
-  Future<int> newGame(Game game) async {
+  Future<int> newGame(GameWithPlayers game) async {
     final db = await database;
     var res = await db.insert(table: gameTable, row: game.toJson());
     // Update game with ID
@@ -178,7 +177,7 @@ class DBProvider {
     return res.isNotEmpty ? InfoEntry.fromJson(res.first, this) : null;
   }
 
-  Future<int> updateEntry(InfoEntry entry, Game game) async {
+  Future<int> updateEntry(InfoEntry entry, GameWithPlayers game) async {
     final db = await database;
     var res = await db.update(
         where: 'id = ${entry.id}', row: entry.toJson(game), table: entryTable);
@@ -208,4 +207,5 @@ class DBProvider {
         table: playerGameTable,
         row: {"player": playerId.toString(), "game": gameId.toString()});
   }
+  // */
 }

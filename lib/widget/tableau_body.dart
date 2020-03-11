@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/model/info_entry.dart';
+import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 
 class TableauBody extends StatefulWidget {
-  final List<Player> players;
+  final List<PlayerBean> players;
 
   const TableauBody({Key key, @required this.players}) : super(key: key);
 
@@ -32,7 +32,7 @@ class _TableauBodyState extends State<TableauBody> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: List.generate(widget.players.length,
-                  (index) => Text(widget.players[index].name.toUpperCase())),
+              (index) => Text(widget.players[index].name.toUpperCase())),
         ),
       ),
       Container(
@@ -43,10 +43,14 @@ class _TableauBodyState extends State<TableauBody> {
           stream: _entriesDbBloc.sum,
           builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
             if (snapshot.hasError) {
-              return Center(child: Text("Error: ${snapshot.error}"),);
+              return Center(
+                child: Text("Error: ${snapshot.error}"),
+              );
             }
             if (!snapshot.hasData) {
-              return Center(child: Text("No Data"),);
+              return Center(
+                child: Text("No Data"),
+              );
             }
             var sums = snapshot.data;
             return Padding(
@@ -57,19 +61,23 @@ class _TableauBodyState extends State<TableauBody> {
                 children: List.generate(sums.length, (index) {
                   print(widget.players[index]);
                   var sum = sums[widget.players[index].name];
-                  return Text(sum.toStringAsFixed(1), style: TextStyle(
-                      color: sum < 0 ? Colors.red : Colors.green),);
-                }),),
+                  return Text(
+                    sum.toStringAsFixed(1),
+                    style:
+                        TextStyle(color: sum < 0 ? Colors.red : Colors.green),
+                  );
+                }),
+              ),
             );
           }),
       Container(
         constraints: BoxConstraints.expand(height: 4),
         color: Colors.pink,
       ),
-      StreamBuilder<List<InfoEntry>>(
-        stream: _entriesDbBloc.entries,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<InfoEntry>> snapshot) {
+      StreamBuilder<List<InfoEntryPlayerBean>>(
+        stream: _entriesDbBloc.infoEntries,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<InfoEntryPlayerBean>> snapshot) {
           if (snapshot.hasError) {
             return Center(
               child: Padding(
@@ -101,8 +109,7 @@ class _TableauBodyState extends State<TableauBody> {
                 itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
                   Map<String, double> calculateGain =
-                  calculateGains(
-                      entries[index], widget.players.toList());
+                      calculateGains(entries[index], widget.players.toList());
                   var gains = transformGainsToList(
                       calculateGain, widget.players.toList());
                   return Padding(
@@ -111,18 +118,15 @@ class _TableauBodyState extends State<TableauBody> {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                          gains.length,
-                              (index) {
-                            print("Gain[$index] = ${gains[index]}");
-                            return Text(
-                                gains[index].toString(),
-                                style: TextStyle(
-                                    color: gains[index] >= 0
-                                        ? Colors.grey
-                                        : Colors.red),
-                            );
-                          }),
+                      children: List.generate(gains.length, (index) {
+                        print("Gain[$index] = ${gains[index]}");
+                        return Text(
+                          gains[index].toString(),
+                          style: TextStyle(
+                              color:
+                                  gains[index] >= 0 ? Colors.grey : Colors.red),
+                        );
+                      }),
                     ),
                   );
                 }),

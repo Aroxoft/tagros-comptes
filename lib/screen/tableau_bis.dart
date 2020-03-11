@@ -2,12 +2,14 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
-import 'package:tagros_comptes/model/game.dart';
+import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/model/info_entry_player.dart';
+import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/widget/tableau_body.dart';
 
 class TableauPage extends StatefulWidget {
-  final Game game;
+  final GameWithPlayers game;
 
   const TableauPage({Key key, @required this.game}) : super(key: key);
 
@@ -34,13 +36,12 @@ class _TableauPageState extends State<TableauPage> {
           child: Icon(Icons.add),
           foregroundColor: Colors.pink,
           onPressed: () async {
-            final res = await Navigator.of(context).pushNamed(
-                AddModifyEntry.routeName,
-                arguments: AddModifyArguments(
-                    players: widget.game.players,
-                    infoEntry: null));
+            final InfoEntryPlayerBean res = await Navigator.of(context)
+                .pushNamed(AddModifyEntry.routeName,
+                    arguments: AddModifyArguments(
+                        players: widget.game.players, infoEntry: null));
             if (res != null) {
-              _entriesDbBloc.addEntry(res);
+              _entriesDbBloc.inAddEntry.add(res);
               Flushbar(
                 flushbarStyle: FlushbarStyle.GROUNDED,
                 flushbarPosition: FlushbarPosition.BOTTOM,
@@ -50,12 +51,13 @@ class _TableauPageState extends State<TableauPage> {
                 backgroundGradient: LinearGradient(
                   colors: [Colors.blueGrey, Colors.teal],
                 ),
-              )
-                ..show(context);
+              )..show(context);
               print(res);
             }
           }),
-      body: TableauBody(players: widget.game.players),
+      body: TableauBody(
+          players:
+              widget.game.players.map((e) => PlayerBean.fromDb(e)).toList()),
     );
   }
 }

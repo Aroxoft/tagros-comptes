@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/data/database.dart';
+import 'package:tagros_comptes/data/database_moor.dart';
 import 'package:tagros_comptes/main.dart';
-import 'package:tagros_comptes/model/game.dart';
+import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
-import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/types/functions.dart';
 import 'package:tagros_comptes/widget/choose_player.dart';
 
@@ -23,8 +22,7 @@ class MenuScreen extends StatelessWidget {
                 })
           ],
         ),
-        body: MenuBody()
-    );
+        body: MenuBody());
   }
 }
 
@@ -53,12 +51,13 @@ class _MenuBodyState extends State<MenuBody> {
                     showDialogPlayers(
                         context, getNumber(NbPlayers.values[index]),
                         doAfter: (List<Player> players) {
-                          print("chose: $players");
-                          navigateToTableau(context,
-                              game: Game(nbPlayers: getNumber(NbPlayers
-                                  .values[index]),
-                                  dateTime: DateTime.now(), players: players));
-                        });
+                      print("chose: $players");
+                      navigateToTableau(context,
+                          game: GameWithPlayers(
+                              nbPlayers: getNumber(NbPlayers.values[index]),
+                              dateTime: DateTime.now(),
+                              players: players));
+                    });
                   },
                   child: Text("${getNumber(NbPlayers.values[index])} players")),
             );
@@ -69,7 +68,7 @@ class _MenuBodyState extends State<MenuBody> {
   showDialogPlayers(BuildContext context, int nbPlayers,
       {DoAfterChosen doAfter}) {
     final formKey = GlobalKey<FormState>();
-    players = List.generate(nbPlayers, (index) => Player(name: ""));
+    players = List.generate(nbPlayers, (index) => Player(pseudo: "", id: null));
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -81,11 +80,10 @@ class _MenuBodyState extends State<MenuBody> {
           return AlertDialog(
             content: Form(
               key: formKey,
-
-              child: FutureBuilder<List<Player>>(
-                future: DBProvider.db.getPlayers(),
-                builder: (BuildContext context, AsyncSnapshot<List<
-                    Player>> snapshot) {
+              child: StreamBuilder<List<Player>>(
+                stream: MyDatabase.db.watchAllPlayers,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Player>> snapshot) {
                   List<Player> playerDb = [];
                   if (!snapshot.hasError && snapshot.hasData) {
                     playerDb = snapshot.data;
@@ -94,19 +92,19 @@ class _MenuBodyState extends State<MenuBody> {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children:
-                    List.generate(nbPlayers, (int index) {
+                    children: List.generate(nbPlayers, (int index) {
                       return ChoosePlayerFormField(
-                        playerDb, validator: (value) {
-                        if (value == null || value.name.isEmpty) {
-                          return 'Veuillez entrer un nom';
-                        }
-                        if ((players.toList()
-                          ..remove(value)).contains(value)) {
-                          return 'Tous les noms doivent être différents';
-                        }
-                        return null;
-                      },
+                        playerDb,
+                        validator: (value) {
+                          if (value == null || value.pseudo.isEmpty) {
+                            return 'Veuillez entrer un nom';
+                          }
+                          if ((players.toList()..remove(value))
+                              .contains(value)) {
+                            return 'Tous les noms doivent être différents';
+                          }
+                          return null;
+                        },
                         onSaved: (newValue) => players[index] = newValue,
                         initialValue: players[index],
                       );
@@ -205,7 +203,6 @@ class _MenuBodyState extends State<MenuBody> {
             actions: <Widget>[
               FlatButton(
                   onPressed: () {
-
                     if (formKey.currentState.validate()) {
                       Navigator.of(context).pop();
                       doAfter(players);

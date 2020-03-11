@@ -88,7 +88,6 @@ class _MenuBodyState extends State<MenuBody> {
                   if (!snapshot.hasError && snapshot.hasData) {
                     playerDb = snapshot.data;
                   }
-                  print("in futureBuilder, players: $playerDb");
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

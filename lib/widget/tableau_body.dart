@@ -82,7 +82,7 @@ class _TableauBodyState extends State<TableauBody> {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("ERROR"),
+                child: Text("ERROR: ${snapshot.error}"),
               ),
             );
           }

@@ -10,18 +10,5 @@ class GameWithPlayers {
   GameWithPlayers(
       {@required this.nbPlayers, this.dateTime, this.id, this.players});
 
-  factory GameWithPlayers.fromJson(Map<String, dynamic> json) =>
-      GameWithPlayers(
-        nbPlayers: json["nbPlayers"],
-        id: json["id"],
-        dateTime: json["dateTime"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "nbPlayers": nbPlayers,
-        "dateTime": dateTime.millisecondsSinceEpoch
-      };
-
   Game toGameDb() => Game(id: id, nbPlayers: nbPlayers, date: dateTime);
 }

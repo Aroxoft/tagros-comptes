@@ -7,16 +7,10 @@ class PlayerBean {
 
   PlayerBean({@required this.name, this.id});
 
-  factory PlayerBean.fromDb(Player player) =>
-      PlayerBean(name: player.pseudo, id: player.id);
-
-  factory PlayerBean.fromJson(Map<String, dynamic> json) =>
-      PlayerBean(name: json["name"], id: json["id"]);
-
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "id": id,
-      };
+  factory PlayerBean.fromDb(Player player) {
+    if (player == null) return null;
+    return PlayerBean(name: player.pseudo, id: player.id);
+  }
 
   @override
   String toString() {

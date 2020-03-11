@@ -33,11 +33,8 @@ class EntriesDbBloc implements BlocBase {
   GameWithPlayers game;
 
   EntriesDbBloc(GameWithPlayers game) {
+    assert(game.id != null);
     this.game = game;
-
-    if (game.id == null) {
-      _addNewGame(game);
-    }
 
     // Watch entries
     infoEntries =
@@ -66,9 +63,5 @@ class EntriesDbBloc implements BlocBase {
 
   void _handleDeleteEntry(InfoEntryPlayerBean entry) async {
     await MyDatabase.db.deleteEntry(entry.infoEntry.id);
-  }
-
-  void _addNewGame(GameWithPlayers game) async {
-    await MyDatabase.db.newGame(game);
   }
 }

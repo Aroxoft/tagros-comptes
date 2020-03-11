@@ -18,6 +18,7 @@ class ChoosePlayerFormField extends FormField<Player> {
             autovalidate: autoValidate,
             builder: (FormFieldState<Player> state) {
               var controller = TextEditingController(text: state.value.pseudo);
+              var key = GlobalKey<AutoCompleteTextFieldState<Player>>();
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,6 +30,13 @@ class ChoosePlayerFormField extends FormField<Player> {
                       Expanded(
                           child: AutoCompleteTextField<Player>(
                               controller: controller,
+                              onFocusChanged: (focused) async{
+                                if (!focused) {
+                                  await checkForPseudoInDb(
+                                      controller.text, state, suggestions);
+                                  onSaved(state.value);
+                                }
+                              },
                               style: TextStyle(fontSize: 16),
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.symmetric(
@@ -36,11 +44,12 @@ class ChoosePlayerFormField extends FormField<Player> {
                                   filled: true,
                                   hintText: 'Nom du joueur',
                                   hintStyle: TextStyle(color: Colors.blueGrey)),
-                              itemSubmitted: (p) {
-                                state.didChange(p);
+                              itemSubmitted: (p) async{
+                                await checkForPseudoInDb(
+                                    controller.text, state, suggestions);
                                 onSaved(p);
                               },
-                              key: GlobalKey(),
+                              key: key,
                               suggestions: suggestions,
                               itemBuilder:
                                   (BuildContext context, Player item) =>
@@ -61,22 +70,9 @@ class ChoosePlayerFormField extends FormField<Player> {
                       IconButton(
                           icon: Icon(Icons.add),
                           onPressed: () async {
-                            var text = controller.text;
-                            state.didChange(state.value.copyWith(pseudo: text));
-                            if (suggestions
-                                .any((element) => element.pseudo == text)) {
-                              // We have this player in DB
-                              state.didChange(state.value.copyWith(
-                                  id: suggestions
-                                      .firstWhere(
-                                          (element) => element.pseudo == text)
-                                      .id));
-                            } else {
-                              // Create in DB
-                              var id = await MyDatabase.db
-                                  .newPlayer(player: state.value);
-                              state.didChange(state.value.copyWith(id: id));
-                            }
+                            await checkForPseudoInDb(
+                                controller.text, state, suggestions);
+                            onSaved(state.value);
                           })
                     ],
                   ),
@@ -99,4 +95,17 @@ class ChoosePlayerFormField extends FormField<Player> {
                 ],
               );
             });
+  static checkForPseudoInDb(String text, FormFieldState<Player> state,
+      List<Player> suggestions) async {
+    if (suggestions.any((element) => element.pseudo == text)) {
+      // We have this player in DB
+      state.didChange(
+          suggestions.firstWhere((element) => element.pseudo == text));
+    } else {
+      // Create in DB
+      var player = Player(id: null, pseudo: text);
+      var id = await MyDatabase.db.newPlayer(player: player);
+      state.didChange(player.copyWith(id: id));
+    }
+  }
 }

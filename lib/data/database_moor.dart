@@ -156,11 +156,11 @@ class MyDatabase extends _$MyDatabase {
 
   Future<int> newEntry(
       InfoEntryPlayerBean infoEntry, GameWithPlayers game) async {
-    Value with1 = Value.absent(), with2 = Value.absent();
+    Value<int> with1 = Value.absent(), with2 = Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers.isNotEmpty) {
-      with1 = Value(infoEntry.withPlayers[0]);
+      with1 = Value(infoEntry.withPlayers[0].id);
       if (infoEntry.withPlayers.length > 1) {
-        with2 = Value(infoEntry.withPlayers[1]);
+        with2 = Value(infoEntry.withPlayers[1].id);
       }
     }
     return into(infoEntries).insert(InfoEntriesCompanion.insert(
@@ -216,7 +216,9 @@ class MyDatabase extends _$MyDatabase {
     assert(player != null ||
         playersCompanion != null &&
             (player == null || playersCompanion == null));
-    if (player != null) return into(players).insert(player);
+    if (player != null)
+      return into(players)
+          .insert(PlayersCompanion.insert(pseudo: player.pseudo));
     return into(players).insert(playersCompanion);
   }
   //</editor-fold>

@@ -25,15 +25,11 @@ class InfoEntryBean {
       this.id});
 
   factory InfoEntryBean.fromDb(InfoEntry infoEntry) => InfoEntryBean(
-          points: infoEntry.points,
-          nbBouts: infoEntry.nbBouts,
-          id: infoEntry.id,
-          prise: fromDbPrise(infoEntry.prise),
-          pointsForAttack: infoEntry.pointsForAttack,
-          petitsAuBout: [
-            // TODO fix petits
-          ],
-          poignees: [
-            // TODO fix poignees
-          ]);
+      points: infoEntry.points,
+      nbBouts: infoEntry.nbBouts,
+      id: infoEntry.id,
+      prise: fromDbPrise(infoEntry.prise),
+      pointsForAttack: infoEntry.pointsForAttack,
+      petitsAuBout: fromDbPetit(infoEntry.petitAuBout),
+      poignees: fromDbPoignee(infoEntry.poignee));
 }

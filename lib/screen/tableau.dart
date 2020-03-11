@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
-import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/widget/tableau_body.dart';
@@ -36,7 +35,7 @@ class _TableauPageState extends State<TableauPage> {
           child: Icon(Icons.add),
           foregroundColor: Colors.pink,
           onPressed: () async {
-            final InfoEntryPlayerBean res = await Navigator.of(context)
+            final res = await Navigator.of(context)
                 .pushNamed(AddModifyEntry.routeName,
                     arguments: AddModifyArguments(
                         players: widget.game.players, infoEntry: null));

@@ -94,6 +94,7 @@ class _MenuBodyState extends State<MenuBody> {
                     children: List.generate(nbPlayers, (int index) {
                       return ChoosePlayerFormField(
                         playerDb,
+                        autoValidate: true,
                         validator: (value) {
                           if (value == null || value.pseudo.isEmpty) {
                             return 'Veuillez entrer un nom';
@@ -104,7 +105,9 @@ class _MenuBodyState extends State<MenuBody> {
                           }
                           return null;
                         },
-                        onSaved: (newValue) => players[index] = newValue,
+                        onSaved: (newValue) {
+                          players[index] = newValue;
+                        },
                         initialValue: players[index],
                       );
 //                      if (index == nbPlayers * 3) {

@@ -2,10 +2,11 @@ import 'package:appspector/appspector.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
+import 'package:tagros_comptes/data/database_moor.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
-import 'package:tagros_comptes/screen/tableau_bis.dart';
+import 'package:tagros_comptes/screen/tableau.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +16,8 @@ void main() {
 
 void runAppSpector() {
   var config = Config();
-  config.androidApiKey = "android_YjE3ODM3ZDctZTdiMC00ZjRlLWJiMWMtZTJjOTg2ZjNjZjEz";
+  config.androidApiKey =
+      "android_YjE3ODM3ZDctZTdiMC00ZjRlLWJiMWMtZTJjOTg2ZjNjZjEz";
   AppSpectorPlugin.run(config);
 }
 
@@ -47,14 +49,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<T> navigateToTableau<T>(BuildContext context, {
-  GameWithPlayers game}) {
-  return Navigator
-      .of(context)
-      .push(
-      MaterialPageRoute(builder: (context) =>
-          BlocProvider(
+Future<T> navigateToTableau<T>(BuildContext context,
+    {@required GameWithPlayers game}) async {
+  if (game.id == null) {
+    var idGame = await MyDatabase.db.newGame(game);
+    game.id = idGame;
+  }
+  return Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => BlocProvider(
             bloc: EntriesDbBloc(game),
-            child: TableauPage(game: game,),))
-  );
+            child: TableauPage(
+              game: game,
+            ),
+          )));
 }

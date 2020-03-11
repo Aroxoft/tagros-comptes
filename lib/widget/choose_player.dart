@@ -19,6 +19,7 @@ class ChoosePlayerFormField extends FormField<Player> {
             builder: (FormFieldState<Player> state) {
               var controller = TextEditingController(text: state.value.pseudo);
               var key = GlobalKey<AutoCompleteTextFieldState<Player>>();
+              var changed = false;
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,12 +31,13 @@ class ChoosePlayerFormField extends FormField<Player> {
                       Expanded(
                           child: AutoCompleteTextField<Player>(
                               controller: controller,
-                              onFocusChanged: (focused) async{
-                                if (!focused) {
+                              onFocusChanged: (focused) async {
+                                if (!focused && !changed) {
                                   await checkForPseudoInDb(
                                       controller.text, state, suggestions);
                                   onSaved(state.value);
                                 }
+                                changed = false;
                               },
                               style: TextStyle(fontSize: 16),
                               decoration: InputDecoration(
@@ -44,9 +46,11 @@ class ChoosePlayerFormField extends FormField<Player> {
                                   filled: true,
                                   hintText: 'Nom du joueur',
                                   hintStyle: TextStyle(color: Colors.blueGrey)),
-                              itemSubmitted: (p) async{
+                              itemSubmitted: (p) async {
+                                controller.text = p.pseudo;
+                                changed = true;
                                 await checkForPseudoInDb(
-                                    controller.text, state, suggestions);
+                                    p.pseudo, state, suggestions);
                                 onSaved(p);
                               },
                               key: key,
@@ -97,13 +101,13 @@ class ChoosePlayerFormField extends FormField<Player> {
             });
   static checkForPseudoInDb(String text, FormFieldState<Player> state,
       List<Player> suggestions) async {
-    if (suggestions.any((element) => element.pseudo == text)) {
+    if (suggestions.any((element) => element.pseudo.trim() == text.trim())) {
       // We have this player in DB
       state.didChange(
-          suggestions.firstWhere((element) => element.pseudo == text));
+          suggestions.firstWhere((element) => element.pseudo.trim() == text.trim()));
     } else {
       // Create in DB
-      var player = Player(id: null, pseudo: text);
+      var player = Player(id: null, pseudo: text.trim());
       var id = await MyDatabase.db.newPlayer(player: player);
       state.didChange(player.copyWith(id: id));
     }

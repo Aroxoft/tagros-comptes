@@ -35,10 +35,10 @@ class _TableauPageState extends State<TableauPage> {
           child: Icon(Icons.add),
           foregroundColor: Colors.pink,
           onPressed: () async {
-            final res = await Navigator.of(context)
-                .pushNamed(AddModifyEntry.routeName,
-                    arguments: AddModifyArguments(
-                        players: widget.game.players, infoEntry: null));
+            final res = await Navigator.of(context).pushNamed(
+                AddModifyEntry.routeName,
+                arguments: AddModifyArguments(
+                    players: widget.game.players, infoEntry: null));
             if (res != null) {
               _entriesDbBloc.inAddEntry.add(res);
               Flushbar(

@@ -10,8 +10,12 @@ class SelectableTag extends StatelessWidget {
   final Color textColor;
 
   const SelectableTag(
-      {Key key, @required this.text, @required this.onPressed, this.selected = true, this.color = Colors
-          .pink, this.textColor = Colors.black})
+      {Key key,
+      @required this.text,
+      @required this.onPressed,
+      this.selected = true,
+      this.color = Colors.pink,
+      this.textColor = Colors.black})
       : super(key: key);
 
   @override
@@ -25,9 +29,12 @@ class SelectableTag extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: selected ? color : Colors.transparent,
-              border: Border.all(
-                  color: color, style: BorderStyle.solid, width: 2)),
-          child: Text(text, style: TextStyle(color: textColor),),
+              border:
+                  Border.all(color: color, style: BorderStyle.solid, width: 2)),
+          child: Text(
+            text,
+            style: TextStyle(color: textColor),
+          ),
         ),
       ),
     );

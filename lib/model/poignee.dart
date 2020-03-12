@@ -93,22 +93,23 @@ const String _double = "DOUBLE";
 const String _triple = "TRIPLE";
 const String _none = "NONE";
 
-String toDbPoignees(List<PoigneeType> poignees) =>
-    poignees == null ? null :
-    (poignees.map((e) {
-      switch (e) {
-        case PoigneeType.SIMPLE:
-          return _simple;
-        case PoigneeType.DOUBLE:
-          return _double;
-        case PoigneeType.TRIPLE:
-          return _triple;
-        case PoigneeType.NONE:
-          return null;
-      }
-      return null;
-    })
-      ..where((element) => element != null)).join(",");
+String toDbPoignees(List<PoigneeType> poignees) => poignees == null
+    ? null
+    : (poignees.map((e) {
+        switch (e) {
+          case PoigneeType.SIMPLE:
+            return _simple;
+          case PoigneeType.DOUBLE:
+            return _double;
+          case PoigneeType.TRIPLE:
+            return _triple;
+          case PoigneeType.NONE:
+            return null;
+        }
+        return null;
+      })
+          ..where((element) => element != null))
+        .join(",");
 
 List<PoigneeType> fromDbPoignee(String poignees) {
   if (poignees == null || poignees.isEmpty) return null;
@@ -125,5 +126,6 @@ List<PoigneeType> fromDbPoignee(String poignees) {
     }
     return null;
   })
-    ..where((element) => element != null)).toList();
+        ..where((element) => element != null))
+      .toList();
 }

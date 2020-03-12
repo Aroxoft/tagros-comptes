@@ -4,7 +4,6 @@ import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
 import 'package:tagros_comptes/types/functions.dart';
-import 'package:tagros_comptes/widget/choose_player.dart';
 import 'package:tagros_comptes/widget/dialog_players.dart';
 
 class MenuScreen extends StatelessWidget {

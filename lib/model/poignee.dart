@@ -84,7 +84,7 @@ getNamePoignee(PoigneeType poigneeType) {
     case PoigneeType.TRIPLE:
       return "triple";
     case PoigneeType.NONE:
-      return "pas de poignée";
+      return "non";
   }
 }
 

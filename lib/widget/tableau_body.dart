@@ -96,10 +96,12 @@ class _TableauBodyState extends State<TableauBody> {
           }
           var entries = snapshot.data;
           if (entries == null || entries.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text("No data"),
+            return Expanded(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("No data"),
+                ),
               ),
             );
           }

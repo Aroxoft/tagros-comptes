@@ -26,7 +26,7 @@ class ChoosePlayerFormField extends FormField<Player> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Expanded(
                           child: AutoCompleteTextField<Player>(

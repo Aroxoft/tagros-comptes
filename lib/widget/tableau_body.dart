@@ -4,6 +4,7 @@ import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
+import 'package:tagros_comptes/screen/add_modify.dart';
 
 class TableauBody extends StatefulWidget {
   final List<PlayerBean> players;
@@ -125,23 +126,37 @@ class _TableauBodyState extends State<TableauBody> {
                     color: index % 2 == 1 ? Colors.black12 : Colors.white,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: List.generate(gains.length, (index) {
-                          print("Gain[$index] = ${gains[index]}");
-                          return Expanded(
-                            child: Text(
-                              gains[index].toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: gains[index] >= 0
-                                      ? Colors.grey[850]
-                                      : Colors.red[900]),
-                            ),
-                          );
-                        }),
+                      child: GestureDetector(
+                        onLongPress: () async {
+                          var modified = await Navigator.of(context).pushNamed(
+                              AddModifyEntry.routeName,
+                              arguments: AddModifyArguments(
+                                  players: widget.players
+                                      .map((e) => PlayerBean.toDb(e))
+                                      .toList(),
+                                  infoEntry: entries[index]));
+                          if (modified != null) {
+                            _entriesDbBloc.inModifyEntry.add(modified);
+                          }
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(gains.length, (index) {
+                            print("Gain[$index] = ${gains[index]}");
+                            return Expanded(
+                              child: Text(
+                                gains[index].toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: gains[index] >= 0
+                                        ? Colors.grey[850]
+                                        : Colors.red[900]),
+                              ),
+                            );
+                          }),
+                        ),
                       ),
                     ),
                   );

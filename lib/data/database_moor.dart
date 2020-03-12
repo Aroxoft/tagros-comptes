@@ -224,9 +224,28 @@ class MyDatabase extends _$MyDatabase {
   //</editor-fold>
 
   //<editor-fold desc="UPDATE">
-  Future<int> updateEntry(InfoEntry entry) async {
-    return (update(infoEntries)..where((tbl) => tbl.id.equals(entry.id)))
-        .write(entry);
+  Future<int> updateEntry(InfoEntryPlayerBean infoEntry) async {
+    Value<int> with1 = Value.absent(), with2 = Value.absent();
+    if (infoEntry.withPlayers != null && infoEntry.withPlayers.isNotEmpty) {
+      with1 = Value(infoEntry.withPlayers[0].id);
+      if (infoEntry.withPlayers.length > 1) {
+        with2 = Value(infoEntry.withPlayers[1].id);
+      }
+    }
+
+    return (update(infoEntries)
+          ..where((tbl) => tbl.id.equals(infoEntry.infoEntry.id)))
+        .write(InfoEntriesCompanion(
+      player: Value(infoEntry.player.id),
+      points: Value(infoEntry.infoEntry.points),
+      prise: Value(toDbPrise(infoEntry.infoEntry.prise)),
+      nbBouts: Value(infoEntry.infoEntry.nbBouts),
+      pointsForAttack: Value(infoEntry.infoEntry.pointsForAttack),
+      petitAuBout: Value(toDbPetits(infoEntry.infoEntry.petitsAuBout)),
+      poignee: Value(toDbPoignees(infoEntry.infoEntry.poignees)),
+      with1: with1,
+      with2: with2,
+    ));
   }
 
   //</editor-fold>

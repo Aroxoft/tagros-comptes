@@ -16,4 +16,9 @@ class PlayerBean {
   String toString() {
     return "$name ($id)";
   }
+
+  static Player toDb(PlayerBean player) {
+    if (player == null) return null;
+    return Player(pseudo: player.name, id: player.id);
+  }
 }

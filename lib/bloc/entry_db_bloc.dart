@@ -19,13 +19,16 @@ class EntriesDbBloc implements BlocBase {
   Stream<Map<String, double>> sum;
 
   final _addEntryController = StreamController<InfoEntryPlayerBean>.broadcast();
+  final _modifyEntryController =
+      StreamController<InfoEntryPlayerBean>.broadcast();
 
   final _deleteEntryController =
       StreamController<InfoEntryPlayerBean>.broadcast();
 
   // Input stream for adding new infoEntries. We'll call this from our pages
   StreamSink<InfoEntryPlayerBean> get inAddEntry => _addEntryController.sink;
-
+  StreamSink<InfoEntryPlayerBean> get inModifyEntry =>
+      _modifyEntryController.sink;
   // Input stream for deleting infoEntries. We'll call this from our pages
   StreamSink<InfoEntryPlayerBean> get inDeleteEntry =>
       _deleteEntryController.sink;
@@ -45,12 +48,14 @@ class EntriesDbBloc implements BlocBase {
     // Listens for changes to the addEntryController and
     // calls _handleAddEntry on change
     _addEntryController.stream.listen(_handleAddEntry);
+    _modifyEntryController.stream.listen(_handleModifyEntry);
     _deleteEntryController.stream.listen(_handleDeleteEntry);
   }
 
   @override
   void dispose() {
     _addEntryController.close();
+    _modifyEntryController.close();
     _deleteEntryController.close();
     _game.close();
 //    _players.close();
@@ -63,5 +68,9 @@ class EntriesDbBloc implements BlocBase {
 
   void _handleDeleteEntry(InfoEntryPlayerBean entry) async {
     await MyDatabase.db.deleteEntry(entry.infoEntry.id);
+  }
+
+  void _handleModifyEntry(InfoEntryPlayerBean entry) async {
+    await MyDatabase.db.updateEntry(entry);
   }
 }

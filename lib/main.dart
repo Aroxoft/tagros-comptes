@@ -1,5 +1,6 @@
 import 'package:appspector/appspector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/data/database_moor.dart';
@@ -10,6 +11,7 @@ import 'package:tagros_comptes/screen/tableau.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  Stetho.initialize();
   runAppSpector();
   runApp(MyApp());
 }

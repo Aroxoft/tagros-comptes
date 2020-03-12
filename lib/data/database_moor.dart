@@ -4,6 +4,7 @@ import 'package:moor/moor.dart';
 import 'package:moor_ffi/moor_ffi.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
@@ -144,10 +145,40 @@ class MyDatabase extends _$MyDatabase {
   Stream<List<Player>> get watchAllPlayers => select(players).watch();
   Future<List<Player>> get allPlayers => select(players).get();
 
-  Stream<List<Player>> watchPlayersStarting(String start) {
-    // TODO
-    throw "e";
-//    return (select(players)..where((tbl) => infoEntries.pseudo.equals(start))).watch();
+  Stream<List<GameWithPlayers>> watchAllGames() {
+    // Start by watching all games
+    final Stream<List<Game>> gameStream = select(games).watch();
+    return gameStream.switchMap((games) {
+      // This method is called whenever the list of games changes. For each
+      // game, now we want to load all the players in it
+      // Create a map from id to game, for performance reasons
+      final idToGame = {for (var game in games) game.id: game};
+      final ids = idToGame.keys;
+
+      // Select all players that are included in any game that we found
+      final playerQuery = select(playerGames)
+          .join([innerJoin(players, players.id.equalsExp(playerGames.player))])
+            ..where(playerGames.game.isIn(ids));
+
+      return playerQuery.watch().map((rows) {
+        // Store the list of players for each game
+        final idToPlayers = <int, List<Player>>{};
+
+        // For each player (row) that is included in a game, put it in the map of players
+        for (var row in rows) {
+          final player = row.readTable(players);
+          final id = row.readTable(playerGames).game;
+
+          idToPlayers.putIfAbsent(id, () => []).add(player);
+        }
+
+        // Finally, merge the map of games with the map of players
+        return [
+          for (var id in ids)
+            GameWithPlayers(game: idToGame[id], players: idToPlayers[id] ?? [])
+        ];
+      });
+    });
   }
 
   //</editor-fold>
@@ -164,7 +195,7 @@ class MyDatabase extends _$MyDatabase {
       }
     }
     return into(infoEntries).insert(InfoEntriesCompanion.insert(
-      game: game.id,
+      game: game.game.id,
       player: infoEntry.player.id,
       points: infoEntry.infoEntry.points,
       prise: toDbPrise(infoEntry.infoEntry.prise),
@@ -179,7 +210,7 @@ class MyDatabase extends _$MyDatabase {
 
   Future<int> newGame(GameWithPlayers gameWithPlayers) {
     return transaction(() async {
-      final Game game = gameWithPlayers.toGameDb();
+      final Game game = gameWithPlayers.game;
 
       var idGame =
           await into(games).insert(game, mode: InsertMode.insertOrReplace);

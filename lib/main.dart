@@ -53,9 +53,9 @@ class MyApp extends StatelessWidget {
 
 Future<T> navigateToTableau<T>(BuildContext context,
     {@required GameWithPlayers game}) async {
-  if (game.id == null) {
+  if (game.game.id == null) {
     var idGame = await MyDatabase.db.newGame(game);
-    game.id = idGame;
+    game.game = game.game.copyWith(id: idGame);
   }
   return Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => BlocProvider(

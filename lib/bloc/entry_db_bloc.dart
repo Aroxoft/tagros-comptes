@@ -36,12 +36,12 @@ class EntriesDbBloc implements BlocBase {
   GameWithPlayers game;
 
   EntriesDbBloc(GameWithPlayers game) {
-    assert(game.id != null);
+    assert(game.game.id != null);
     this.game = game;
 
     // Watch entries
     infoEntries =
-        MyDatabase.db.watchInfoEntriesInGame(game.id).asBroadcastStream();
+        MyDatabase.db.watchInfoEntriesInGame(game.game.id).asBroadcastStream();
     sum = infoEntries.map((event) => calculateSum(
         event, game.players.map((e) => PlayerBean.fromDb(e)).toList()));
 

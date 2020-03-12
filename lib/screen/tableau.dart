@@ -29,7 +29,7 @@ class _TableauPageState extends State<TableauPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.game.nbPlayers} joueurs"),
+        title: Text("${widget.game.players.length} joueurs"),
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),

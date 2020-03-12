@@ -31,8 +31,13 @@ class _TableauBodyState extends State<TableauBody> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: List.generate(widget.players.length,
-              (index) => Text(widget.players[index].name.toUpperCase())),
+          children: List.generate(
+              widget.players.length,
+              (index) => Expanded(
+                      child: Text(
+                    widget.players[index].name.toUpperCase(),
+                    textAlign: TextAlign.center,
+                  ))),
         ),
       ),
       Container(
@@ -57,14 +62,17 @@ class _TableauBodyState extends State<TableauBody> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: List.generate(sums.length, (index) {
                   print(widget.players[index]);
                   var sum = sums[widget.players[index].name];
-                  return Text(
-                    sum.toStringAsFixed(1),
-                    style:
-                        TextStyle(color: sum < 0 ? Colors.red : Colors.green),
+                  return Expanded(
+                    child: Text(
+                      sum.toStringAsFixed(1),
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(color: sum < 0 ? Colors.red : Colors.green),
+                    ),
                   );
                 }),
               ),
@@ -105,8 +113,7 @@ class _TableauBodyState extends State<TableauBody> {
               ),
             );
           }
-          return Container(
-            constraints: BoxConstraints.expand(height: 700),
+          return Expanded(
             child: ListView.builder(
                 itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -114,21 +121,28 @@ class _TableauBodyState extends State<TableauBody> {
                       calculateGains(entries[index], widget.players.toList());
                   var gains = transformGainsToList(
                       calculateGain, widget.players.toList());
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(gains.length, (index) {
-                        print("Gain[$index] = ${gains[index]}");
-                        return Text(
-                          gains[index].toString(),
-                          style: TextStyle(
-                              color:
-                                  gains[index] >= 0 ? Colors.grey : Colors.red),
-                        );
-                      }),
+                  return Container(
+                    color: index % 2 == 1 ? Colors.black12 : Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: List.generate(gains.length, (index) {
+                          print("Gain[$index] = ${gains[index]}");
+                          return Expanded(
+                            child: Text(
+                              gains[index].toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  color: gains[index] >= 0
+                                      ? Colors.grey[850]
+                                      : Colors.red[900]),
+                            ),
+                          );
+                        }),
+                      ),
                     ),
                   );
                 }),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
@@ -122,61 +123,70 @@ class _TableauBodyState extends State<TableauBody> {
                       calculateGains(entries[index], widget.players.toList());
                   var gains = transformGainsToList(
                       calculateGain, widget.players.toList());
-                  return Dismissible(
-                    key: Key(entries[index].infoEntry.id.toString()),
-                    onDismissed: (direction) {
-                      _entriesDbBloc.inDeleteEntry.add(entries[index]);
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
+                  var key = GlobalKey<SlidableState>();
+                  return Slidable(
+                    key: key,
+                    actionPane: SlidableBehindActionPane(),
+                    actionExtentRatio: 0.3333,
+//                    dismissal: SlidableDismissal(
+//                      child: SlidableDrawerDismissal(),
+//                      onWillDismiss: (actionType) =>
+//                          actionType == SlideActionType.primary,
+//                    ),
+                    actions: <Widget>[
+                      IconSlideAction(
+//                        caption: 'Modifier',
+                        color: Colors.amber,
+                        icon: Icons.edit,
+                        foregroundColor: Colors.white,
+                        onTap: () async {
+                          var modified = await Navigator.of(context).pushNamed(
+                              AddModifyEntry.routeName,
+                              arguments: AddModifyArguments(
+                                  players: widget.players
+                                      .map((e) => PlayerBean.toDb(e))
+                                      .toList(),
+                                  infoEntry: entries[index]));
+                          if (modified != null) {
+                            _entriesDbBloc.inModifyEntry.add(modified);
+                          }
+                        },
                       ),
-                    ),
+                    ],
+                    secondaryActions: [
+                      IconSlideAction(
+//                        caption: "Supprimer",
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        foregroundColor: Colors.white,
+                        onTap: () {
+                          _entriesDbBloc.inDeleteEntry.add(entries[index]);
+
+                          key.currentState.dismiss();
+                        },
+                      )
+                    ],
                     child: Container(
-                      color: index % 2 == 1 ? Colors.black12 : Colors.white,
+                      color: index % 2 == 1 ? Colors.grey : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onLongPress: () async {
-                            var modified = await Navigator.of(context)
-                                .pushNamed(AddModifyEntry.routeName,
-                                    arguments: AddModifyArguments(
-                                        players: widget.players
-                                            .map((e) => PlayerBean.toDb(e))
-                                            .toList(),
-                                        infoEntry: entries[index]));
-                            if (modified != null) {
-                              _entriesDbBloc.inModifyEntry.add(modified);
-                            }
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(gains.length, (index) {
-                              print("Gain[$index] = ${gains[index]}");
-                              return Expanded(
-                                child: Text(
-                                  gains[index].toString(),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: gains[index] >= 0
-                                          ? Colors.grey[850]
-                                          : Colors.red[900]),
-                                ),
-                              );
-                            }),
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: List.generate(gains.length, (index) {
+                            print("Gain[$index] = ${gains[index]}");
+                            return Expanded(
+                              child: Text(
+                                gains[index].toString(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: gains[index] >= 0
+                                        ? Colors.grey[850]
+                                        : Colors.red[900]),
+                              ),
+                            );
+                          }),
                         ),
                       ),
                     ),

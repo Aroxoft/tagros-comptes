@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/data/database_moor.dart';
 import 'package:tagros_comptes/dialog/dialog_games.dart';
+import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/types/functions.dart';
-import 'file:///D:/Documents/Dev/projects/tagros-comptes/lib/dialog/dialog_players.dart';
 
 class MenuScreen extends StatelessWidget {
   static const routeName = "/menu";

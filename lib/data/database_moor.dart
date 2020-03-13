@@ -15,13 +15,11 @@ import 'package:tagros_comptes/model/prise.dart';
 
 part 'database_moor.g.dart';
 
-//@DataClassName("player")
 class Players extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get pseudo => text()();
 }
 
-//@DataClassName("game")
 class Games extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get nbPlayers => integer()();
@@ -76,9 +74,6 @@ class MyDatabase extends _$MyDatabase {
         onCreate: (Migrator m) => m.createAll(),
         onUpgrade: (Migrator m, int from, int to) async {
           // For example:
-//      if(from == 1) {
-//        await m.addColumn(players, players.pseudo)
-//      }
         },
         beforeOpen: (details) async {
           // TODO

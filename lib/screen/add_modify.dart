@@ -220,9 +220,6 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                 });
                               })
                         ]),
-//                        Container(width: 10,
-//                          height: 1,
-//                        ),
                   ],
                 ),
                 title: "Attaque",

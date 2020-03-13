@@ -58,7 +58,6 @@ class EntriesDbBloc implements BlocBase {
     _modifyEntryController.close();
     _deleteEntryController.close();
     _game.close();
-//    _players.close();
   }
 
   void _handleAddEntry(InfoEntryPlayerBean entry) async {

@@ -128,14 +128,8 @@ class _TableauBodyState extends State<TableauBody> {
                     key: key,
                     actionPane: SlidableBehindActionPane(),
                     actionExtentRatio: 0.3333,
-//                    dismissal: SlidableDismissal(
-//                      child: SlidableDrawerDismissal(),
-//                      onWillDismiss: (actionType) =>
-//                          actionType == SlideActionType.primary,
-//                    ),
                     actions: <Widget>[
                       IconSlideAction(
-//                        caption: 'Modifier',
                         color: Colors.amber,
                         icon: Icons.edit,
                         foregroundColor: Colors.white,
@@ -155,7 +149,6 @@ class _TableauBodyState extends State<TableauBody> {
                     ],
                     secondaryActions: [
                       IconSlideAction(
-//                        caption: "Supprimer",
                         color: Colors.red,
                         icon: Icons.delete,
                         foregroundColor: Colors.white,

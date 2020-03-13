@@ -44,7 +44,6 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(bloc: GameDbBloc(), child: MenuScreen()),
       routes: <String, WidgetBuilder>{
-//        Tableau.routeName: (context) => Tableau(),
         MenuScreen.routeName: (context) => MenuScreen(),
         AddModifyEntry.routeName: (context) => AddModifyEntry(),
       },

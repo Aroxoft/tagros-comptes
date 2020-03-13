@@ -36,19 +36,20 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
     if (infoEntry == null) {
       final AddModifyArguments args = ModalRoute.of(context).settings.arguments;
       infoEntry = args.infoEntry;
-      players = args.players.map((e) => PlayerBean.fromDb(e)).toList();
+      players = args.players.reversed.map((e) => PlayerBean.fromDb(e)).toList();
       print(
           "So we ${infoEntry == null ? "add" : "modify"} an entry, we have the players: $players");
       add = false;
       if (infoEntry == null) {
         add = true;
+        var pLength = players.length;
         infoEntry = InfoEntryPlayerBean(
             player: players[0],
             withPlayers: null,
             infoEntry: InfoEntryBean(points: 0, nbBouts: 0));
-        if (players.length == 5) {
+        if (pLength == 5) {
           infoEntry.withPlayers = [players[0]];
-        } else if (players.length > 5) {
+        } else if (pLength > 5) {
           infoEntry.withPlayers = [players[0], players[0]];
         }
       }
@@ -98,7 +99,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                 reverse: true,
                                 scrollDirection: Axis.horizontal,
                                 itemCount: players.length,
-                                itemBuilder: (BuildContext context, int index) =>
+                                itemBuilder: (BuildContext context,
+                                        int index) =>
                                     SelectableTag(
                                         selected: infoEntry.player.id ==
                                             players[index].id,
@@ -134,19 +136,22 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                 height: 35,
                                 padding: EdgeInsets.symmetric(vertical: 2),
                                 child: ListView.builder(
+                                    reverse: true,
                                     scrollDirection: Axis.horizontal,
                                     itemCount: players.length,
                                     itemBuilder: (BuildContext context,
                                             int index) =>
                                         SelectableTag(
-                                            selected: infoEntry.withPlayers[0] ==
-                                                players[index],
+                                            selected:
+                                                infoEntry.withPlayers[0] ==
+                                                    players[index],
                                             text: players[index].name,
                                             onPressed: () {
                                               setState(() {
                                                 if (infoEntry.withPlayers[0] ==
                                                     players[index]) {
-                                                  infoEntry.withPlayers[0] = null;
+                                                  infoEntry.withPlayers[0] =
+                                                      null;
                                                 } else {
                                                   infoEntry.withPlayers[0] =
                                                       players[index];
@@ -172,19 +177,22 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                 height: 35,
                                 padding: EdgeInsets.symmetric(vertical: 2),
                                 child: ListView.builder(
+                                    reverse: true,
                                     scrollDirection: Axis.horizontal,
                                     itemCount: players.length,
                                     itemBuilder: (BuildContext context,
                                             int index) =>
                                         SelectableTag(
-                                            selected: infoEntry.withPlayers[1] ==
-                                                players[index],
+                                            selected:
+                                                infoEntry.withPlayers[1] ==
+                                                    players[index],
                                             text: players[index].name,
                                             onPressed: () {
                                               setState(() {
                                                 if (infoEntry.withPlayers[1] ==
                                                     players[index]) {
-                                                  infoEntry.withPlayers[1] = null;
+                                                  infoEntry.withPlayers[1] =
+                                                      null;
                                                 } else {
                                                   infoEntry.withPlayers[1] =
                                                       players[index];
@@ -250,7 +258,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             constraints: BoxConstraints.loose(Size(60, 35)),
                             child: TextFormField(
                               inputFormatters: [HalfDecimalInputFormatter()],
-                              initialValue: infoEntry.infoEntry.points.toString(),
+                              initialValue:
+                                  infoEntry.infoEntry.points.toString(),
                               onChanged: (String value) {
                                 var points =
                                     value.isEmpty ? 0 : double.tryParse(value);
@@ -268,8 +277,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                     borderRadius: BorderRadius.circular(5),
                                     gapPadding: 1),
                               ),
-                              keyboardType:
-                                  TextInputType.numberWithOptions(decimal: true),
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
                             ),
                           ),
                           Text(" points"),
@@ -321,8 +330,9 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                     PoigneeType.SIMPLE
                                   ];
                                 }
-                                infoEntry.infoEntry.poignees[0] =
-                                    value ? PoigneeType.SIMPLE : PoigneeType.NONE;
+                                infoEntry.infoEntry.poignees[0] = value
+                                    ? PoigneeType.SIMPLE
+                                    : PoigneeType.NONE;
                               });
                             }),
                         Text("Poignée "),
@@ -337,7 +347,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                       (e) => DropdownMenuItem<PoigneeType>(
                                           key: UniqueKey(),
                                           value: e,
-                                          child: Text("${getNamePoignee(e)} (${getNbAtouts(e, players.length)}+ atouts)")),
+                                          child: Text(
+                                              "${getNamePoignee(e)} (${getNbAtouts(e, players.length)}+ atouts)")),
                                     )
                                     .toList(),
                                 onChanged: (poignee) {
@@ -356,7 +367,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             value: infoEntry.infoEntry.petitsAuBout != null &&
                                 infoEntry.infoEntry.petitsAuBout.isNotEmpty &&
                                 infoEntry.infoEntry.petitsAuBout[0] != null &&
-                                infoEntry.infoEntry.petitsAuBout[0] != Camp.NONE,
+                                infoEntry.infoEntry.petitsAuBout[0] !=
+                                    Camp.NONE,
                             onChanged: (bool value) {
                               setState(() {
                                 if (infoEntry.infoEntry.petitsAuBout == null ||

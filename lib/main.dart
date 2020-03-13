@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
+import 'package:tagros_comptes/bloc/game_db_bloc.dart';
 import 'package:tagros_comptes/data/database_moor.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MenuScreen(),
+      home: BlocProvider(bloc: GameDbBloc(), child: MenuScreen()),
       routes: <String, WidgetBuilder>{
 //        Tableau.routeName: (context) => Tableau(),
         MenuScreen.routeName: (context) => MenuScreen(),

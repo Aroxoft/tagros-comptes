@@ -286,5 +286,18 @@ class MyDatabase extends _$MyDatabase {
     return (delete(infoEntries)..where((tbl) => tbl.id.equals(entryId))).go();
   }
 
+  Future<void> deleteGame(GameWithPlayers gameWithPlayers) async {
+    return transaction(() async {
+      await (delete(infoEntries)
+            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id)))
+          .go();
+      await (delete(playerGames)
+            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id)))
+          .go();
+      await (delete(games)
+            ..where((tbl) => tbl.id.equals(gameWithPlayers.game.id)))
+          .go();
+    });
+  }
   //</editor-fold>
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/bloc/bloc_provider.dart';
+import 'package:tagros_comptes/bloc/game_db_bloc.dart';
 import 'package:tagros_comptes/data/database_moor.dart';
 import 'package:tagros_comptes/dialog/dialog_games.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
@@ -34,10 +36,12 @@ class MenuBody extends StatefulWidget {
 
 class _MenuBodyState extends State<MenuBody> {
   List<Player> players;
+  GameDbBloc _gameDbBloc;
   @override
   void initState() {
     super.initState();
     players = [];
+    _gameDbBloc = BlocProvider.of<GameDbBloc>(context);
   }
 
   @override
@@ -66,8 +70,10 @@ class _MenuBodyState extends State<MenuBody> {
             onPressed: () {
               showDialog(
                 context: context,
-                barrierDismissible: false,
-                builder: (context) => DialogChooseGame(),
+                barrierDismissible: true,
+                builder: (context) => DialogChooseGame(
+                  gameDbBloc: _gameDbBloc,
+                ),
               );
             })
       ],

@@ -158,6 +158,7 @@ void main() {
           ));
       gains = calculateGains(entry, players);
       expect(gains, {"A": 50, "B": 25, "C": -25, "D": -25, "E": -25});
+      expect(checkSum(gains), 0, reason: "Failed checksum");
     });
     test('Petite de A, appel de B, chutée de 3 (1 bout)', () {
       entry = InfoEntryPlayerBean(
@@ -169,6 +170,7 @@ void main() {
           ));
       gains = calculateGains(entry, players);
       expect(gains, {"A": -56, "B": -28, "C": 28, "D": 28, "E": 28});
+      expect(checkSum(gains), 0, reason: "Failed checksum");
     });
     test('Garde de D, appel de C, faite de 0 (2 bouts)', () {
       entry = InfoEntryPlayerBean(
@@ -181,6 +183,7 @@ void main() {
           ));
       gains = calculateGains(entry, players);
       expect(gains, {"A": -50, "B": -50, "C": 50, "D": 100, "E": -50});
+      expect(checkSum(gains), 0, reason: "Failed checksum");
     });
     test('Garde-sans de C, tout seul, faite de 0 (3 bouts)', () {
       entry = InfoEntryPlayerBean(
@@ -193,6 +196,33 @@ void main() {
           ));
       gains = calculateGains(entry, players);
       expect(gains, {"A": -100, "B": -100, "C": 400, "D": -100, "E": -100});
+      expect(checkSum(gains), 0, reason: "Failed checksum");
+    });
+  });
+  group('Calcul à 7', () {
+    final A = PlayerBean(name: "A");
+    final B = PlayerBean(name: "B");
+    final C = PlayerBean(name: "C");
+    final D = PlayerBean(name: "D");
+    final E = PlayerBean(name: "E");
+    final F = PlayerBean(name: "F");
+    final G = PlayerBean(name: "G");
+    final players = [A, B, C, D, E, F, G];
+    InfoEntryPlayerBean entry;
+    Map<String, double> gains;
+
+    test('Petite de A, appel de B et C, faite de 0 (0 bouts)', () {
+      entry = InfoEntryPlayerBean(
+          player: A,
+          withPlayers: [B, C],
+          infoEntry: InfoEntryBean(
+            points: 106,
+            nbBouts: 0,
+          ));
+      gains = calculateGains(entry, players);
+      expect(gains,
+          {"A": 50, "B": 25, "C": 25, "D": -25, "E": -25, "F": -25, "G": -25});
+      expect(checkSum(gains), 0, reason: "Failed checksum");
     });
   });
 }

@@ -143,7 +143,9 @@ Map<String, double> calculateGains(
       if (player == infoEntryPlayer.player.name) {
         // taker
         gains[player] = mise * 2;
-      } else if (infoEntryPlayer.withPlayers.contains(player)) {
+      } else if (infoEntryPlayer.withPlayers
+          .map((e) => e.name)
+          .contains(player)) {
         // Attackers with taker
         gains[player] = mise;
       } else {

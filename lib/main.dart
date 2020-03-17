@@ -9,6 +9,7 @@ import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
 import 'package:tagros_comptes/screen/tableau.dart';
+import 'package:tagros_comptes/screen/test_native.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +46,7 @@ class MyApp extends StatelessWidget {
       home: BlocProvider(bloc: GameDbBloc(), child: MenuScreen()),
       routes: <String, WidgetBuilder>{
         MenuScreen.routeName: (context) => MenuScreen(),
+        TestNative.routeName: (context) => TestNative(),
         AddModifyEntry.routeName: (context) => AddModifyEntry(),
       },
     );

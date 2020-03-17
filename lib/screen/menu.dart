@@ -7,6 +7,7 @@ import 'package:tagros_comptes/dialog/dialog_games.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/screen/test_native.dart';
 import 'package:tagros_comptes/types/functions.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class MenuScreen extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {
-                  print("pressed settings");
+                  Navigator.of(context).pushNamed(TestNative.routeName);
                 })
           ],
         ),

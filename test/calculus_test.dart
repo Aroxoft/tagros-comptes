@@ -8,11 +8,11 @@ import 'package:test/test.dart';
 
 void main() {
   group('Calcul à 4', () {
-    var players = ["A", "B", "C", "D"].map((e) => PlayerBean(name: e)).toList();
     final A = PlayerBean(name: "A");
     final B = PlayerBean(name: "B");
     final C = PlayerBean(name: "C");
     final D = PlayerBean(name: "D");
+    var players = [A, B, C, D];
 
     InfoEntryPlayerBean entry;
     Map<String, double> gains;
@@ -137,14 +137,12 @@ void main() {
     });
   });
   group('Calcul à 5', () {
-    var players =
-        ["A", "B", "C", "D", "E"].map((e) => PlayerBean(name: e)).toList();
     final A = PlayerBean(name: "A");
     final B = PlayerBean(name: "B");
     final C = PlayerBean(name: "C");
     final D = PlayerBean(name: "D");
     final E = PlayerBean(name: "E");
-
+    var players = [A, B, C, D, E];
     InfoEntryPlayerBean entry;
     Map<String, double> gains;
 

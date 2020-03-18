@@ -52,7 +52,7 @@ LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     // put the database file in the doc folder
     final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(join(dbFolder.parent.path, 'databases/app.db'));
+    final file = File(join(dbFolder.path, 'app.sqlite'));
     return VmDatabase(file);
   });
 }

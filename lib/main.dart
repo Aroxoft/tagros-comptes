@@ -1,4 +1,3 @@
-import 'package:appspector/appspector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stetho/flutter_stetho.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
@@ -12,18 +11,16 @@ import 'package:tagros_comptes/screen/tableau.dart';
 import 'package:tagros_comptes/screen/test_native.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
   Stetho.initialize();
-  runAppSpector();
   runApp(MyApp());
 }
-
-void runAppSpector() {
-  var config = Config();
-  config.androidApiKey =
-      "android_YjE3ODM3ZDctZTdiMC00ZjRlLWJiMWMtZTJjOTg2ZjNjZjEz";
-  AppSpectorPlugin.run(config);
-}
+//
+//void _runAppSpector() {
+//  var config = Config();
+//  config.androidApiKey =
+//      "android_YjE3ODM3ZDctZTdiMC00ZjRlLWJiMWMtZTJjOTg2ZjNjZjEz";
+//  AppSpectorPlugin.run(config);
+//}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

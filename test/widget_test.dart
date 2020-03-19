@@ -7,24 +7,45 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:tagros_comptes/main.dart';
+import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/dialog/dialog_players.dart';
+import 'package:tagros_comptes/widget/choose_player.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Show dialog players', (WidgetTester tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: DialogPlayerBody(
+          doAfterChosen: (players) => print(players),
+        ),
+      ),
+    ));
+    final finder = find.text('Aa');
+    expect(finder, findsNothing);
+  });
+
+  testWidgets('Choose player test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(Material(
+      child: ChoosePlayerFormField(
+        ["Aa", "Bb", "CC", "Dd"]
+            .map((e) => Player(id: null, pseudo: e))
+            .toList(),
+        initialValue: Player(pseudo: "Aa", id: null),
+        validator: (value) => null,
+      ),
+    ));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    final finder = find.text("Aa");
+    expect(finder, findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+//    // Tap the '+' icon and trigger a frame.
+//    await tester.tap(find.byIcon(Icons.add));
+//    await tester.pump();
+//
+//    // Verify that our counter has incremented.
+//    expect(find.text('0'), findsNothing);
+//    expect(find.text('1'), findsOneWidget);
   });
 }

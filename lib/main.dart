@@ -1,22 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-// import 'package:flutter_stetho/flutter_stetho.dart';
-import 'package:tagros_comptes/bloc/bloc_provider.dart';
-import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
-import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
 import 'package:tagros_comptes/screen/tableau.dart';
 import 'package:tagros_comptes/screen/test_native.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/state/providers.dart';
 
 void main() {
   if (kDebugMode) {
     // Stetho.initialize();
   }
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 //
 //void _runAppSpector() {
@@ -49,7 +46,7 @@ class MyApp extends StatelessWidget {
                   onPrimary: Colors.black,
                   padding:
                       EdgeInsets.symmetric(horizontal: 20, vertical: 10)))),
-      home: BlocProvider(bloc: GameDbBloc(), child: MenuScreen()),
+      home: MenuScreen(),
       routes: <String, WidgetBuilder>{
         MenuScreen.routeName: (context) => MenuScreen(),
         TestNative.routeName: (context) => TestNative(),
@@ -60,16 +57,14 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> navigateToTableau(BuildContext context,
-    {required GameWithPlayers game}) async {
+    {required GameWithPlayers game, required MyDatabase appDatabase}) async {
   if (game.game.id == null) {
-    var idGame = await MyDatabase.db.newGame(game);
+    var idGame = await appDatabase.newGame(game);
     game.game = game.game.copyWith(id: idGame);
   }
   await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => BlocProvider(
-            bloc: EntriesDbBloc(game),
-            child: TableauPage(
-              game: game,
-            ),
-          )));
+    builder: (context) => ProviderScope(
+        overrides: [gameProvider.overrideWithValue(game)],
+        child: TableauPage(game: game)),
+  ));
 }

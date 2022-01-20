@@ -1,24 +1,23 @@
 import 'dart:async';
 
-import 'package:tagros_comptes/bloc/bloc_provider.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 
-class GameDbBloc implements BlocBase {
+class GameNotifier {
   final _deleteGameController = StreamController<GameWithPlayers>.broadcast();
+  final MyDatabase _database;
 
   StreamSink<GameWithPlayers> get inDeleteGame => _deleteGameController.sink;
 
-  GameDbBloc() {
+  GameNotifier({required MyDatabase database}) : this._database = database {
     _deleteGameController.stream.listen(_handleDeleteGame);
   }
 
-  @override
   void dispose() {
     _deleteGameController.close();
   }
 
   void _handleDeleteGame(GameWithPlayers event) async {
-    await MyDatabase.db.deleteGame(event);
+    await _database.deleteGame(event);
   }
 }

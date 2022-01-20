@@ -15,33 +15,36 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.15.1 <3.0.0"
+  flutter: ">=2.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
-
+  another_flushbar: ^1.10.28 #Substitute for toasts and snackbars
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
-  rxdart: ^0.27.3
-#  sqflite: ^1.0.0
-  drift: ^1.0.0 # For reactive sql
-#  moor_ffi: ^0.4.0 # Contains code that will run the actual queries
-  path_provider: ^2.0.8
-  path: ^1.8.0
-#  autocomplete_textfield: ^1.7.3
-  flutter_typeahead: ^3.2.4
-#  appspector: ^0.1.0 #For viewing database
-#  flutter_stetho: ^0.5.2
+  drift: ^1.3.0 # For reactive sql
+  flutter:
+    sdk: flutter
+  flutter_hooks: ^0.18.0
   flutter_slidable: ^1.2.0
-  another_flushbar: ^1.10.28 #Substitute for toasts and snackbars
+  flutter_typeahead: ^3.2.4
+  hooks_riverpod: ^2.0.0-dev.0
+  #  sqflite: ^1.0.0
+  #  moor_ffi: ^0.4.0 # Contains code that will run the actual queries
+  path: ^1.8.0
+  path_provider: ^2.0.8
+  #  autocomplete_textfield: ^1.7.3
+  #  appspector: ^0.1.0 #For viewing database
+  #  flutter_stetho: ^0.5.2
   recase: ^4.0.0
+  rxdart: ^0.27.3
+  sqlite3_flutter_libs: ^0.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   test: ^1.17.12
-  drift_dev: ^1.0.0
+  drift_dev: ^1.3.0
   build_runner: ^2.1.7
 
 

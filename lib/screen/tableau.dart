@@ -1,47 +1,37 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/bloc/bloc_provider.dart';
-import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
+import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/widget/tableau_body.dart';
-class TableauPage extends StatefulWidget {
+
+class TableauPage extends ConsumerWidget {
+  const TableauPage({Key? key, required this.game}) : super(key: key);
   final GameWithPlayers game;
 
-  const TableauPage({Key? key, required this.game}) : super(key: key);
-
   @override
-  _TableauPageState createState() => _TableauPageState();
-}
-
-class _TableauPageState extends State<TableauPage> {
-  late EntriesDbBloc _entriesDbBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _entriesDbBloc = BlocProvider.of<EntriesDbBloc>(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.game.players.length} joueurs"),
+        title: Text("${game.players.length} joueurs"),
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           foregroundColor: Colors.pink,
           onPressed: () async {
-            final InfoEntryPlayerBean? res = await Navigator.of(context)
-                .pushNamed(AddModifyEntry.routeName,
-                    arguments: AddModifyArguments(
-                        players: widget.game.players, infoEntry: null));
+            final res = await Navigator.of(context).pushNamed(
+                AddModifyEntry.routeName,
+                arguments:
+                    AddModifyArguments(players: game.players, infoEntry: null));
             if (res != null) {
-              _entriesDbBloc.inAddEntry.add(res);
+              ref
+                  .read(entriesProvider)
+                  .inAddEntry
+                  .add(res as InfoEntryPlayerBean);
               Flushbar(
                 flushbarStyle: FlushbarStyle.GROUNDED,
                 flushbarPosition: FlushbarPosition.BOTTOM,
@@ -56,7 +46,7 @@ class _TableauPageState extends State<TableauPage> {
             }
           }),
       body: TableauBody(
-          players: widget.game.players
+          players: game.players
               .map((e) => PlayerBean.fromDb(e))
               .whereNotNull()
               .toList()),

@@ -118,6 +118,7 @@ class AutocompleteFormField extends FormField<Player> {
       {required FormFieldSetter<Player> onSaved,
       required FormFieldValidator<Player> validator,
       required Player initialValue,
+      required MyDatabase database,
       bool autoValidate = false})
       : super(
           onSaved: onSaved,
@@ -157,7 +158,8 @@ class AutocompleteFormField extends FormField<Player> {
                         },
                         onSuggestionSelected: (Player option) async {
                           final player = await _checkForPseudoInDb(
-                              option.pseudo, state, suggestions);
+                              option.pseudo, state, suggestions,
+                              database: database);
                           onSaved(player);
                         },
                       ),
@@ -165,7 +167,8 @@ class AutocompleteFormField extends FormField<Player> {
                     IconButton(
                         onPressed: () async {
                           final p = await _checkForPseudoInDb(
-                              controller.text, state, suggestions);
+                              controller.text, state, suggestions,
+                              database: database);
                           onSaved(p);
                         },
                         icon: Icon(Icons.add))
@@ -182,8 +185,9 @@ class AutocompleteFormField extends FormField<Player> {
           },
         );
 
-  static Future<Player> _checkForPseudoInDb(String text,
-      FormFieldState<Player> state, List<Player> suggestions) async {
+  static Future<Player> _checkForPseudoInDb(
+      String text, FormFieldState<Player> state, List<Player> suggestions,
+      {required MyDatabase database}) async {
     Player added;
     if (suggestions.any((element) => element.pseudo.trim() == text.trim())) {
       // We have this player in DB
@@ -192,7 +196,7 @@ class AutocompleteFormField extends FormField<Player> {
     } else {
       // Create in DB
       var player = Player(id: null, pseudo: text.trim());
-      var id = await MyDatabase.db.newPlayer(player: player);
+      var id = await database.newPlayer(player: player);
       added = player.copyWith(id: id);
     }
     state.didChange(added);

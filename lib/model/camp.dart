@@ -42,6 +42,6 @@ String? toDbPetits(List<Camp>? petits) {
         return null;
     }
   })
-    ..where((element) => element != null))
+        ..where((element) => element != null))
       .join(",");
 }

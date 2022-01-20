@@ -1,32 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:tagros_comptes/bloc/bloc_provider.dart';
-import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
+import 'package:tagros_comptes/state/providers.dart';
 
-class TableauBody extends StatefulWidget {
+class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;
 
   const TableauBody({Key? key, required this.players}) : super(key: key);
 
   @override
-  _TableauBodyState createState() => _TableauBodyState();
-}
-
-class _TableauBodyState extends State<TableauBody> {
-  late EntriesDbBloc _entriesDbBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _entriesDbBloc = BlocProvider.of<EntriesDbBloc>(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(children: [
       Padding(
         padding: const EdgeInsets.all(8),
@@ -34,10 +21,10 @@ class _TableauBodyState extends State<TableauBody> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: List.generate(
-              widget.players.length,
+              players.length,
               (index) => Expanded(
                       child: Text(
-                    widget.players[index].name.toUpperCase(),
+                    players[index].name.toUpperCase(),
                     textAlign: TextAlign.center,
                   ))),
         ),
@@ -47,7 +34,7 @@ class _TableauBodyState extends State<TableauBody> {
         color: Colors.pink,
       ),
       StreamBuilder(
-          stream: _entriesDbBloc.sum,
+          stream: ref.watch(entriesProvider.select((value) => value.sum)),
           builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -66,8 +53,8 @@ class _TableauBodyState extends State<TableauBody> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: List.generate(sums.length, (index) {
-                  print(widget.players[index]);
-                  var sum = sums[widget.players[index].name]!;
+                  print(players[index]);
+                  var sum = sums[players[index].name]!;
                   return Expanded(
                     child: Text(
                       sum.toStringAsFixed(1),
@@ -85,7 +72,7 @@ class _TableauBodyState extends State<TableauBody> {
         color: Colors.pink,
       ),
       StreamBuilder<List<InfoEntryPlayerBean>>(
-        stream: _entriesDbBloc.infoEntries,
+        stream: ref.watch(entriesProvider.select((value) => value.infoEntries)),
         builder: (BuildContext context,
             AsyncSnapshot<List<InfoEntryPlayerBean>> snapshot) {
           if (snapshot.hasError) {
@@ -120,9 +107,9 @@ class _TableauBodyState extends State<TableauBody> {
                 itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
                   Map<String, double> calculateGain =
-                      calculateGains(entries[index], widget.players.toList());
-                  var gains = transformGainsToList(
-                      calculateGain, widget.players.toList());
+                      calculateGains(entries[index], players.toList());
+                  var gains =
+                      transformGainsToList(calculateGain, players.toList());
                   // var key = GlobalKey<SlidableState>();
                   return Slidable(
                     key: ValueKey(index),
@@ -137,12 +124,14 @@ class _TableauBodyState extends State<TableauBody> {
                               .pushNamed<InfoEntryPlayerBean>(
                                   AddModifyEntry.routeName,
                                   arguments: AddModifyArguments(
-                                      players: widget.players
-                                          .map((e) => e.toDb)
-                                          .toList(),
+                                      players:
+                                          players.map((e) => e.toDb).toList(),
                                       infoEntry: entries[index]));
                           if (modified != null) {
-                            _entriesDbBloc.inModifyEntry.add(modified);
+                            ref
+                                .read(entriesProvider)
+                                .inModifyEntry
+                                .add(modified);
                           }
                         },
                       ),
@@ -158,7 +147,10 @@ class _TableauBodyState extends State<TableauBody> {
                           icon: Icons.delete,
                           foregroundColor: Colors.white,
                           onPressed: (context) {
-                            _entriesDbBloc.inDeleteEntry.add(entries[index]);
+                            ref
+                                .read(entriesProvider)
+                                .inDeleteEntry
+                                .add(entries[index]);
 
                             // key.currentState.dismiss(); // todo see
                           },

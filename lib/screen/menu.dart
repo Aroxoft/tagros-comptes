@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/bloc/bloc_provider.dart';
-import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/dialog/dialog_games.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/screen/test_native.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/types/functions.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -25,24 +25,12 @@ class MenuScreen extends StatelessWidget {
                 })
           ],
         ),
-        body: MenuBody());
+        body: const MenuBody());
   }
 }
 
-class MenuBody extends StatefulWidget {
-  @override
-  _MenuBodyState createState() => _MenuBodyState();
-}
-
-class _MenuBodyState extends State<MenuBody> {
-  late List<Player> players;
-  late GameDbBloc _gameDbBloc;
-  @override
-  void initState() {
-    super.initState();
-    players = [];
-    _gameDbBloc = BlocProvider.of<GameDbBloc>(context);
-  }
+class MenuBody extends StatelessWidget {
+  const MenuBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,18 +38,21 @@ class _MenuBodyState extends State<MenuBody> {
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        ElevatedButton(
-          onPressed: () {
-            showDialogPlayers(context,
-                doAfter: (players) => navigateToTableau(context,
-                    game: GameWithPlayers(
-                        game: Game(
-                            id: null,
-                            nbPlayers: players.length,
-                            date: DateTime.now()),
-                        players: players)));
-          },
-          child: Text("Nouvelle partie"),
+        Consumer(
+          builder: (context, ref, child) => ElevatedButton(
+            onPressed: () {
+              showDialogPlayers(context,
+                  doAfter: (players) => navigateToTableau(context,
+                      appDatabase: ref.read(databaseProvider),
+                      game: GameWithPlayers(
+                          game: Game(
+                              id: null,
+                              nbPlayers: players.length,
+                              date: DateTime.now()),
+                          players: players)));
+            },
+            child: Text("Nouvelle partie"),
+          ),
         ),
         ElevatedButton(
             child: Text("Continuer"),
@@ -69,9 +60,7 @@ class _MenuBodyState extends State<MenuBody> {
               showDialog(
                 context: context,
                 barrierDismissible: true,
-                builder: (context) => DialogChooseGame(
-                  gameDbBloc: _gameDbBloc,
-                ),
+                builder: (context) => DialogChooseGame(),
               );
             })
       ],

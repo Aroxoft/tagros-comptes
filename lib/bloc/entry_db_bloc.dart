@@ -1,14 +1,13 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 
-class EntriesDbBloc implements BlocBase {
+class EntriesDbBloc {
   // Create a broadcast controller that allows this stream to be listened
   // to multiple times. This is the primary, if not only, type of stream we'll be using.
 
@@ -34,14 +33,15 @@ class EntriesDbBloc implements BlocBase {
       _deleteEntryController.sink;
 
   GameWithPlayers game;
+  final MyDatabase _database;
 
-  EntriesDbBloc(GameWithPlayers game)
+  EntriesDbBloc(GameWithPlayers game, {required MyDatabase database})
       : assert(game.game.id != null),
+        this._database = database,
         this.game = game,
         // Watch entries
-        this.infoEntries = MyDatabase.db
-            .watchInfoEntriesInGame(game.game.id!)
-            .asBroadcastStream() {
+        this.infoEntries =
+            database.watchInfoEntriesInGame(game.game.id!).asBroadcastStream() {
     sum = this.infoEntries.map((event) => calculateSum(event,
         game.players.map((e) => PlayerBean.fromDb(e)).whereNotNull().toList()));
 
@@ -52,7 +52,6 @@ class EntriesDbBloc implements BlocBase {
     _deleteEntryController.stream.listen(_handleDeleteEntry);
   }
 
-  @override
   void dispose() {
     _addEntryController.close();
     _modifyEntryController.close();
@@ -61,14 +60,14 @@ class EntriesDbBloc implements BlocBase {
 
   void _handleAddEntry(InfoEntryPlayerBean entry) async {
     // Create the entry in the database
-    await MyDatabase.db.newEntry(entry, game);
+    await _database.newEntry(entry, game);
   }
 
   void _handleDeleteEntry(InfoEntryPlayerBean entry) async {
-    await MyDatabase.db.deleteEntry(entry.infoEntry.id!);
+    await _database.deleteEntry(entry.infoEntry.id!);
   }
 
   void _handleModifyEntry(InfoEntryPlayerBean entry) async {
-    await MyDatabase.db.updateEntry(entry);
+    await _database.updateEntry(entry);
   }
 }

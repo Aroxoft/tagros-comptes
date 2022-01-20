@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/types/functions.dart';
 import 'package:tagros_comptes/widget/choose_player.dart';
 
 class DialogChoosePlayers extends StatelessWidget {
   final DoAfterChosen doAfterChosen;
+
   const DialogChoosePlayers({Key? key, required this.doAfterChosen})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -28,17 +32,20 @@ class DialogChoosePlayers extends StatelessWidget {
   }
 }
 
-class DialogPlayerBody extends StatefulWidget {
+class DialogPlayerBody extends ConsumerStatefulWidget {
   final DoAfterChosen doAfterChosen;
+
   const DialogPlayerBody({Key? key, required this.doAfterChosen})
       : super(key: key);
+
   @override
   _DialogPlayerBodyState createState() => _DialogPlayerBodyState();
 }
 
-class _DialogPlayerBodyState extends State<DialogPlayerBody> {
+class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
   late List<Player> players;
   String? errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +58,7 @@ class _DialogPlayerBodyState extends State<DialogPlayerBody> {
     return Form(
       key: formKey,
       child: StreamBuilder<List<Player>>(
-        stream: MyDatabase.db.watchAllPlayers,
+        stream: ref.watch(databaseProvider).watchAllPlayers,
         builder: (BuildContext context, AsyncSnapshot<List<Player>> snapshot) {
           List<Player> playerDb = [];
           if (!snapshot.hasError && snapshot.hasData && snapshot.data != null) {
@@ -97,6 +104,7 @@ class _DialogPlayerBodyState extends State<DialogPlayerBody> {
                                 }
                                 return null;
                               },
+                              database: ref.watch(databaseProvider),
                             ),
                             Wrap(
                               direction: Axis.horizontal,

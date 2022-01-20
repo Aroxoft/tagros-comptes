@@ -2,23 +2,20 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/state/providers.dart';
 
-class DialogChooseGame extends StatelessWidget {
-  final GameDbBloc gameDbBloc;
-
-  const DialogChooseGame({Key? key, required this.gameDbBloc})
-      : super(key: key);
+class DialogChooseGame extends ConsumerWidget {
+  const DialogChooseGame({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       content: Container(
         child: StreamBuilder<List<GameWithPlayers>>(
-            stream: MyDatabase.db.watchAllGames(),
+            stream: ref.watch(databaseProvider).watchAllGames(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Text("Error: ${snapshot.error}");
@@ -44,23 +41,35 @@ class DialogChooseGame extends StatelessWidget {
                                 foregroundColor: Colors.red,
                                 icon: Icons.delete,
                                 onPressed: (context) {
-                                  gameDbBloc.inDeleteGame.add(games[index]);
+                                  ref
+                                      .read(gameChangeProvider)
+                                      .inDeleteGame
+                                      .add(games[index]);
                                 },
                               )
                             ],
                           ),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor:
-                                  Colors.indigo[Random().nextInt(10) * 100],
-                              child: Text(
-                                  "${games[index].players.length.toString()}",
-                                  style: TextStyle(color: Colors.white)),
+                          child: Consumer(
+                            builder: (context, ref, child) => ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor:
+                                    Colors.indigo[Random().nextInt(10) * 100],
+                                child: Text(
+                                    "${games[index].players.length.toString()}",
+                                    style: TextStyle(color: Colors.white)),
+                              ),
+                              title: Text(
+                                "${games[index].players.length} joueurs",
+                              ),
+                              subtitle: child,
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                navigateToTableau(context,
+                                    game: games[index],
+                                    appDatabase: ref.read(databaseProvider));
+                              },
                             ),
-                            title: Text(
-                              "${games[index].players.length} joueurs",
-                            ),
-                            subtitle: Column(
+                            child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -70,10 +79,6 @@ class DialogChooseGame extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   )
                                 ]),
-                            onTap: () {
-                              Navigator.of(context).pop();
-                              navigateToTableau(context, game: games[index]);
-                            },
                           ),
                         ),
                       )),

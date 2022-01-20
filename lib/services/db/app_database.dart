@@ -8,7 +8,6 @@ import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
-import 'package:tagros_comptes/services/db/platforms/database.dart';
 
 part 'app_database.g.dart';
 
@@ -71,8 +70,6 @@ class MyDatabase extends _$MyDatabase {
         });
   }
 
-  static final MyDatabase db = MyDatabase(Database.openConnection());
-
   // <editor-fold desc="GET">
   // loads all entries
   Future<List<InfoEntry>> get allInfoEntries => select(infoEntries).get();
@@ -114,10 +111,10 @@ class MyDatabase extends _$MyDatabase {
     return query.watch().map((rows) {
       return rows.map((row) {
         return InfoEntryPlayerBean(
-            player: PlayerBean.fromDb(row.readTable(p)),
+            player: PlayerBean.fromDb(row.readTableOrNull(p)),
             withPlayers: [
-              PlayerBean.fromDb(row.readTable(with1)),
-              PlayerBean.fromDb(row.readTable(with2))
+              PlayerBean.fromDb(row.readTableOrNull(with1)),
+              PlayerBean.fromDb(row.readTableOrNull(with2))
             ].whereNotNull().toList(),
             infoEntry: InfoEntryBean.fromDb(row.readTable(infoEntries)));
       }).toList();

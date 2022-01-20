@@ -1,9 +1,5 @@
-import 'dart:io';
-
+import 'package:collection/collection.dart';
 import 'package:moor/moor.dart';
-import 'package:moor_ffi/moor_ffi.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
@@ -12,18 +8,22 @@ import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/services/db/platforms/database.dart';
 
 part 'database_moor.g.dart';
 
 class Players extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  IntColumn get id => integer().autoIncrement().nullable()();
+
   TextColumn get pseudo => text()();
 }
 
 class Games extends Table {
-  IntColumn get id => integer().autoIncrement()();
+  IntColumn get id => integer().autoIncrement().nullable()();
+
   IntColumn get nbPlayers => integer()();
-  DateTimeColumn get date => dateTime()();
+
+  DateTimeColumn get date => dateTime().nullable()();
 }
 
 @DataClassName("InfoEntry")
@@ -48,21 +48,12 @@ class PlayerGames extends Table {
   IntColumn get game => integer()();
 }
 
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    // put the database file in the doc folder
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(join(dbFolder.path, 'app.sqlite'));
-    return VmDatabase(file);
-  });
-}
-
 @UseMoor(tables: [Players, Games, InfoEntries, PlayerGames])
 class MyDatabase extends _$MyDatabase {
   static const int DATABASE_VERSION = 1;
 
   // We tell the database where to store the data with this constructor
-  MyDatabase._() : super(_openConnection());
+  MyDatabase(QueryExecutor conn) : super(conn);
 
   // Bump this number whenever we change or add a table definition
   @override
@@ -80,7 +71,7 @@ class MyDatabase extends _$MyDatabase {
         });
   }
 
-  static final MyDatabase db = MyDatabase._();
+  static final MyDatabase db = MyDatabase(Database.openConnection());
 
   // <editor-fold desc="GET">
   // loads all entries
@@ -102,7 +93,7 @@ class MyDatabase extends _$MyDatabase {
           withPlayers: [
             PlayerBean.fromDb(row.readTable(with1)),
             PlayerBean.fromDb(row.readTable(with2))
-          ].where((element) => element != null).toList(),
+          ].whereNotNull().toList(),
           infoEntry: InfoEntryBean.fromDb(row.readTable(infoEntries)),
         );
       }).toList();
@@ -127,7 +118,7 @@ class MyDatabase extends _$MyDatabase {
             withPlayers: [
               PlayerBean.fromDb(row.readTable(with1)),
               PlayerBean.fromDb(row.readTable(with2))
-            ].where((element) => element != null).toList(),
+            ].whereNotNull().toList(),
             infoEntry: InfoEntryBean.fromDb(row.readTable(infoEntries)));
       }).toList();
     });
@@ -170,7 +161,7 @@ class MyDatabase extends _$MyDatabase {
         // Finally, merge the map of games with the map of players
         return [
           for (var id in ids)
-            GameWithPlayers(game: idToGame[id], players: idToPlayers[id] ?? [])
+            GameWithPlayers(game: idToGame[id]!, players: idToPlayers[id] ?? [])
         ];
       });
     });
@@ -183,15 +174,15 @@ class MyDatabase extends _$MyDatabase {
   Future<int> newEntry(
       InfoEntryPlayerBean infoEntry, GameWithPlayers game) async {
     Value<int> with1 = Value.absent(), with2 = Value.absent();
-    if (infoEntry.withPlayers != null && infoEntry.withPlayers.isNotEmpty) {
-      with1 = Value(infoEntry.withPlayers[0].id);
-      if (infoEntry.withPlayers.length > 1) {
-        with2 = Value(infoEntry.withPlayers[1].id);
+    if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
+      with1 = Value(infoEntry.withPlayers![0]!.id!);
+      if (infoEntry.withPlayers!.length > 1) {
+        with2 = Value(infoEntry.withPlayers![1]!.id!);
       }
     }
     return into(infoEntries).insert(InfoEntriesCompanion.insert(
-      game: game.game.id,
-      player: infoEntry.player.id,
+      game: game.game.id!,
+      player: infoEntry.player!.id!,
       points: infoEntry.infoEntry.points,
       prise: toDbPrise(infoEntry.infoEntry.prise),
       nbBouts: infoEntry.infoEntry.nbBouts,
@@ -227,42 +218,42 @@ class MyDatabase extends _$MyDatabase {
     for (var player in thePlayers) {
       var single = await (select(players)
             ..where((tbl) => players.pseudo.equals(player.pseudo.value)))
-          .getSingle();
+          .getSingleOrNull();
       if (single == null) {
         var id = await newPlayer(playersCompanion: player);
         playersIds.add(id);
       } else {
-        playersIds.add(single.id);
+        playersIds.add(single.id!);
       }
     }
     return playersIds;
   }
 
-  Future<int> newPlayer({Player player, PlayersCompanion playersCompanion}) {
+  Future<int> newPlayer({Player? player, PlayersCompanion? playersCompanion}) {
     assert(player != null ||
         playersCompanion != null &&
             (player == null || playersCompanion == null));
     if (player != null)
       return into(players)
           .insert(PlayersCompanion.insert(pseudo: player.pseudo));
-    return into(players).insert(playersCompanion);
+    return into(players).insert(playersCompanion!);
   }
   //</editor-fold>
 
   //<editor-fold desc="UPDATE">
   Future<int> updateEntry(InfoEntryPlayerBean infoEntry) async {
     Value<int> with1 = Value.absent(), with2 = Value.absent();
-    if (infoEntry.withPlayers != null && infoEntry.withPlayers.isNotEmpty) {
-      with1 = Value(infoEntry.withPlayers[0].id);
-      if (infoEntry.withPlayers.length > 1) {
-        with2 = Value(infoEntry.withPlayers[1].id);
+    if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
+      with1 = Value(infoEntry.withPlayers![0]!.id!);
+      if (infoEntry.withPlayers!.length > 1) {
+        with2 = Value(infoEntry.withPlayers![1]!.id!);
       }
     }
 
     return (update(infoEntries)
           ..where((tbl) => tbl.id.equals(infoEntry.infoEntry.id)))
         .write(InfoEntriesCompanion(
-      player: Value(infoEntry.player.id),
+      player: Value(infoEntry.player!.id!),
       points: Value(infoEntry.infoEntry.points),
       prise: Value(toDbPrise(infoEntry.infoEntry.prise)),
       nbBouts: Value(infoEntry.infoEntry.nbBouts),

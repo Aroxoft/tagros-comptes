@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 
 class InfoEntryBean {
-  int id;
+  int? id;
   Prise prise;
   double points;
   int nbBouts;
@@ -16,8 +15,8 @@ class InfoEntryBean {
   List<PoigneeType> poignees;
 
   InfoEntryBean(
-      {@required this.points,
-      @required this.nbBouts,
+      {required this.points,
+      required this.nbBouts,
       this.prise = Prise.PETITE,
       this.pointsForAttack = true,
       this.petitsAuBout = const [],

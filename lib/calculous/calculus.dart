@@ -8,19 +8,19 @@ Map<String, double> calculateGains(
     InfoEntryPlayerBean infoEntryPlayer, List<PlayerBean> playersList) {
   final players = playersList.map((e) => e.name).toList();
   // Assert that players in entry exist in the list of players
-  assert(players.contains(infoEntryPlayer.player.name));
+  assert(players.contains(infoEntryPlayer.player!.name));
   if (infoEntryPlayer.withPlayers != null) {
-    for (var withPlayer in infoEntryPlayer.withPlayers) {
-      assert(players.contains(withPlayer.name));
+    for (var withPlayer in infoEntryPlayer.withPlayers!) {
+      assert(players.contains(withPlayer!.name));
     }
   }
 
   var nbPlayers = players.length;
 
   if (nbPlayers > 5) {
-    assert(infoEntryPlayer.withPlayers.length == 2);
+    assert(infoEntryPlayer.withPlayers?.length == 2);
   } else if (nbPlayers == 5) {
-    assert(infoEntryPlayer.withPlayers.length == 1);
+    assert(infoEntryPlayer.withPlayers?.length == 1);
   }
 
   var gros = nbPlayers > 5;
@@ -36,7 +36,7 @@ Map<String, double> calculateGains(
   var boutsForAttack = infoEntryPlayer.infoEntry.pointsForAttack
       ? infoEntryPlayer.infoEntry.nbBouts
       : totalBouts - infoEntryPlayer.infoEntry.nbBouts;
-  double wonBy;
+  double wonBy = 0;
   if (!gros) {
     switch (boutsForAttack) {
       case 0:
@@ -81,27 +81,23 @@ Map<String, double> calculateGains(
   bool won = wonBy >= 0;
   // Petit au bout
   int petitPoints = 0;
-  if (infoEntryPlayer.infoEntry.petitsAuBout != null) {
-    for (var petitAuBout in infoEntryPlayer.infoEntry.petitsAuBout) {
-      switch (petitAuBout) {
-        case Camp.ATTACK:
-          petitPoints += won ? 10 : -10;
-          break;
-        case Camp.DEFENSE:
-          petitPoints += won ? -10 : 10;
-          break;
-        case Camp.NONE:
-          break;
-      }
+  for (var petitAuBout in infoEntryPlayer.infoEntry.petitsAuBout) {
+    switch (petitAuBout) {
+      case Camp.ATTACK:
+        petitPoints += won ? 10 : -10;
+        break;
+      case Camp.DEFENSE:
+        petitPoints += won ? -10 : 10;
+        break;
+      case Camp.NONE:
+        break;
     }
   }
 
   // Poignee
   var pointsForPoignee = 0;
-  if (infoEntryPlayer.infoEntry.poignees != null) {
-    for (var poignee in infoEntryPlayer.infoEntry.poignees) {
-      pointsForPoignee += getPoigneePoints(poignee);
-    }
+  for (var poignee in infoEntryPlayer.infoEntry.poignees) {
+    pointsForPoignee += getPoigneePoints(poignee);
   }
 
   double mise = (wonBy.abs() + 25 + petitPoints) *
@@ -117,19 +113,19 @@ Map<String, double> calculateGains(
 
   if (!gros) {
     if (nbPlayers < 5 ||
-        infoEntryPlayer.player == infoEntryPlayer.withPlayers[0]) {
+        infoEntryPlayer.player == infoEntryPlayer.withPlayers![0]) {
       // one player against the others
       for (var player in players) {
-        gains[player] = infoEntryPlayer.player.name == player
+        gains[player] = infoEntryPlayer.player!.name == player
             ? mise * (nbPlayers - 1)
             : -mise;
       }
     } else {
       // with 5 players, 2 vs 3
       for (var player in players) {
-        if (player == infoEntryPlayer.player.name) {
+        if (player == infoEntryPlayer.player!.name) {
           gains[player] = mise * 2;
-        } else if (player == infoEntryPlayer.withPlayers[0].name) {
+        } else if (player == infoEntryPlayer.withPlayers![0]!.name) {
           gains[player] = mise;
         } else {
           gains[player] = -mise;
@@ -140,11 +136,11 @@ Map<String, double> calculateGains(
     // TAGROS
     // Common for every tagros
     for (var player in players) {
-      if (player == infoEntryPlayer.player.name) {
+      if (player == infoEntryPlayer.player!.name) {
         // taker
         gains[player] = mise * 2;
-      } else if (infoEntryPlayer.withPlayers
-          .map((e) => e.name)
+      } else if (infoEntryPlayer.withPlayers!
+          .map((e) => e!.name)
           .contains(player)) {
         // Attackers with taker
         gains[player] = mise;
@@ -175,18 +171,12 @@ Map<String, double> calculateSum(
   for (var entry in entries) {
     var gains = calculateGains(entry, players);
     for (var gain in gains.entries) {
-      sums[gain.key] += gain.value;
+      sums[gain.key] = sums[gain.key]! + gain.value;
     }
   }
   return sums;
 }
 
 List<double> transformGainsToList(
-    Map<String, double> gains, List<PlayerBean> players) {
-  var res = List<double>(players.length);
-  for (int i = 0; i < players.length; i++) {
-    res[i] = gains[players[i].name];
-  }
-
-  return res;
-}
+        Map<String, double> gains, List<PlayerBean> players) =>
+    List.generate(players.length, (index) => gains[players[index].name]!);

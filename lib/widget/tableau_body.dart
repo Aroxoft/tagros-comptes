@@ -10,14 +10,14 @@ import 'package:tagros_comptes/screen/add_modify.dart';
 class TableauBody extends StatefulWidget {
   final List<PlayerBean> players;
 
-  const TableauBody({Key key, @required this.players}) : super(key: key);
+  const TableauBody({Key? key, required this.players}) : super(key: key);
 
   @override
   _TableauBodyState createState() => _TableauBodyState();
 }
 
 class _TableauBodyState extends State<TableauBody> {
-  EntriesDbBloc _entriesDbBloc;
+  late EntriesDbBloc _entriesDbBloc;
 
   @override
   void initState() {
@@ -54,12 +54,12 @@ class _TableauBodyState extends State<TableauBody> {
                 child: Text("Error: ${snapshot.error}"),
               );
             }
-            if (!snapshot.hasData) {
+            final sums = snapshot.data;
+            if (sums == null) {
               return Center(
                 child: Text("No Data"),
               );
             }
-            var sums = snapshot.data;
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -67,7 +67,7 @@ class _TableauBodyState extends State<TableauBody> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: List.generate(sums.length, (index) {
                   print(widget.players[index]);
-                  var sum = sums[widget.players[index].name];
+                  var sum = sums[widget.players[index].name]!;
                   return Expanded(
                     child: Text(
                       sum.toStringAsFixed(1),
@@ -123,42 +123,48 @@ class _TableauBodyState extends State<TableauBody> {
                       calculateGains(entries[index], widget.players.toList());
                   var gains = transformGainsToList(
                       calculateGain, widget.players.toList());
-                  var key = GlobalKey<SlidableState>();
+                  // var key = GlobalKey<SlidableState>();
                   return Slidable(
-                    key: key,
-                    actionPane: SlidableBehindActionPane(),
-                    actionExtentRatio: 0.3333,
-                    actions: <Widget>[
-                      IconSlideAction(
-                        color: Colors.amber,
+                    key: ValueKey(index),
+                    startActionPane:
+                        ActionPane(motion: ScrollMotion(), children: [
+                      SlidableAction(
+                        backgroundColor: Colors.amber,
                         icon: Icons.edit,
                         foregroundColor: Colors.white,
-                        onTap: () async {
-                          var modified = await Navigator.of(context).pushNamed(
-                              AddModifyEntry.routeName,
-                              arguments: AddModifyArguments(
-                                  players: widget.players
-                                      .map((e) => PlayerBean.toDb(e))
-                                      .toList(),
-                                  infoEntry: entries[index]));
+                        onPressed: (context) async {
+                          var modified = await Navigator.of(context)
+                              .pushNamed<InfoEntryPlayerBean>(
+                                  AddModifyEntry.routeName,
+                                  arguments: AddModifyArguments(
+                                      players: widget.players
+                                          .map((e) => e.toDb)
+                                          .toList(),
+                                      infoEntry: entries[index]));
                           if (modified != null) {
                             _entriesDbBloc.inModifyEntry.add(modified);
                           }
                         },
                       ),
-                    ],
-                    secondaryActions: [
-                      IconSlideAction(
-                        color: Colors.red,
-                        icon: Icons.delete,
-                        foregroundColor: Colors.white,
-                        onTap: () {
-                          _entriesDbBloc.inDeleteEntry.add(entries[index]);
+                    ]),
+                    endActionPane: ActionPane(
+                      dismissible: DismissiblePane(
+                        onDismissed: () {},
+                      ),
+                      motion: ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          backgroundColor: Colors.red,
+                          icon: Icons.delete,
+                          foregroundColor: Colors.white,
+                          onPressed: (context) {
+                            _entriesDbBloc.inDeleteEntry.add(entries[index]);
 
-                          key.currentState.dismiss();
-                        },
-                      )
-                    ],
+                            // key.currentState.dismiss(); // todo see
+                          },
+                        ),
+                      ],
+                    ),
                     child: Container(
                       color: index % 2 == 1 ? Colors.grey : Colors.white,
                       child: Padding(

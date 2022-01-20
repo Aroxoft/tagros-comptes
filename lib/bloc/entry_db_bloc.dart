@@ -1,22 +1,20 @@
 import 'dart:async';
 
-import 'package:rxdart/rxdart.dart';
+import 'package:collection/collection.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
-
 class EntriesDbBloc implements BlocBase {
   // Create a broadcast controller that allows this stream to be listened
   // to multiple times. This is the primary, if not only, type of stream we'll be using.
 
-  BehaviorSubject<GameWithPlayers> _game = BehaviorSubject();
 
   // Output stream. This one will be used within our pages to display the entries.
   Stream<List<InfoEntryPlayerBean>> infoEntries;
-  Stream<Map<String, double>> sum;
+  late Stream<Map<String, double>> sum;
 
   final _addEntryController = StreamController<InfoEntryPlayerBean>.broadcast();
   final _modifyEntryController =
@@ -27,23 +25,25 @@ class EntriesDbBloc implements BlocBase {
 
   // Input stream for adding new infoEntries. We'll call this from our pages
   StreamSink<InfoEntryPlayerBean> get inAddEntry => _addEntryController.sink;
+
   StreamSink<InfoEntryPlayerBean> get inModifyEntry =>
       _modifyEntryController.sink;
+
   // Input stream for deleting infoEntries. We'll call this from our pages
   StreamSink<InfoEntryPlayerBean> get inDeleteEntry =>
       _deleteEntryController.sink;
 
   GameWithPlayers game;
 
-  EntriesDbBloc(GameWithPlayers game) {
-    assert(game.game.id != null);
-    this.game = game;
-
-    // Watch entries
-    infoEntries =
-        MyDatabase.db.watchInfoEntriesInGame(game.game.id).asBroadcastStream();
-    sum = infoEntries.map((event) => calculateSum(
-        event, game.players.map((e) => PlayerBean.fromDb(e)).toList()));
+  EntriesDbBloc(GameWithPlayers game)
+      : assert(game.game.id != null),
+        this.game = game,
+        // Watch entries
+        this.infoEntries = MyDatabase.db
+            .watchInfoEntriesInGame(game.game.id!)
+            .asBroadcastStream() {
+    sum = this.infoEntries.map((event) => calculateSum(event,
+        game.players.map((e) => PlayerBean.fromDb(e)).whereNotNull().toList()));
 
     // Listens for changes to the addEntryController and
     // calls _handleAddEntry on change
@@ -57,7 +57,6 @@ class EntriesDbBloc implements BlocBase {
     _addEntryController.close();
     _modifyEntryController.close();
     _deleteEntryController.close();
-    _game.close();
   }
 
   void _handleAddEntry(InfoEntryPlayerBean entry) async {
@@ -66,7 +65,7 @@ class EntriesDbBloc implements BlocBase {
   }
 
   void _handleDeleteEntry(InfoEntryPlayerBean entry) async {
-    await MyDatabase.db.deleteEntry(entry.infoEntry.id);
+    await MyDatabase.db.deleteEntry(entry.infoEntry.id!);
   }
 
   void _handleModifyEntry(InfoEntryPlayerBean entry) async {

@@ -14,8 +14,8 @@ class _TestNativeState extends State<TestNative> {
   @override
   void initState() {
     super.initState();
-    _getMessage().then((String message) => setState(() {
-          _message = message;
+    _getMessage().then((String? message) => setState(() {
+          _message = message ?? "No messages!";
         }));
   }
 
@@ -28,8 +28,8 @@ class _TestNativeState extends State<TestNative> {
     );
   }
 
-  Future<String> _getMessage() async {
-    String message;
+  Future<String?> _getMessage() async {
+    String? message;
     try {
       message = await platform.invokeMethod("getMessage");
     } catch (e) {

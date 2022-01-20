@@ -1,17 +1,18 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 
 class DialogChooseGame extends StatelessWidget {
   final GameDbBloc gameDbBloc;
 
-  const DialogChooseGame({Key key, @required this.gameDbBloc}) : super(key: key);
+  const DialogChooseGame({Key? key, required this.gameDbBloc})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -36,18 +37,18 @@ class DialogChooseGame extends StatelessWidget {
                       children: List.generate(
                         games.length,
                         (index) => Slidable(
-                          actionPane: SlidableStrechActionPane(),
-                          actionExtentRatio: 0.33,
-                          secondaryActions: <Widget>[
-                            IconSlideAction(
-                              color: Colors.red,
-                              icon: Icons.delete,
-                              foregroundColor: Colors.white,
-                              onTap: () {
-                                gameDbBloc.inDeleteGame.add(games[index]);
-                              },
-                            )
-                          ],
+                          endActionPane: ActionPane(
+                            motion: ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                foregroundColor: Colors.red,
+                                icon: Icons.delete,
+                                onPressed: (context) {
+                                  gameDbBloc.inDeleteGame.add(games[index]);
+                                },
+                              )
+                            ],
+                          ),
                           child: ListTile(
                             leading: CircleAvatar(
                               backgroundColor:
@@ -71,8 +72,7 @@ class DialogChooseGame extends StatelessWidget {
                                 ]),
                             onTap: () {
                               Navigator.of(context).pop();
-                              return navigateToTableau(context,
-                                  game: games[index]);
+                              navigateToTableau(context, game: games[index]);
                             },
                           ),
                         ),

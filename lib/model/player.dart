@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 
 class PlayerBean {
-  int id;
+  int? id;
   String name;
 
-  PlayerBean({@required this.name, this.id});
+  PlayerBean({required this.name, this.id});
 
-  factory PlayerBean.fromDb(Player player) {
+  static PlayerBean? fromDb(Player? player) {
     if (player == null) return null;
     return PlayerBean(name: player.pseudo, id: player.id);
   }
@@ -17,8 +16,5 @@ class PlayerBean {
     return "$name ($id)";
   }
 
-  static Player toDb(PlayerBean player) {
-    if (player == null) return null;
-    return Player(pseudo: player.name, id: player.id);
-  }
+  Player get toDb => Player(pseudo: name, id: id);
 }

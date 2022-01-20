@@ -1,6 +1,6 @@
 enum Prise { PETITE, GARDE, GARDE_SANS, GARDE_CONTRE }
 
-getCoeff(Prise prise) {
+int getCoeff(Prise prise) {
   switch (prise) {
     case Prise.PETITE:
       return 1;
@@ -13,7 +13,7 @@ getCoeff(Prise prise) {
   }
 }
 
-getNomPrise(Prise prise) {
+String getNomPrise(Prise prise) {
   switch (prise) {
     case Prise.PETITE:
       return "Prise";
@@ -42,7 +42,7 @@ Prise fromDbPrise(String prise) {
     case _garde_contre:
       return Prise.GARDE_CONTRE;
   }
-  return null;
+  return Prise.PETITE;
 }
 
 String toDbPrise(Prise prise) {
@@ -56,5 +56,4 @@ String toDbPrise(Prise prise) {
     case Prise.GARDE_CONTRE:
       return _garde_contre;
   }
-  return null;
 }

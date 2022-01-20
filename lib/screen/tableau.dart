@@ -1,23 +1,24 @@
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/widget/tableau_body.dart';
-
 class TableauPage extends StatefulWidget {
   final GameWithPlayers game;
 
-  const TableauPage({Key key, @required this.game}) : super(key: key);
+  const TableauPage({Key? key, required this.game}) : super(key: key);
 
   @override
   _TableauPageState createState() => _TableauPageState();
 }
 
 class _TableauPageState extends State<TableauPage> {
-  EntriesDbBloc _entriesDbBloc;
+  late EntriesDbBloc _entriesDbBloc;
 
   @override
   void initState() {
@@ -35,10 +36,10 @@ class _TableauPageState extends State<TableauPage> {
           child: Icon(Icons.add),
           foregroundColor: Colors.pink,
           onPressed: () async {
-            final res = await Navigator.of(context).pushNamed(
-                AddModifyEntry.routeName,
-                arguments: AddModifyArguments(
-                    players: widget.game.players, infoEntry: null));
+            final InfoEntryPlayerBean? res = await Navigator.of(context)
+                .pushNamed(AddModifyEntry.routeName,
+                    arguments: AddModifyArguments(
+                        players: widget.game.players, infoEntry: null));
             if (res != null) {
               _entriesDbBloc.inAddEntry.add(res);
               Flushbar(
@@ -55,8 +56,10 @@ class _TableauPageState extends State<TableauPage> {
             }
           }),
       body: TableauBody(
-          players:
-              widget.game.players.map((e) => PlayerBean.fromDb(e)).toList()),
+          players: widget.game.players
+              .map((e) => PlayerBean.fromDb(e))
+              .whereNotNull()
+              .toList()),
     );
   }
 }

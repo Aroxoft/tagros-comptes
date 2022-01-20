@@ -14,13 +14,13 @@ class Boxed extends StatelessWidget {
   final double titleSize;
 
   const Boxed(
-      {Key key,
+      {Key? key,
       this.fillColor = Colors.white,
       this.color = Colors.green,
       this.borderWidth = 3,
       this.radius = 20,
-      @required this.child,
-      @required this.title,
+      required this.child,
+      required this.title,
       this.titleWeight = FontWeight.w700,
       this.titleSize = 18})
       : super(key: key);

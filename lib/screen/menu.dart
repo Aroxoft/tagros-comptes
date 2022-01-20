@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 import 'package:tagros_comptes/dialog/dialog_games.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/main.dart';
@@ -36,8 +35,8 @@ class MenuBody extends StatefulWidget {
 }
 
 class _MenuBodyState extends State<MenuBody> {
-  List<Player> players;
-  GameDbBloc _gameDbBloc;
+  late List<Player> players;
+  late GameDbBloc _gameDbBloc;
   @override
   void initState() {
     super.initState();
@@ -51,9 +50,7 @@ class _MenuBodyState extends State<MenuBody> {
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        RaisedButton(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          color: Colors.amber,
+        ElevatedButton(
           onPressed: () {
             showDialogPlayers(context,
                 doAfter: (players) => navigateToTableau(context,
@@ -66,7 +63,7 @@ class _MenuBodyState extends State<MenuBody> {
           },
           child: Text("Nouvelle partie"),
         ),
-        RaisedButton(
+        ElevatedButton(
             child: Text("Continuer"),
             onPressed: () {
               showDialog(
@@ -81,7 +78,7 @@ class _MenuBodyState extends State<MenuBody> {
     ));
   }
 
-  showDialogPlayers(BuildContext context, {DoAfterChosen doAfter}) {
+  showDialogPlayers(BuildContext context, {required DoAfterChosen doAfter}) {
     showDialog(
         barrierDismissible: false,
         context: context,

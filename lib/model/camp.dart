@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 enum Camp { ATTACK, DEFENSE, NONE }
 
 String getNameCamp(Camp camp) {
@@ -9,14 +11,13 @@ String getNameCamp(Camp camp) {
     case Camp.NONE:
       return "aucun";
   }
-  return null;
 }
 
 const String _attack = "ATTACK";
 const String _defense = "DEFENSE";
 
-List<Camp> fromDbPetit(String petits) {
-  if (petits == null || petits.isEmpty) return null;
+List<Camp> fromDbPetit(String? petits) {
+  if (petits == null || petits.isEmpty) return [];
   return (petits.split(",").map((e) {
     switch (e) {
       case _attack:
@@ -25,12 +26,11 @@ List<Camp> fromDbPetit(String petits) {
         return Camp.DEFENSE;
     }
     return null;
-  })
-        ..where((element) => element != null))
+  }).whereNotNull())
       .toList();
 }
 
-String toDbPetits(List<Camp> petits) {
+String? toDbPetits(List<Camp>? petits) {
   if (petits == null || petits.isEmpty) return null;
   return (petits.map((e) {
     switch (e) {
@@ -41,8 +41,7 @@ String toDbPetits(List<Camp> petits) {
       case Camp.NONE:
         return null;
     }
-    return null;
   })
-        ..where((element) => element != null))
+    ..where((element) => element != null))
       .join(",");
 }

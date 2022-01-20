@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 
 class GameDbBloc implements BlocBase {

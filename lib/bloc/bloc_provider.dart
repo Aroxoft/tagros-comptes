@@ -8,7 +8,7 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
   final T bloc;
   final Widget child;
 
-  const BlocProvider({Key key, @required this.bloc, @required this.child})
+  const BlocProvider({Key? key, required this.bloc, required this.child})
       : super(key: key);
 
   @override
@@ -16,7 +16,7 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
 
   static T of<T extends BlocBase>(BuildContext context) {
     BlocProvider<T> provider =
-        context.findAncestorWidgetOfExactType<BlocProvider<T>>();
+        context.findAncestorWidgetOfExactType<BlocProvider<T>>()!;
     return provider.bloc;
   }
 }

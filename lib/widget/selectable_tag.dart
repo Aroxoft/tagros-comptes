@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:tagros_comptes/types/functions.dart';
 
 class SelectableTag extends StatelessWidget {
@@ -11,9 +10,9 @@ class SelectableTag extends StatelessWidget {
   final Color textColorSelected;
 
   const SelectableTag(
-      {Key key,
-      @required this.text,
-      @required this.onPressed,
+      {Key? key,
+      required this.text,
+      required this.onPressed,
       this.selected = true,
       this.color = Colors.pink,
       this.textColor = Colors.blueGrey,

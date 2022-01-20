@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
 import 'package:tagros_comptes/types/functions.dart';
 import 'package:tagros_comptes/widget/choose_player.dart';
 
 class DialogChoosePlayers extends StatelessWidget {
   final DoAfterChosen doAfterChosen;
-  DialogChoosePlayers({Key key, @required this.doAfterChosen})
+  const DialogChoosePlayers({Key? key, required this.doAfterChosen})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -30,15 +30,15 @@ class DialogChoosePlayers extends StatelessWidget {
 
 class DialogPlayerBody extends StatefulWidget {
   final DoAfterChosen doAfterChosen;
-  const DialogPlayerBody({Key key,@required this.doAfterChosen})
+  const DialogPlayerBody({Key? key,required this.doAfterChosen})
       : super(key: key);
   @override
   _DialogPlayerBodyState createState() => _DialogPlayerBodyState();
 }
 
 class _DialogPlayerBodyState extends State<DialogPlayerBody> {
-  List<Player> players;
-  String errorMessage;
+  late List<Player> players;
+  String? errorMessage;
   @override
   void initState() {
     super.initState();
@@ -54,8 +54,8 @@ class _DialogPlayerBodyState extends State<DialogPlayerBody> {
         stream: MyDatabase.db.watchAllPlayers,
         builder: (BuildContext context, AsyncSnapshot<List<Player>> snapshot) {
           List<Player> playerDb = [];
-          if (!snapshot.hasError && snapshot.hasData) {
-            playerDb = snapshot.data;
+          if (!snapshot.hasError && snapshot.hasData && snapshot.data != null) {
+            playerDb = snapshot.data!;
           }
           return Container(
             child: Column(
@@ -69,7 +69,7 @@ class _DialogPlayerBodyState extends State<DialogPlayerBody> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            ChoosePlayerFormField(
+                            AutocompleteFormField(
                               playerDb,
                               onSaved: (newValue) {
                                 setState(() {
@@ -128,16 +128,15 @@ class _DialogPlayerBodyState extends State<DialogPlayerBody> {
                             ),
                             if (errorMessage != null)
                               Text(
-                                errorMessage,
+                                errorMessage!,
                                 style: TextStyle(color: Colors.red),
                               )
                           ]),
                     ),
                   ),
-                  RaisedButton(
-                      color: Colors.amber,
+                  ElevatedButton(
                       onPressed: () {
-                        if (formKey.currentState.validate()) {
+                        if (formKey.currentState?.validate() ?? false) {
                           Navigator.of(context).pop();
                           widget.doAfterChosen(players);
                         }

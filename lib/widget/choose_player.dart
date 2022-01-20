@@ -1,20 +1,23 @@
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+// import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
-
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
+/*
 class ChoosePlayerFormField extends FormField<Player> {
   final List<Player> suggestions;
 
   ChoosePlayerFormField(this.suggestions,
-      {FormFieldSetter<Player> onSaved,
-      FormFieldValidator<Player> validator,
-      Player initialValue,
+      {required FormFieldSetter<Player> onSaved,
+      required FormFieldValidator<Player> validator,
+      required Player initialValue,
       bool autoValidate = false})
       : super(
-            onSaved: onSaved,
+      onSaved: onSaved,
             validator: validator,
             initialValue: initialValue,
-            autovalidate: autoValidate,
+            autovalidateMode: autoValidate
+                ? AutovalidateMode.always
+                : AutovalidateMode.disabled,
             builder: (FormFieldState<Player> state) {
               var controller = TextEditingController();
               var key = GlobalKey<AutoCompleteTextFieldState<Player>>();
@@ -81,7 +84,7 @@ class ChoosePlayerFormField extends FormField<Player> {
                   ),
                   state.hasError
                       ? Text(
-                          state.errorText,
+                    state.errorText!,
                           style: TextStyle(color: Colors.red),
                         )
                       : Container(),
@@ -89,6 +92,96 @@ class ChoosePlayerFormField extends FormField<Player> {
               );
             });
   static Future<Player> checkForPseudoInDb(String text,
+      FormFieldState<Player> state, List<Player> suggestions) async {
+    Player added;
+    if (suggestions.any((element) => element.pseudo.trim() == text.trim())) {
+      // We have this player in DB
+      added = suggestions
+          .firstWhere((element) => element.pseudo.trim() == text.trim());
+    } else {
+      // Create in DB
+      var player = Player(id: null, pseudo: text.trim());
+      var id = await MyDatabase.db.newPlayer(player: player);
+      added = player.copyWith(id: id);
+    }
+    state.didChange(added);
+
+    return added;
+  }
+}
+*/
+class AutocompleteFormField extends FormField<Player> {
+  final List<Player> suggestions;
+
+  AutocompleteFormField(this.suggestions,
+      {required FormFieldSetter<Player> onSaved,
+      required FormFieldValidator<Player> validator,
+      required Player initialValue,
+      bool autoValidate = false})
+      : super(
+          onSaved: onSaved,
+          validator: validator,
+          initialValue: initialValue,
+          autovalidateMode: autoValidate
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
+          builder: (FormFieldState<Player> state) {
+            var controller = TextEditingController();
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TypeAheadField<Player>(
+                        suggestionsCallback: (pattern) {
+                          if (pattern.isEmpty) return [];
+                          return suggestions.where((element) => element.pseudo
+                              .toLowerCase()
+                              .contains(pattern.toLowerCase()));
+                        },
+                        textFieldConfiguration:
+                            TextFieldConfiguration(controller: controller),
+                        itemBuilder: (context, suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              suggestion.pseudo,
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.amber),
+                            ),
+                          );
+                        },
+                        onSuggestionSelected: (Player option) async {
+                          final player = await _checkForPseudoInDb(
+                              option.pseudo, state, suggestions);
+                          onSaved(player);
+                        },
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () async {
+                          final p = await _checkForPseudoInDb(
+                              controller.text, state, suggestions);
+                          onSaved(p);
+                        },
+                        icon: Icon(Icons.add))
+                  ],
+                ),
+                state.hasError
+                    ? Text(
+                        state.errorText!,
+                        style: TextStyle(color: Colors.red),
+                      )
+                    : Container(),
+              ],
+            );
+          },
+        );
+
+  static Future<Player> _checkForPseudoInDb(String text,
       FormFieldState<Player> state, List<Player> suggestions) async {
     Player added;
     if (suggestions.any((element) => element.pseudo.trim() == text.trim())) {

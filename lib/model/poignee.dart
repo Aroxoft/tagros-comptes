@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
+
 enum PoigneeType { SIMPLE, DOUBLE, TRIPLE, NONE }
 
-getPoigneePoints(PoigneeType poigneeType) {
+int getPoigneePoints(PoigneeType poigneeType) {
   switch (poigneeType) {
     case PoigneeType.SIMPLE:
       return 20;
@@ -93,39 +95,41 @@ const String _double = "DOUBLE";
 const String _triple = "TRIPLE";
 const String _none = "NONE";
 
-String toDbPoignees(List<PoigneeType> poignees) => poignees == null
+String? toDbPoignees(List<PoigneeType> poignees) => poignees.isEmpty
     ? null
-    : (poignees.map((e) {
+    : poignees
+        .map((e) {
+          switch (e) {
+            case PoigneeType.SIMPLE:
+              return _simple;
+            case PoigneeType.DOUBLE:
+              return _double;
+            case PoigneeType.TRIPLE:
+              return _triple;
+            case PoigneeType.NONE:
+              return null;
+          }
+        })
+        .whereNotNull()
+        .join(",");
+
+List<PoigneeType> fromDbPoignee(String? poignees) {
+  if (poignees == null || poignees.isEmpty) return [];
+  return poignees
+      .split(",")
+      .map((e) {
         switch (e) {
-          case PoigneeType.SIMPLE:
-            return _simple;
-          case PoigneeType.DOUBLE:
-            return _double;
-          case PoigneeType.TRIPLE:
-            return _triple;
-          case PoigneeType.NONE:
+          case _simple:
+            return PoigneeType.SIMPLE;
+          case _double:
+            return PoigneeType.DOUBLE;
+          case _triple:
+            return PoigneeType.TRIPLE;
+          case _none:
             return null;
         }
         return null;
       })
-          ..where((element) => element != null))
-        .join(",");
-
-List<PoigneeType> fromDbPoignee(String poignees) {
-  if (poignees == null || poignees.isEmpty) return null;
-  return (poignees.split(",").map((e) {
-    switch (e) {
-      case _simple:
-        return PoigneeType.SIMPLE;
-      case _double:
-        return PoigneeType.DOUBLE;
-      case _triple:
-        return PoigneeType.TRIPLE;
-      case _none:
-        return null;
-    }
-    return null;
-  })
-        ..where((element) => element != null))
+      .whereNotNull()
       .toList();
 }

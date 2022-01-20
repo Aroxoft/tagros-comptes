@@ -1,8 +1,7 @@
-import 'package:flushbar/flushbar.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:another_flushbar/flushbar.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
@@ -12,7 +11,6 @@ import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 import 'package:tagros_comptes/widget/boxed.dart';
 import 'package:tagros_comptes/widget/selectable_tag.dart';
-
 class AddModifyEntry extends StatefulWidget {
   static String routeName = "/addModify";
 
@@ -21,22 +19,28 @@ class AddModifyEntry extends StatefulWidget {
 }
 
 class _AddModifyEntryState extends State<AddModifyEntry> {
-  InfoEntryPlayerBean infoEntry;
-  bool add;
-  List<PlayerBean> players;
+  InfoEntryPlayerBean? infoEntry;
+  late bool add;
+  late List<PlayerBean> players;
 
   @override
   void initState() {
     infoEntry = null;
+    players = [];
+    add = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     if (infoEntry == null) {
-      final AddModifyArguments args = ModalRoute.of(context).settings.arguments;
+      final AddModifyArguments args =
+          ModalRoute.of(context)!.settings.arguments as AddModifyArguments;
       infoEntry = args.infoEntry;
-      players = args.players.reversed.map((e) => PlayerBean.fromDb(e)).toList();
+      players = args.players.reversed
+          .map((e) => PlayerBean.fromDb(e))
+          .whereNotNull()
+          .toList();
       print(
           "So we ${infoEntry == null ? "add" : "modify"} an entry, we have the players: $players");
       add = false;
@@ -48,9 +52,9 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
             withPlayers: null,
             infoEntry: InfoEntryBean(points: 0, nbBouts: 0));
         if (pLength == 5) {
-          infoEntry.withPlayers = [players[0]];
+          infoEntry!.withPlayers = [players[0]];
         } else if (pLength > 5) {
-          infoEntry.withPlayers = [players[0], players[0]];
+          infoEntry!.withPlayers = [players[0], players[0]];
         }
       }
     }
@@ -62,7 +66,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
-            if (_validate(infoEntry)) {
+            if (_validate(infoEntry!)) {
               Navigator.of(context).pop(infoEntry);
             } else {
               Flushbar(
@@ -99,22 +103,23 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                 reverse: true,
                                 scrollDirection: Axis.horizontal,
                                 itemCount: players.length,
-                                itemBuilder: (BuildContext context,
-                                        int index) =>
-                                    SelectableTag(
-                                        selected: infoEntry.player.id ==
-                                            players[index].id,
-                                        text: players[index].name,
-                                        onPressed: () {
-                                          setState(() {
-                                            if (infoEntry.player.id ==
-                                                players[index].id) {
-                                              infoEntry.player = null;
-                                            } else {
-                                              infoEntry.player = players[index];
-                                            }
-                                          });
-                                        }),
+                                itemBuilder:
+                                    (BuildContext context, int index) =>
+                                        SelectableTag(
+                                            selected: infoEntry!.player!.id ==
+                                                players[index].id,
+                                            text: players[index].name,
+                                            onPressed: () {
+                                              setState(() {
+                                                if (infoEntry!.player!.id ==
+                                                    players[index].id) {
+                                                  infoEntry!.player = null;
+                                                } else {
+                                                  infoEntry!.player =
+                                                      players[index];
+                                                }
+                                              });
+                                            }),
                               ),
                             ),
                           ),
@@ -140,20 +145,21 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: players.length,
                                     itemBuilder: (BuildContext context,
-                                            int index) =>
+                                        int index) =>
                                         SelectableTag(
                                             selected:
-                                                infoEntry.withPlayers[0] ==
+                                            infoEntry!.withPlayers![0] ==
                                                     players[index],
                                             text: players[index].name,
                                             onPressed: () {
                                               setState(() {
-                                                if (infoEntry.withPlayers[0] ==
+                                                if (infoEntry!
+                                                        .withPlayers![0] ==
                                                     players[index]) {
-                                                  infoEntry.withPlayers[0] =
+                                                  infoEntry!.withPlayers![0] =
                                                       null;
                                                 } else {
-                                                  infoEntry.withPlayers[0] =
+                                                  infoEntry!.withPlayers![0] =
                                                       players[index];
                                                 }
                                               });
@@ -181,20 +187,21 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: players.length,
                                     itemBuilder: (BuildContext context,
-                                            int index) =>
+                                        int index) =>
                                         SelectableTag(
                                             selected:
-                                                infoEntry.withPlayers[1] ==
+                                            infoEntry!.withPlayers![1] ==
                                                     players[index],
                                             text: players[index].name,
                                             onPressed: () {
                                               setState(() {
-                                                if (infoEntry.withPlayers[1] ==
+                                                if (infoEntry!
+                                                        .withPlayers![1] ==
                                                     players[index]) {
-                                                  infoEntry.withPlayers[1] =
+                                                  infoEntry!.withPlayers![1] =
                                                       null;
                                                 } else {
-                                                  infoEntry.withPlayers[1] =
+                                                  infoEntry!.withPlayers![1] =
                                                       players[index];
                                                 }
                                               });
@@ -209,15 +216,17 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                         children: <Widget>[
                           Text("Type"),
                           DropdownButton(
-                              value: infoEntry.infoEntry.prise,
+                              value: infoEntry!.infoEntry.prise,
                               items: Prise.values
                                   .map((e) => DropdownMenuItem<Prise>(
                                       value: e, child: Text(getNomPrise(e))))
                                   .toList(),
-                              onChanged: (Prise p) {
-                                setState(() {
-                                  infoEntry.infoEntry.prise = p;
-                                });
+                              onChanged: (Prise? p) {
+                                if (p != null) {
+                                  setState(() {
+                                    infoEntry!.infoEntry.prise = p;
+                                  });
+                                }
                               })
                         ]),
                   ],
@@ -233,17 +242,20 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                         children: <Widget>[
                           Text("Pour "),
                           DropdownButton<bool>(
-                              value: infoEntry.infoEntry.pointsForAttack,
+                              value: infoEntry!.infoEntry.pointsForAttack,
                               items: ["l'attaque", "la défense"]
                                   .map((e) => DropdownMenuItem<bool>(
                                       key: UniqueKey(),
                                       value: e == "l'attaque",
                                       child: Text(e)))
                                   .toList(),
-                              onChanged: (bool value) {
-                                setState(() {
-                                  infoEntry.infoEntry.pointsForAttack = value;
-                                });
+                              onChanged: (bool? value) {
+                                if (value != null) {
+                                  setState(() {
+                                    infoEntry!.infoEntry.pointsForAttack =
+                                        value;
+                                  });
+                                }
                               })
                         ],
                       ),
@@ -256,11 +268,12 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             child: TextFormField(
                               inputFormatters: [HalfDecimalInputFormatter()],
                               initialValue:
-                                  infoEntry.infoEntry.points.toString(),
+                                  infoEntry!.infoEntry.points.toString(),
                               onChanged: (String value) {
-                                var points =
-                                    value.isEmpty ? 0 : double.tryParse(value);
-                                infoEntry.infoEntry.points =
+                                var points = value.isEmpty
+                                    ? 0
+                                    : double.tryParse(value) ?? 0;
+                                infoEntry!.infoEntry.points =
                                     (points * 2).round() / 2;
                               },
                               decoration: InputDecoration(
@@ -286,7 +299,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           DropdownButton(
-                              value: infoEntry.infoEntry.nbBouts,
+                              value: infoEntry!.infoEntry.nbBouts,
                               items: List.generate(players.length > 5 ? 7 : 4,
                                       (index) => index)
                                   .map((e) => DropdownMenuItem<int>(
@@ -294,14 +307,16 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                       value: e,
                                       child: Text(e.toString())))
                                   .toList(),
-                              onChanged: (int value) {
-                                setState(() {
-                                  infoEntry.infoEntry.nbBouts = value;
-                                  print(infoEntry);
-                                });
+                              onChanged: (int? value) {
+                                if (value != null) {
+                                  setState(() {
+                                    infoEntry!.infoEntry.nbBouts = value;
+                                    print(infoEntry);
+                                  });
+                                }
                               }),
                           Text(
-                              " bout${infoEntry.infoEntry.nbBouts != 1 ? "s" : ""}")
+                              " bout${infoEntry!.infoEntry.nbBouts != 1 ? "s" : ""}")
                         ],
                       )
                     ],
@@ -314,30 +329,28 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Checkbox(
-                            value: infoEntry.infoEntry.poignees != null &&
-                                infoEntry.infoEntry.poignees.isNotEmpty &&
-                                infoEntry.infoEntry.poignees[0] != null &&
-                                infoEntry.infoEntry.poignees[0] !=
+                            value: infoEntry!.infoEntry.poignees.isNotEmpty &&
+                                infoEntry!.infoEntry.poignees[0] !=
                                     PoigneeType.NONE,
-                            onChanged: (bool value) {
-                              setState(() {
-                                if (infoEntry.infoEntry.poignees == null ||
-                                    infoEntry.infoEntry.poignees.isEmpty) {
-                                  infoEntry.infoEntry.poignees = [
-                                    PoigneeType.SIMPLE
-                                  ];
-                                }
-                                infoEntry.infoEntry.poignees[0] = value
-                                    ? PoigneeType.SIMPLE
-                                    : PoigneeType.NONE;
-                              });
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                setState(() {
+                                  if (infoEntry!.infoEntry.poignees.isEmpty) {
+                                    infoEntry!.infoEntry.poignees = [
+                                      PoigneeType.SIMPLE
+                                    ];
+                                  }
+                                  infoEntry!.infoEntry.poignees[0] = value
+                                      ? PoigneeType.SIMPLE
+                                      : PoigneeType.NONE;
+                                });
+                              }
                             }),
                         Text("Poignée "),
-                        if (infoEntry.infoEntry.poignees != null &&
-                            infoEntry.infoEntry.poignees.isNotEmpty)
+                        if (infoEntry!.infoEntry.poignees.isNotEmpty)
                           Expanded(
-                            child: DropdownButton(
-                                value: infoEntry.infoEntry.poignees[0],
+                            child: DropdownButton<PoigneeType>(
+                                value: infoEntry!.infoEntry.poignees[0],
                                 isExpanded: true,
                                 items: PoigneeType.values
                                     .map(
@@ -348,10 +361,13 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                               "${getNamePoignee(e)} (${getNbAtouts(e, players.length)}+ atouts)")),
                                     )
                                     .toList(),
-                                onChanged: (poignee) {
-                                  setState(() {
-                                    infoEntry.infoEntry.poignees[0] = poignee;
-                                  });
+                                onChanged: (PoigneeType? poignee) {
+                                  if (poignee != null) {
+                                    setState(() {
+                                      infoEntry!.infoEntry.poignees[0] =
+                                          poignee;
+                                    });
+                                  }
                                 }),
                           ),
                       ],
@@ -361,38 +377,41 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Checkbox(
-                            value: infoEntry.infoEntry.petitsAuBout != null &&
-                                infoEntry.infoEntry.petitsAuBout.isNotEmpty &&
-                                infoEntry.infoEntry.petitsAuBout[0] != null &&
-                                infoEntry.infoEntry.petitsAuBout[0] !=
-                                    Camp.NONE,
-                            onChanged: (bool value) {
-                              setState(() {
-                                if (infoEntry.infoEntry.petitsAuBout == null ||
-                                    infoEntry.infoEntry.petitsAuBout.isEmpty) {
-                                  infoEntry.infoEntry.petitsAuBout = [
-                                    Camp.ATTACK
-                                  ];
-                                }
-                                infoEntry.infoEntry.petitsAuBout[0] =
-                                    value ? Camp.ATTACK : Camp.NONE;
-                              });
+                            value:
+                                infoEntry!.infoEntry.petitsAuBout.isNotEmpty &&
+                                    infoEntry!.infoEntry.petitsAuBout[0] !=
+                                        Camp.NONE,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                setState(() {
+                                  if (infoEntry!
+                                      .infoEntry.petitsAuBout.isEmpty) {
+                                    infoEntry!.infoEntry.petitsAuBout = [
+                                      Camp.ATTACK
+                                    ];
+                                  }
+                                  infoEntry!.infoEntry.petitsAuBout[0] =
+                                      value ? Camp.ATTACK : Camp.NONE;
+                                });
+                              }
                             }),
                         Text("Petit au bout "),
-                        if (infoEntry.infoEntry.petitsAuBout != null &&
-                            infoEntry.infoEntry.petitsAuBout.isNotEmpty)
-                          DropdownButton(
-                              value: infoEntry.infoEntry.petitsAuBout[0],
+                        if (infoEntry!.infoEntry.petitsAuBout.isNotEmpty)
+                          DropdownButton<Camp>(
+                              value: infoEntry!.infoEntry.petitsAuBout[0],
                               items: Camp.values
                                   .map((e) => DropdownMenuItem(
                                         child: Text(getNameCamp(e)),
                                         value: e,
                                       ))
                                   .toList(),
-                              onChanged: (petit) {
-                                setState(() {
-                                  infoEntry.infoEntry.petitsAuBout[0] = petit;
-                                });
+                              onChanged: (Camp? petit) {
+                                if (petit != null) {
+                                  setState(() {
+                                    infoEntry!.infoEntry.petitsAuBout[0] =
+                                        petit;
+                                  });
+                                }
                               })
                       ],
                     )
@@ -406,20 +425,19 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
   }
 
   bool _validate(InfoEntryPlayerBean infoEntry) {
-    if (infoEntry == null) return false;
     if (infoEntry.player == null) return false;
     if (players.length < 5) return true;
-    if (infoEntry.withPlayers == null || infoEntry.withPlayers.isEmpty)
+    if (infoEntry.withPlayers == null || infoEntry.withPlayers!.isEmpty)
       return false;
     if (players.length == 5) return true;
-    if (infoEntry.withPlayers.length != 2) return false;
+    if (infoEntry.withPlayers!.length != 2) return false;
     return true;
   }
 }
 
 class AddModifyArguments {
-  InfoEntryPlayerBean infoEntry;
+  InfoEntryPlayerBean? infoEntry;
   List<Player> players;
 
-  AddModifyArguments({this.infoEntry, @required this.players});
+  AddModifyArguments({required this.infoEntry, required this.players});
 }

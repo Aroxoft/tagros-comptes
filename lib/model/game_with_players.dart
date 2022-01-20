@@ -1,8 +1,8 @@
-import 'package:tagros_comptes/data/database_moor.dart';
+import 'package:tagros_comptes/services/db/database_moor.dart';
 
 class GameWithPlayers {
   Game game;
   List<Player> players;
 
-  GameWithPlayers({this.players, this.game});
+  GameWithPlayers({required this.players, required this.game});
 }

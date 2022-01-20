@@ -1,3 +1,4 @@
+import 'package:appspector/appspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,19 +10,25 @@ import 'package:tagros_comptes/screen/test_native.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 
+import '.env.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  _runAppSpector();
   if (kDebugMode) {
     // Stetho.initialize();
   }
   runApp(ProviderScope(child: MyApp()));
 }
-//
-//void _runAppSpector() {
-//  var config = Config();
-//  config.androidApiKey =
-//      "android_YjE3ODM3ZDctZTdiMC00ZjRlLWJiMWMtZTJjOTg2ZjNjZjEz";
-//  AppSpectorPlugin.run(config);
-//}
+
+void _runAppSpector() {
+  var config = Config()
+    ..androidApiKey = environment['appSpector']
+    ..iosApiKey = environment['appSpectorIos']
+  // ..monitors = [Monitors.sqLite, Monitors.fileSystem]
+  ;
+  AppSpectorPlugin.run(config);
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

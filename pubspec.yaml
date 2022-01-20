@@ -34,9 +34,8 @@ dependencies:
   path: ^1.8.0
   path_provider: ^2.0.8
   #  autocomplete_textfield: ^1.7.3
-  #  appspector: ^0.1.0 #For viewing database
+  appspector: ^0.8.1 #For viewing database
   #  flutter_stetho: ^0.5.2
-  recase: ^4.0.0
   rxdart: ^0.27.3
   sqlite3_flutter_libs: ^0.5.0
 

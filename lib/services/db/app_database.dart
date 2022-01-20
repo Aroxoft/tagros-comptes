@@ -28,15 +28,26 @@ class Games extends Table {
 @DataClassName("InfoEntry")
 class InfoEntries extends Table {
   IntColumn get id => integer().autoIncrement()();
+
   IntColumn get game => integer()();
+
   IntColumn get player => integer()();
+
   IntColumn get with1 => integer().nullable()();
+
   IntColumn get with2 => integer().nullable()();
+
   RealColumn get points => real()();
-  BoolColumn get pointsForAttack => boolean().withDefault(Constant(true))();
+
+  BoolColumn get pointsForAttack =>
+      boolean().withDefault(const Constant(true))();
+
   TextColumn get petitAuBout => text().nullable()();
+
   TextColumn get poignee => text().nullable()();
+
   TextColumn get prise => text()();
+
   IntColumn get nbBouts => integer()();
 }
 
@@ -49,14 +60,14 @@ class PlayerGames extends Table {
 
 @DriftDatabase(tables: [Players, Games, InfoEntries, PlayerGames])
 class MyDatabase extends _$MyDatabase {
-  static const int DATABASE_VERSION = 1;
+  static const int databaseVersion = 1;
 
   // We tell the database where to store the data with this constructor
   MyDatabase(QueryExecutor conn) : super(conn);
 
   // Bump this number whenever we change or add a table definition
   @override
-  int get schemaVersion => DATABASE_VERSION;
+  int get schemaVersion => databaseVersion;
 
   @override
   MigrationStrategy get migration {
@@ -148,7 +159,7 @@ class MyDatabase extends _$MyDatabase {
         final idToPlayers = <int, List<Player>>{};
 
         // For each player (row) that is included in a game, put it in the map of players
-        for (var row in rows) {
+        for (final row in rows) {
           final player = row.readTable(players);
           final id = row.readTable(playerGames).game;
 
@@ -170,7 +181,8 @@ class MyDatabase extends _$MyDatabase {
 
   Future<int> newEntry(
       InfoEntryPlayerBean infoEntry, GameWithPlayers game) async {
-    Value<int> with1 = Value.absent(), with2 = Value.absent();
+    Value<int> with1 = const Value.absent();
+    Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
       with1 = Value(infoEntry.withPlayers![0]!.id!);
       if (infoEntry.withPlayers!.length > 1) {
@@ -195,10 +207,10 @@ class MyDatabase extends _$MyDatabase {
     return transaction(() async {
       final Game game = gameWithPlayers.game;
 
-      var idGame =
+      final idGame =
           await into(games).insert(game, mode: InsertMode.insertOrReplace);
 
-      var idPlayers = await addPlayers(gameWithPlayers.players
+      final idPlayers = await addPlayers(gameWithPlayers.players
           .map((e) => PlayersCompanion.insert(pseudo: e.pseudo)));
 
       final playersToInsert = idPlayers.map(
@@ -210,13 +222,13 @@ class MyDatabase extends _$MyDatabase {
   }
 
   Future<List<int>> addPlayers(Iterable<PlayersCompanion> thePlayers) async {
-    List<int> playersIds = [];
-    for (var player in thePlayers) {
-      var single = await (select(players)
+    final List<int> playersIds = [];
+    for (final player in thePlayers) {
+      final single = await (select(players)
             ..where((tbl) => players.pseudo.equals(player.pseudo.value)))
           .getSingleOrNull();
       if (single == null) {
-        var id = await newPlayer(playersCompanion: player);
+        final id = await newPlayer(playersCompanion: player);
         playersIds.add(id);
       } else {
         playersIds.add(single.id!);
@@ -226,19 +238,19 @@ class MyDatabase extends _$MyDatabase {
   }
 
   Future<int> newPlayer({Player? player, PlayersCompanion? playersCompanion}) {
-    assert(player != null ||
-        playersCompanion != null &&
-            (player == null || playersCompanion == null));
-    if (player != null)
+    assert(player != null || playersCompanion != null && player == null);
+    if (player != null) {
       return into(players)
           .insert(PlayersCompanion.insert(pseudo: player.pseudo));
+    }
     return into(players).insert(playersCompanion!);
   }
   //</editor-fold>
 
   //<editor-fold desc="UPDATE">
   Future<int> updateEntry(InfoEntryPlayerBean infoEntry) async {
-    Value<int> with1 = Value.absent(), with2 = Value.absent();
+    Value<int> with1 = const Value.absent();
+    Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
       with1 = Value(infoEntry.withPlayers![0]!.id!);
       if (infoEntry.withPlayers!.length > 1) {

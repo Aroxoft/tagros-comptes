@@ -4,7 +4,8 @@ class Boxed extends StatelessWidget {
   final Color fillColor;
 
   final Color color;
-  final double borderWidth, radius;
+  final double borderWidth;
+  final double radius;
 
   final Widget child;
 
@@ -47,7 +48,7 @@ class Boxed extends StatelessWidget {
             left: 20,
             top: 10,
             child: Container(
-              padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+              padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
               color: fillColor,
               child: Text(
                 title,

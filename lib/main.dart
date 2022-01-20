@@ -12,7 +12,7 @@ import 'package:tagros_comptes/state/providers.dart';
 
 // import '.env.dart';
 
-void main() async {
+void main() {
   // WidgetsFlutterBinding.ensureInitialized();
   // await _runAppSpector();
   if (kDebugMode) {
@@ -55,12 +55,12 @@ class MyApp extends StatelessWidget {
                   primary: Colors.amber,
                   onPrimary: Colors.black,
                   padding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 10)))),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10)))),
       home: MenuScreen(),
       routes: <String, WidgetBuilder>{
         MenuScreen.routeName: (context) => MenuScreen(),
         TestNative.routeName: (context) => TestNative(),
-        AddModifyEntry.routeName: (context) => AddModifyEntry(),
+        AddModifyEntry.routeName: (context) => const AddModifyEntry(),
       },
     );
   }
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
 Future<void> navigateToTableau(BuildContext context,
     {required GameWithPlayers game, required MyDatabase appDatabase}) async {
   if (game.game.id == null) {
-    var idGame = await appDatabase.newGame(game);
+    final idGame = await appDatabase.newGame(game);
     game.game = game.game.copyWith(id: idGame);
   }
   await Navigator.of(context).push(MaterialPageRoute(

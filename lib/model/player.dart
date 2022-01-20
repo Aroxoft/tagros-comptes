@@ -5,9 +5,9 @@ part 'player.freezed.dart';
 
 @freezed
 class PlayerBean with _$PlayerBean {
-  PlayerBean._();
-
   factory PlayerBean({required String name, int? id}) = _PlayerBean;
+
+  PlayerBean._();
 
   static PlayerBean? fromDb(Player? player) {
     if (player == null) return null;

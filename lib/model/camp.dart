@@ -1,15 +1,15 @@
 import 'package:collection/collection.dart';
 
-enum Camp { ATTACK, DEFENSE, NONE }
+enum Camp { attack, defense, none }
 
 extension CampExt on Camp {
   String get displayName {
     switch (this) {
-      case Camp.ATTACK:
+      case Camp.attack:
         return "attaque";
-      case Camp.DEFENSE:
+      case Camp.defense:
         return "défense";
-      case Camp.NONE:
+      case Camp.none:
         return "aucun";
     }
   }
@@ -23,9 +23,9 @@ List<Camp> fromDbPetit(String? petits) {
   return (petits.split(",").map((e) {
     switch (e) {
       case _attack:
-        return Camp.ATTACK;
+        return Camp.attack;
       case _defense:
-        return Camp.DEFENSE;
+        return Camp.defense;
     }
     return null;
   }).whereNotNull())
@@ -36,11 +36,11 @@ String? toDbPetits(List<Camp>? petits) {
   if (petits == null || petits.isEmpty) return null;
   return (petits.map((e) {
     switch (e) {
-      case Camp.ATTACK:
+      case Camp.attack:
         return _attack;
-      case Camp.DEFENSE:
+      case Camp.defense:
         return _defense;
-      case Camp.NONE:
+      case Camp.none:
         return null;
     }
   })

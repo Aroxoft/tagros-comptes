@@ -11,12 +11,12 @@ class InfoEntryBean with _$InfoEntryBean {
   factory InfoEntryBean(
       {required double points,
       required int nbBouts,
-      @Default(Prise.PETITE) Prise prise,
+      @Default(Prise.petite) Prise prise,
 
       /// are the points for the attack?
       @Default(true) bool pointsForAttack,
-      @Default(const []) List<Camp> petitsAuBout,
-      @Default(const []) List<PoigneeType> poignees,
+      @Default(<Camp>[]) List<Camp> petitsAuBout,
+      @Default(<PoigneeType>[]) List<PoigneeType> poignees,
       int? id}) = _InfoEntryBean;
 
   factory InfoEntryBean.fromDb(InfoEntry infoEntry) => InfoEntryBean(

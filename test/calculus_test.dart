@@ -12,7 +12,7 @@ void main() {
     final B = PlayerBean(name: "B");
     final C = PlayerBean(name: "C");
     final D = PlayerBean(name: "D");
-    var players = [A, B, C, D];
+    final players = [A, B, C, D];
 
     InfoEntryPlayerBean entry;
     Map<String, double> gains;
@@ -21,7 +21,7 @@ void main() {
       entry = InfoEntryPlayerBean(
           player: A,
           infoEntry: InfoEntryBean(
-            prise: Prise.PETITE,
+            prise: Prise.petite,
             nbBouts: 3,
             points: 36,
             pointsForAttack: true,
@@ -34,7 +34,7 @@ void main() {
       entry = InfoEntryPlayerBean(
           player: A,
           infoEntry: InfoEntryBean(
-            prise: Prise.PETITE,
+            prise: Prise.petite,
             points: 41,
             pointsForAttack: true,
             nbBouts: 2,
@@ -47,7 +47,7 @@ void main() {
       entry = InfoEntryPlayerBean(
           player: A,
           infoEntry: InfoEntryBean(
-            prise: Prise.PETITE,
+            prise: Prise.petite,
             points: 51,
             pointsForAttack: true,
             nbBouts: 1,
@@ -60,7 +60,7 @@ void main() {
       entry = InfoEntryPlayerBean(
           player: A,
           infoEntry: InfoEntryBean(
-            prise: Prise.PETITE,
+            prise: Prise.petite,
             points: 56,
             pointsForAttack: true,
             nbBouts: 0,
@@ -88,7 +88,7 @@ void main() {
         infoEntry: InfoEntryBean(
           points: 52,
           nbBouts: 1,
-          prise: Prise.GARDE,
+          prise: Prise.garde,
         ),
       );
       gains = calculateGains(entry, players);
@@ -102,7 +102,7 @@ void main() {
           points: 51,
           nbBouts: 1,
           pointsForAttack: false,
-          prise: Prise.GARDE,
+          prise: Prise.garde,
         ),
       );
       gains = calculateGains(entry, players);
@@ -115,7 +115,7 @@ void main() {
         infoEntry: InfoEntryBean(
           points: 56,
           nbBouts: 0,
-          prise: Prise.GARDE_SANS,
+          prise: Prise.gardeSans,
         ),
       );
       gains = calculateGains(entry, players);
@@ -128,8 +128,8 @@ void main() {
           infoEntry: InfoEntryBean(
             points: 36,
             nbBouts: 3,
-            prise: Prise.GARDE,
-            petitsAuBout: [Camp.ATTACK],
+            prise: Prise.garde,
+            petitsAuBout: [Camp.attack],
           ));
       gains = calculateGains(entry, players);
       expect(gains, {"A": 70 * 3, "B": -70, "C": -70, "D": -70});
@@ -142,7 +142,7 @@ void main() {
     final C = PlayerBean(name: "C");
     final D = PlayerBean(name: "D");
     final E = PlayerBean(name: "E");
-    var players = [A, B, C, D, E];
+    final players = [A, B, C, D, E];
     InfoEntryPlayerBean entry;
     Map<String, double> gains;
 
@@ -177,7 +177,7 @@ void main() {
           infoEntry: InfoEntryBean(
             points: 41,
             nbBouts: 2,
-            prise: Prise.GARDE,
+            prise: Prise.garde,
           ));
       gains = calculateGains(entry, players);
       expect(gains, {"A": -50, "B": -50, "C": 50, "D": 100, "E": -50});
@@ -188,7 +188,7 @@ void main() {
           player: C,
           withPlayers: [C],
           infoEntry: InfoEntryBean(
-            prise: Prise.GARDE_SANS,
+            prise: Prise.gardeSans,
             points: 36,
             nbBouts: 3,
           ));

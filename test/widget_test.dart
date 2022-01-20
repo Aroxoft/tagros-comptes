@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -19,7 +20,11 @@ void main() {
       child: MaterialApp(
         home: Scaffold(
           body: DialogPlayerBody(
-            doAfterChosen: (players) => print(players),
+            doAfterChosen: (players) {
+              if (kDebugMode) {
+                print(players);
+              }
+            },
           ),
         ),
       ),

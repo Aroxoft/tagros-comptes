@@ -19,6 +19,8 @@ environment:
 
 dependencies:
   another_flushbar: ^1.10.28 #Substitute for toasts and snackbars
+  appspector: ^0.8.1 #For viewing database
+  collection: ^1.15.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
@@ -26,23 +28,25 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_hooks: ^0.18.0
+  flutter_localizations:
+    sdk: flutter
   flutter_slidable: ^1.2.0
   flutter_typeahead: ^3.2.4
   freezed_annotation: ^1.1.0
   hooks_riverpod: ^2.0.0-dev.0
+  lint: ^1.8.2
   #  sqflite: ^1.0.0
   #  moor_ffi: ^0.4.0 # Contains code that will run the actual queries
   path: ^1.8.0
   path_provider: ^2.0.8
   #  autocomplete_textfield: ^1.7.3
-  appspector: ^0.8.1 #For viewing database
   #  flutter_stetho: ^0.5.2
   rxdart: ^0.27.3
   sqlite3_flutter_libs: ^0.5.0
 
 dev_dependencies:
-  change_app_package_name: ^1.0.0
   build_runner: ^2.1.7
+  change_app_package_name: ^1.0.0
   drift_dev: ^1.3.0
   flutter_test:
     sdk: flutter

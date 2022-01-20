@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,7 +10,7 @@ class TestNative extends StatefulWidget {
 }
 
 class _TestNativeState extends State<TestNative> {
-  static const platform = const MethodChannel('com.aroxoft.tagros.points/info');
+  static const platform = MethodChannel('com.aroxoft.tagros.points/info');
   String _message = "No messages yet...";
   @override
   void initState() {
@@ -21,10 +22,8 @@ class _TestNativeState extends State<TestNative> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text(_message),
-      ),
+    return Center(
+      child: Text(_message),
     );
   }
 
@@ -33,7 +32,9 @@ class _TestNativeState extends State<TestNative> {
     try {
       message = await platform.invokeMethod("getMessage");
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
     return message;
   }

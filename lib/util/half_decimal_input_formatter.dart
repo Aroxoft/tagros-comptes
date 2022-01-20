@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 class HalfDecimalInputFormatter extends TextInputFormatter {
-  RegExp _exp;
+  final RegExp _exp;
 
   HalfDecimalInputFormatter() : _exp = RegExp(r"^([0-9]+(\.[05]?)?)?$");
 

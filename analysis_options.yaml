@@ -1,0 +1,21 @@
+include: package:lint/analysis_options.yaml
+analyzer:
+  language:
+    strict-raw-types: true
+  strong-mode:
+    implicit-casts: false
+#    implicit-dynamic: false
+  errors:
+    # either warning or error or info or ignore
+    dead_code: error
+    invalid_use_of_protected_member: error
+  exclude:
+    - lib/.env.dart
+    - lib/generated/**
+    - lib/**/*.g.dart
+    - lib/**/**.freezed.dart
+linter:
+  rules:
+    avoid_classes_with_only_static_members: false
+    avoid_redundant_argument_values: false
+    require_trailing_commas: false

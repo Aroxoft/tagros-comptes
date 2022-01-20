@@ -1,21 +1,21 @@
-enum NbPlayers { THREE, FOUR, FIVE, SEVEN, EIGHT, NINE, TEN }
+enum NbPlayers { three, four, five, seven, eight, nine, ten }
 
 extension NbPlayerExt on NbPlayers {
   int get number {
     switch (this) {
-      case NbPlayers.THREE:
+      case NbPlayers.three:
         return 3;
-      case NbPlayers.FOUR:
+      case NbPlayers.four:
         return 4;
-      case NbPlayers.FIVE:
+      case NbPlayers.five:
         return 5;
-      case NbPlayers.SEVEN:
+      case NbPlayers.seven:
         return 7;
-      case NbPlayers.EIGHT:
+      case NbPlayers.eight:
         return 8;
-      case NbPlayers.NINE:
+      case NbPlayers.nine:
         return 9;
-      case NbPlayers.TEN:
+      case NbPlayers.ten:
         return 10;
     }
   }

@@ -9,7 +9,7 @@ class GameNotifier {
 
   StreamSink<GameWithPlayers> get inDeleteGame => _deleteGameController.sink;
 
-  GameNotifier({required MyDatabase database}) : this._database = database {
+  GameNotifier({required MyDatabase database}) : _database = database {
     _deleteGameController.stream.listen(_handleDeleteGame);
   }
 
@@ -17,7 +17,7 @@ class GameNotifier {
     _deleteGameController.close();
   }
 
-  void _handleDeleteGame(GameWithPlayers event) async {
+  Future<void> _handleDeleteGame(GameWithPlayers event) async {
     await _database.deleteGame(event);
   }
 }

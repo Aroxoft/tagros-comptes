@@ -16,10 +16,10 @@ class MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Compteur Tagros"),
+          title: const Text("Compteur Tagros"),
           actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.settings),
+                icon: const Icon(Icons.settings),
                 onPressed: () {
                   Navigator.of(context).pushNamed(TestNative.routeName);
                 })
@@ -51,24 +51,24 @@ class MenuBody extends StatelessWidget {
                               date: DateTime.now()),
                           players: players)));
             },
-            child: Text("Nouvelle partie"),
+            child: const Text("Nouvelle partie"),
           ),
         ),
         ElevatedButton(
-            child: Text("Continuer"),
+            child: const Text("Continuer"),
             onPressed: () {
               showDialog(
                 context: context,
                 barrierDismissible: true,
-                builder: (context) => DialogChooseGame(),
+                builder: (context) => const DialogChooseGame(),
               );
             })
       ],
     ));
   }
 
-  showDialogPlayers(BuildContext context, {required DoAfterChosen doAfter}) {
-    showDialog(
+  void showDialogPlayers(BuildContext context, {required DoAfterChosen doAfter}) {
+    showDialog<void>(
         barrierDismissible: false,
         context: context,
         builder: (context) {

@@ -1,23 +1,23 @@
 import 'package:collection/collection.dart';
 
-enum PoigneeType { SIMPLE, DOUBLE, TRIPLE, NONE }
+enum PoigneeType { simple, double, triple, none }
 
 int getPoigneePoints(PoigneeType poigneeType) {
   switch (poigneeType) {
-    case PoigneeType.SIMPLE:
+    case PoigneeType.simple:
       return 20;
-    case PoigneeType.DOUBLE:
+    case PoigneeType.double:
       return 30;
-    case PoigneeType.TRIPLE:
+    case PoigneeType.triple:
       return 40;
-    case PoigneeType.NONE:
+    case PoigneeType.none:
       return 0;
   }
 }
 
 int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
   switch (poigneeType) {
-    case PoigneeType.SIMPLE:
+    case PoigneeType.simple:
       switch (nbPlayers) {
         case 3:
           return 13;
@@ -35,7 +35,7 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
           return 7;
       }
       break;
-    case PoigneeType.DOUBLE:
+    case PoigneeType.double:
       switch (nbPlayers) {
         case 3:
           return 15;
@@ -53,7 +53,7 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
           return 9;
       }
       break;
-    case PoigneeType.TRIPLE:
+    case PoigneeType.triple:
       switch (nbPlayers) {
         case 3:
           return 18;
@@ -71,7 +71,7 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
           return 11;
       }
       break;
-    case PoigneeType.NONE:
+    case PoigneeType.none:
       return 0;
   }
   return 0;
@@ -80,13 +80,13 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
 extension PoigneExtension on PoigneeType {
   String get displayName {
     switch(this) {
-      case PoigneeType.SIMPLE:
+      case PoigneeType.simple:
         return "simple";
-      case PoigneeType.DOUBLE:
+      case PoigneeType.double:
         return "double";
-      case PoigneeType.TRIPLE:
+      case PoigneeType.triple:
         return "triple";
-      case PoigneeType.NONE:
+      case PoigneeType.none:
         return "non";
     }
   }
@@ -102,13 +102,13 @@ String? toDbPoignees(List<PoigneeType> poignees) => poignees.isEmpty
     : poignees
         .map((e) {
           switch (e) {
-            case PoigneeType.SIMPLE:
+            case PoigneeType.simple:
               return _simple;
-            case PoigneeType.DOUBLE:
+            case PoigneeType.double:
               return _double;
-            case PoigneeType.TRIPLE:
+            case PoigneeType.triple:
               return _triple;
-            case PoigneeType.NONE:
+            case PoigneeType.none:
               return null;
           }
         })
@@ -122,11 +122,11 @@ List<PoigneeType> fromDbPoignee(String? poignees) {
       .map((e) {
         switch (e) {
           case _simple:
-            return PoigneeType.SIMPLE;
+            return PoigneeType.simple;
           case _double:
-            return PoigneeType.DOUBLE;
+            return PoigneeType.double;
           case _triple:
-            return PoigneeType.TRIPLE;
+            return PoigneeType.triple;
           case _none:
             return null;
         }

@@ -13,7 +13,7 @@ Future<void> main() async {
     'appSpectorIos': Platform.environment['APPSPECTORIOS'],
   };
 
-  final filename = 'lib/.env.dart';
+  const filename = 'lib/.env.dart';
   await File(filename).writeAsString(
       'final Map<String, String?> environment = ${json.encode(config)};');
 }

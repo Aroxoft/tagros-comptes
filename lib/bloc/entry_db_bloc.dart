@@ -32,17 +32,17 @@ class EntriesDbBloc {
   StreamSink<InfoEntryPlayerBean> get inDeleteEntry =>
       _deleteEntryController.sink;
 
-  GameWithPlayers game;
+  final GameWithPlayers _game;
   final MyDatabase _database;
 
   EntriesDbBloc(GameWithPlayers game, {required MyDatabase database})
       : assert(game.game.id != null),
-        this._database = database,
-        this.game = game,
+        _database = database,
+        _game = game,
         // Watch entries
-        this.infoEntries =
+        infoEntries =
             database.watchInfoEntriesInGame(game.game.id!).asBroadcastStream() {
-    sum = this.infoEntries.map((event) => calculateSum(event,
+    sum = infoEntries.map((event) => calculateSum(event,
         game.players.map((e) => PlayerBean.fromDb(e)).whereNotNull().toList()));
 
     // Listens for changes to the addEntryController and
@@ -58,16 +58,16 @@ class EntriesDbBloc {
     _deleteEntryController.close();
   }
 
-  void _handleAddEntry(InfoEntryPlayerBean entry) async {
+  Future<void> _handleAddEntry(InfoEntryPlayerBean entry) async {
     // Create the entry in the database
-    await _database.newEntry(entry, game);
+    await _database.newEntry(entry, _game);
   }
 
-  void _handleDeleteEntry(InfoEntryPlayerBean entry) async {
+  Future<void> _handleDeleteEntry(InfoEntryPlayerBean entry) async {
     await _database.deleteEntry(entry.infoEntry.id!);
   }
 
-  void _handleModifyEntry(InfoEntryPlayerBean entry) async {
+  Future<void> _handleModifyEntry(InfoEntryPlayerBean entry) async {
     await _database.updateEntry(entry);
   }
 }

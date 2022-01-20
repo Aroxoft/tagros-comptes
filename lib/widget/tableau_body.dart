@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -30,7 +31,7 @@ class TableauBody extends ConsumerWidget {
         ),
       ),
       Container(
-        constraints: BoxConstraints.expand(height: 4),
+        constraints: const BoxConstraints.expand(height: 4),
         color: Colors.pink,
       ),
       StreamBuilder(
@@ -43,7 +44,7 @@ class TableauBody extends ConsumerWidget {
             }
             final sums = snapshot.data;
             if (sums == null) {
-              return Center(
+              return const Center(
                 child: Text("No Data"),
               );
             }
@@ -53,8 +54,10 @@ class TableauBody extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: List.generate(sums.length, (index) {
-                  print(players[index]);
-                  var sum = sums[players[index].name]!;
+                  if (kDebugMode) {
+                    print(players[index]);
+                  }
+                  final sum = sums[players[index].name]!;
                   return Expanded(
                     child: Text(
                       sum.toStringAsFixed(1),
@@ -68,7 +71,7 @@ class TableauBody extends ConsumerWidget {
             );
           }),
       Container(
-        constraints: BoxConstraints.expand(height: 4),
+        constraints: const BoxConstraints.expand(height: 4),
         color: Colors.pink,
       ),
       StreamBuilder<List<InfoEntryPlayerBean>>(
@@ -84,19 +87,19 @@ class TableauBody extends ConsumerWidget {
             );
           }
           if (!snapshot.hasData) {
-            return Center(
+            return const Center(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0),
                 child: Text("No data"),
               ),
             );
           }
-          var entries = snapshot.data;
+          final entries = snapshot.data;
           if (entries == null || entries.isEmpty) {
-            return Expanded(
+            return const Expanded(
               child: Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Text("No data"),
                 ),
               ),
@@ -106,21 +109,21 @@ class TableauBody extends ConsumerWidget {
             child: ListView.builder(
                 itemCount: entries.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Map<String, double> calculateGain =
+                  final Map<String, double> calculateGain =
                       calculateGains(entries[index], players.toList());
-                  var gains =
+                  final gains =
                       transformGainsToList(calculateGain, players.toList());
                   // var key = GlobalKey<SlidableState>();
                   return Slidable(
                     key: ValueKey(index),
                     startActionPane:
-                        ActionPane(motion: ScrollMotion(), children: [
+                        ActionPane(motion: const ScrollMotion(), children: [
                       SlidableAction(
                         backgroundColor: Colors.amber,
                         icon: Icons.edit,
                         foregroundColor: Colors.white,
                         onPressed: (context) async {
-                          var modified = await Navigator.of(context).pushNamed(
+                          final modified = await Navigator.of(context).pushNamed(
                               AddModifyEntry.routeName,
                               arguments: AddModifyArguments(
                                   players: players.map((e) => e.toDb).toList(),
@@ -138,7 +141,7 @@ class TableauBody extends ConsumerWidget {
                       dismissible: DismissiblePane(
                         onDismissed: () {},
                       ),
-                      motion: ScrollMotion(),
+                      motion: const ScrollMotion(),
                       children: [
                         SlidableAction(
                           backgroundColor: Colors.red,
@@ -156,7 +159,7 @@ class TableauBody extends ConsumerWidget {
                       ],
                     ),
                     child: Container(
-                      color: index % 2 == 1 ? Colors.grey : Colors.white,
+                      color: index.isOdd ? Colors.grey : Colors.white,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -164,7 +167,9 @@ class TableauBody extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: List.generate(gains.length, (index) {
-                            print("Gain[$index] = ${gains[index]}");
+                            if (kDebugMode) {
+                              print("Gain[$index] = ${gains[index]}");
+                            }
                             return Expanded(
                               child: Text(
                                 gains[index].toString(),

@@ -128,7 +128,7 @@ class AutocompleteFormField extends FormField<Player> {
               ? AutovalidateMode.always
               : AutovalidateMode.disabled,
           builder: (FormFieldState<Player> state) {
-            var controller = TextEditingController();
+            final controller = TextEditingController();
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,8 +151,8 @@ class AutocompleteFormField extends FormField<Player> {
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
                               suggestion.pseudo,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.amber),
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.amber),
                             ),
                           );
                         },
@@ -171,15 +171,14 @@ class AutocompleteFormField extends FormField<Player> {
                               database: database);
                           onSaved(p);
                         },
-                        icon: Icon(Icons.add))
+                        icon: const Icon(Icons.add))
                   ],
                 ),
-                state.hasError
-                    ? Text(
-                        state.errorText!,
-                        style: TextStyle(color: Colors.red),
-                      )
-                    : Container(),
+                if (state.hasError)
+                  Text(state.errorText!,
+                      style: const TextStyle(color: Colors.red))
+                else
+                  Container(),
               ],
             );
           },
@@ -195,8 +194,8 @@ class AutocompleteFormField extends FormField<Player> {
           .firstWhere((element) => element.pseudo.trim() == text.trim());
     } else {
       // Create in DB
-      var player = Player(id: null, pseudo: text.trim());
-      var id = await database.newPlayer(player: player);
+      final player = Player(id: null, pseudo: text.trim());
+      final id = await database.newPlayer(player: player);
       added = player.copyWith(id: id);
     }
     state.didChange(added);

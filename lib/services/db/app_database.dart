@@ -201,10 +201,9 @@ class MyDatabase extends _$MyDatabase {
       var idPlayers = await addPlayers(gameWithPlayers.players
           .map((e) => PlayersCompanion.insert(pseudo: e.pseudo)));
 
-      batch((batch) => batch.insertAll(playerGames, [
-            for (var idPlayer in idPlayers)
-              PlayerGamesCompanion(game: Value(idGame), player: Value(idPlayer))
-          ]));
+      final playersToInsert = idPlayers.map(
+          (e) => PlayerGamesCompanion(game: Value(idGame), player: Value(e)));
+      await batch((batch) => batch.insertAll(playerGames, playersToInsert));
 
       return idGame;
     });

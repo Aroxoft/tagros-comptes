@@ -120,18 +120,16 @@ class TableauBody extends ConsumerWidget {
                         icon: Icons.edit,
                         foregroundColor: Colors.white,
                         onPressed: (context) async {
-                          var modified = await Navigator.of(context)
-                              .pushNamed<InfoEntryPlayerBean>(
-                                  AddModifyEntry.routeName,
-                                  arguments: AddModifyArguments(
-                                      players:
-                                          players.map((e) => e.toDb).toList(),
-                                      infoEntry: entries[index]));
+                          var modified = await Navigator.of(context).pushNamed(
+                              AddModifyEntry.routeName,
+                              arguments: AddModifyArguments(
+                                  players: players.map((e) => e.toDb).toList(),
+                                  infoEntry: entries[index]));
                           if (modified != null) {
                             ref
                                 .read(entriesProvider)
                                 .inModifyEntry
-                                .add(modified);
+                                .add(modified as InfoEntryPlayerBean);
                           }
                         },
                       ),

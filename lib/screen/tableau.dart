@@ -28,21 +28,22 @@ class TableauPage extends ConsumerWidget {
                 arguments:
                     AddModifyArguments(players: game.players, infoEntry: null));
             if (res != null) {
+              final info = res as InfoEntryPlayerBean;
               ref
                   .read(entriesProvider)
                   .inAddEntry
-                  .add(res as InfoEntryPlayerBean);
+                  .add(info);
               Flushbar(
                 flushbarStyle: FlushbarStyle.GROUNDED,
                 flushbarPosition: FlushbarPosition.BOTTOM,
                 title: "Partie ajoutée avec succès",
                 duration: Duration(seconds: 2),
-                message: res.toString(),
+                message: info.toString(),
                 backgroundGradient: LinearGradient(
                   colors: [Colors.blueGrey, Colors.teal],
                 ),
               )..show(context);
-              print(res);
+              print(info);
             }
           }),
       body: TableauBody(

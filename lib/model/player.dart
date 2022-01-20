@@ -1,10 +1,13 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 
-class PlayerBean {
-  int? id;
-  String name;
+part 'player.freezed.dart';
 
-  PlayerBean({required this.name, this.id});
+@freezed
+class PlayerBean with _$PlayerBean {
+  PlayerBean._();
+
+  factory PlayerBean({required String name, int? id}) = _PlayerBean;
 
   static PlayerBean? fromDb(Player? player) {
     if (player == null) return null;

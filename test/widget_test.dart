@@ -7,6 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/services/db/platforms/database.dart';
@@ -14,10 +15,12 @@ import 'package:tagros_comptes/widget/choose_player.dart';
 
 void main() {
   testWidgets('Show dialog players', (WidgetTester tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: DialogPlayerBody(
-          doAfterChosen: (players) => print(players),
+    await tester.pumpWidget(ProviderScope(
+      child: MaterialApp(
+        home: Scaffold(
+          body: DialogPlayerBody(
+            doAfterChosen: (players) => print(players),
+          ),
         ),
       ),
     ));
@@ -28,15 +31,17 @@ void main() {
   testWidgets('Choose player test', (WidgetTester tester) async {
     final db = MyDatabase(Database.openConnection());
     // Build our app and trigger a frame.
-    await tester.pumpWidget(Material(
-      child: AutocompleteFormField(
-        ["Aa", "Bb", "CC", "Dd"]
-            .map((e) => Player(id: null, pseudo: e))
-            .toList(),
-        initialValue: Player(pseudo: "Aa", id: null),
-        validator: (value) => null,
-        onSaved: (Player? newValue) {},
-        database: db,
+    await tester.pumpWidget(ProviderScope(
+      child: Material(
+        child: AutocompleteFormField(
+          ["Aa", "Bb", "CC", "Dd"]
+              .map((e) => Player(id: null, pseudo: e))
+              .toList(),
+          initialValue: Player(pseudo: "Aa", id: null),
+          validator: (value) => null,
+          onSaved: (Player? newValue) {},
+          database: db,
+        ),
       ),
     ));
 

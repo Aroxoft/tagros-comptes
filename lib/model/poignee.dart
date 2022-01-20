@@ -77,16 +77,18 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
   return 0;
 }
 
-getNamePoignee(PoigneeType poigneeType) {
-  switch (poigneeType) {
-    case PoigneeType.SIMPLE:
-      return "simple";
-    case PoigneeType.DOUBLE:
-      return "double";
-    case PoigneeType.TRIPLE:
-      return "triple";
-    case PoigneeType.NONE:
-      return "non";
+extension PoigneExtension on PoigneeType {
+  String get displayName {
+    switch(this) {
+      case PoigneeType.SIMPLE:
+        return "simple";
+      case PoigneeType.DOUBLE:
+        return "double";
+      case PoigneeType.TRIPLE:
+        return "triple";
+      case PoigneeType.NONE:
+        return "non";
+    }
   }
 }
 

@@ -2,14 +2,16 @@ import 'package:collection/collection.dart';
 
 enum Camp { ATTACK, DEFENSE, NONE }
 
-String getNameCamp(Camp camp) {
-  switch (camp) {
-    case Camp.ATTACK:
-      return "attaque";
-    case Camp.DEFENSE:
-      return "défense";
-    case Camp.NONE:
-      return "aucun";
+extension CampExt on Camp {
+  String get displayName {
+    switch (this) {
+      case Camp.ATTACK:
+        return "attaque";
+      case Camp.DEFENSE:
+        return "défense";
+      case Camp.NONE:
+        return "aucun";
+    }
   }
 }
 

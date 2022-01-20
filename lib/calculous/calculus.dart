@@ -100,9 +100,9 @@ Map<String, double> calculateGains(
     pointsForPoignee += getPoigneePoints(poignee);
   }
 
-  double mise = (wonBy.abs() + 25 + petitPoints) *
-          getCoeff(infoEntryPlayer.infoEntry.prise) +
-      pointsForPoignee;
+  double mise =
+      (wonBy.abs() + 25 + petitPoints) * infoEntryPlayer.infoEntry.prise.coeff +
+          pointsForPoignee;
   if (!won) mise = -mise;
 
   var gains = Map<String, double>();

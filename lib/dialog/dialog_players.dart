@@ -98,7 +98,7 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                               validator: (value) {
                                 var nbPlayers = players.length;
                                 if (!NbPlayers.values
-                                    .map((e) => getNumber(e))
+                                    .map((e) => e.number)
                                     .contains(nbPlayers)) {
                                   return "Une partie avec $nbPlayers joueur${nbPlayers != 1 ? "s" : ""} n'existe pas";
                                 }

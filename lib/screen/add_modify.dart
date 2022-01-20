@@ -1,74 +1,85 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 import 'package:tagros_comptes/widget/boxed.dart';
 import 'package:tagros_comptes/widget/selectable_tag.dart';
 
-class AddModifyEntry extends StatefulWidget {
+class AddModifyEntry extends HookConsumerWidget {
   static String routeName = "/addModify";
 
-  @override
-  _AddModifyEntryState createState() => _AddModifyEntryState();
-}
-
-class _AddModifyEntryState extends State<AddModifyEntry> {
-  InfoEntryPlayerBean? infoEntry;
-  late bool add;
-  late List<PlayerBean> players;
+  const AddModifyEntry({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    infoEntry = null;
-    players = [];
-    add = false;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (infoEntry == null) {
-      final AddModifyArguments args =
-          ModalRoute.of(context)!.settings.arguments as AddModifyArguments;
-      infoEntry = args.infoEntry;
-      players = args.players.reversed
+  Widget build(BuildContext context, WidgetRef ref) {
+    final players = useState(<PlayerBean>[]);
+    final add = useState(false);
+    final entry = useState(InfoEntryBean(points: 0, nbBouts: 0));
+    final playerAttack = useState(PlayerBean.fromDb(
+        (ModalRoute.of(context)!.settings.arguments as AddModifyArguments)
+            .players
+            .last));
+    final withPlayers = useState<List<PlayerBean?>?>(null);
+    final args = useMemoized(
+        () => ModalRoute.of(context)!.settings.arguments as AddModifyArguments);
+    // final infoEntry = useState(InfoEntryPlayerBean(
+    //     player: PlayerBean.fromDb(
+    //         (ModalRoute.of(context)!.settings.arguments as AddModifyArguments)
+    //             .players
+    //             .last),
+    //     infoEntry: InfoEntryBean(points: 0, nbBouts: 0)));
+    useEffect(() {
+      final playersValue = args.players.reversed
           .map((e) => PlayerBean.fromDb(e))
           .whereNotNull()
           .toList();
+      players.value = playersValue;
+      InfoEntryPlayerBean? info = args.infoEntry;
       print(
-          "So we ${infoEntry == null ? "add" : "modify"} an entry, we have the players: $players");
-      add = false;
-      if (infoEntry == null) {
-        add = true;
-        var pLength = players.length;
-        infoEntry = InfoEntryPlayerBean(
-            player: players[0],
-            withPlayers: null,
+          "So we ${info == null ? "add" : "modify"} an entry, we have the players: $players");
+      add.value = false;
+      if (info == null) {
+        add.value = true;
+        final pLength = playersValue.length;
+        info = InfoEntryPlayerBean(
+            player: playersValue[0],
             infoEntry: InfoEntryBean(points: 0, nbBouts: 0));
         if (pLength == 5) {
-          infoEntry!.withPlayers = [players[0]];
+          info = info.copyWith(withPlayers: [playersValue[0]]);
         } else if (pLength > 5) {
-          infoEntry!.withPlayers = [players[0], players[0]];
+          info = info.copyWith(withPlayers: [playersValue[0], playersValue[0]]);
         }
       }
-    }
+      playerAttack.value = info.player;
+      entry.value = info.infoEntry;
+      withPlayers.value = info.withPlayers;
+    }, [0]);
     return Scaffold(
       appBar: AppBar(
-        title: Text("${(add ? "Ajout" : "Modification")} d'une partie"),
+        title: Text("${(add.value ? "Ajout" : "Modification")} d'une partie"),
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.check),
           onPressed: () {
-            if (_validate(infoEntry!)) {
-              Navigator.of(context).pop(infoEntry);
+            if (_validate(
+                length: players.value.length,
+                withPlayers: withPlayers.value,
+                attack: playerAttack.value)) {
+              Navigator.of(context).pop(InfoEntryPlayerBean(
+                  player: playerAttack.value,
+                  infoEntry: entry.value,
+                  withPlayers: withPlayers.value));
             } else {
               Flushbar(
                 title: "Il manque des informations",
@@ -103,29 +114,27 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                               child: ListView.builder(
                                 reverse: true,
                                 scrollDirection: Axis.horizontal,
-                                itemCount: players.length,
+                                itemCount: players.value.length,
                                 itemBuilder:
                                     (BuildContext context, int index) =>
                                         SelectableTag(
-                                            selected: infoEntry!.player!.id ==
-                                                players[index].id,
-                                            text: players[index].name,
+                                            selected: playerAttack.value?.id ==
+                                                players.value[index].id,
+                                            text: players.value[index].name,
                                             onPressed: () {
-                                              setState(() {
-                                                if (infoEntry!.player!.id ==
-                                                    players[index].id) {
-                                                  infoEntry!.player = null;
-                                                } else {
-                                                  infoEntry!.player =
-                                                      players[index];
-                                                }
-                                              });
+                                              if (playerAttack.value?.id ==
+                                                  players.value[index].id) {
+                                                playerAttack.value = null;
+                                              } else {
+                                                playerAttack.value =
+                                                    players.value[index];
+                                              }
                                             }),
                               ),
                             ),
                           ),
                         ]),
-                    if (players.length >= 5)
+                    if (players.value.length >= 5)
                       Row(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,7 +143,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             Expanded(
                               flex: 2,
                               child: Text(
-                                  "Partenaire${players.length > 5 ? " numéro 1" : ""}"),
+                                  "Partenaire${players.value.length > 5 ? " numéro 1" : ""}"),
                             ),
                             Expanded(
                               flex: 5,
@@ -144,31 +153,29 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                 child: ListView.builder(
                                     reverse: true,
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: players.length,
+                                    itemCount: players.value.length,
                                     itemBuilder: (BuildContext context,
                                             int index) =>
                                         SelectableTag(
-                                            selected:
-                                                infoEntry!.withPlayers![0] ==
-                                                    players[index],
-                                            text: players[index].name,
+                                            selected: withPlayers.value?[0] ==
+                                                players.value[index],
+                                            text: players.value[index].name,
                                             onPressed: () {
-                                              setState(() {
-                                                if (infoEntry!
-                                                        .withPlayers![0] ==
-                                                    players[index]) {
-                                                  infoEntry!.withPlayers![0] =
-                                                      null;
-                                                } else {
-                                                  infoEntry!.withPlayers![0] =
-                                                      players[index];
-                                                }
-                                              });
+                                              final wPlayers =
+                                                  withPlayers.value!;
+                                              if (withPlayers.value?[0] ==
+                                                  players.value[index]) {
+                                                wPlayers[0] = null;
+                                              } else {
+                                                wPlayers[0] =
+                                                    players.value[index];
+                                              }
+                                              withPlayers.value = wPlayers;
                                             })),
                               ),
                             ),
                           ]),
-                    if (players.length > 5)
+                    if (players.value.length > 5)
                       Row(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,26 +193,24 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                 child: ListView.builder(
                                     reverse: true,
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: players.length,
+                                    itemCount: players.value.length,
                                     itemBuilder: (BuildContext context,
                                             int index) =>
                                         SelectableTag(
-                                            selected:
-                                                infoEntry!.withPlayers![1] ==
-                                                    players[index],
-                                            text: players[index].name,
+                                            selected: withPlayers.value?[1] ==
+                                                players.value[index],
+                                            text: players.value[index].name,
                                             onPressed: () {
-                                              setState(() {
-                                                if (infoEntry!
-                                                        .withPlayers![1] ==
-                                                    players[index]) {
-                                                  infoEntry!.withPlayers![1] =
-                                                      null;
-                                                } else {
-                                                  infoEntry!.withPlayers![1] =
-                                                      players[index];
-                                                }
-                                              });
+                                              final wPlayers =
+                                                  withPlayers.value!;
+                                              if (withPlayers.value?[1] ==
+                                                  players.value[index]) {
+                                                wPlayers[1] = null;
+                                              } else {
+                                                wPlayers[1] =
+                                                    players.value[index];
+                                              }
+                                              withPlayers.value = wPlayers;
                                             })),
                               ),
                             ),
@@ -217,16 +222,14 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                         children: <Widget>[
                           Text("Type"),
                           DropdownButton(
-                              value: infoEntry!.infoEntry.prise,
+                              value: entry.value.prise,
                               items: Prise.values
                                   .map((e) => DropdownMenuItem<Prise>(
-                                      value: e, child: Text(getNomPrise(e))))
+                                      value: e, child: Text(e.displayName)))
                                   .toList(),
                               onChanged: (Prise? p) {
                                 if (p != null) {
-                                  setState(() {
-                                    infoEntry!.infoEntry.prise = p;
-                                  });
+                                  entry.value = entry.value.copyWith(prise: p);
                                 }
                               })
                         ]),
@@ -243,7 +246,7 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                         children: <Widget>[
                           Text("Pour "),
                           DropdownButton<bool>(
-                              value: infoEntry!.infoEntry.pointsForAttack,
+                              value: entry.value.pointsForAttack,
                               items: ["l'attaque", "la défense"]
                                   .map((e) => DropdownMenuItem<bool>(
                                       key: UniqueKey(),
@@ -252,10 +255,8 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                   .toList(),
                               onChanged: (bool? value) {
                                 if (value != null) {
-                                  setState(() {
-                                    infoEntry!.infoEntry.pointsForAttack =
-                                        value;
-                                  });
+                                  entry.value = entry.value
+                                      .copyWith(pointsForAttack: value);
                                 }
                               })
                         ],
@@ -268,14 +269,13 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                             constraints: BoxConstraints.loose(Size(60, 35)),
                             child: TextFormField(
                               inputFormatters: [HalfDecimalInputFormatter()],
-                              initialValue:
-                                  infoEntry!.infoEntry.points.toString(),
+                              initialValue: entry.value.points.toString(),
                               onChanged: (String value) {
                                 var points = value.isEmpty
                                     ? 0
                                     : double.tryParse(value) ?? 0;
-                                infoEntry!.infoEntry.points =
-                                    (points * 2).round() / 2;
+                                entry.value = entry.value
+                                    .copyWith(points: (points * 2).round() / 2);
                               },
                               decoration: InputDecoration(
                                 contentPadding:
@@ -300,8 +300,9 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           DropdownButton(
-                              value: infoEntry!.infoEntry.nbBouts,
-                              items: List.generate(players.length > 5 ? 7 : 4,
+                              value: entry.value.nbBouts,
+                              items: List.generate(
+                                      players.value.length > 5 ? 7 : 4,
                                       (index) => index)
                                   .map((e) => DropdownMenuItem<int>(
                                       key: UniqueKey(),
@@ -310,14 +311,14 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                   .toList(),
                               onChanged: (int? value) {
                                 if (value != null) {
-                                  setState(() {
-                                    infoEntry!.infoEntry.nbBouts = value;
-                                    print(infoEntry);
-                                  });
+                                  entry.value =
+                                      entry.value.copyWith(nbBouts: value);
+                                  if (kDebugMode) {
+                                    print(entry.value);
+                                  }
                                 }
                               }),
-                          Text(
-                              " bout${infoEntry!.infoEntry.nbBouts != 1 ? "s" : ""}")
+                          Text(" bout${entry.value.nbBouts != 1 ? "s" : ""}")
                         ],
                       )
                     ],
@@ -330,28 +331,25 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Checkbox(
-                            value: infoEntry!.infoEntry.poignees.isNotEmpty &&
-                                infoEntry!.infoEntry.poignees[0] !=
-                                    PoigneeType.NONE,
+                            value: entry.value.poignees.isNotEmpty &&
+                                entry.value.poignees[0] != PoigneeType.NONE,
                             onChanged: (bool? value) {
                               if (value != null) {
-                                setState(() {
-                                  if (infoEntry!.infoEntry.poignees.isEmpty) {
-                                    infoEntry!.infoEntry.poignees = [
-                                      PoigneeType.SIMPLE
-                                    ];
-                                  }
-                                  infoEntry!.infoEntry.poignees[0] = value
-                                      ? PoigneeType.SIMPLE
-                                      : PoigneeType.NONE;
-                                });
+                                var p = entry.value.poignees.toList();
+                                if (p.isEmpty) {
+                                  p = [PoigneeType.SIMPLE];
+                                }
+                                p[0] = value
+                                    ? PoigneeType.SIMPLE
+                                    : PoigneeType.NONE;
+                                entry.value = entry.value.copyWith(poignees: p);
                               }
                             }),
                         Text("Poignée "),
-                        if (infoEntry!.infoEntry.poignees.isNotEmpty)
+                        if (entry.value.poignees.isNotEmpty)
                           Expanded(
                             child: DropdownButton<PoigneeType>(
-                                value: infoEntry!.infoEntry.poignees[0],
+                                value: entry.value.poignees[0],
                                 isExpanded: true,
                                 items: PoigneeType.values
                                     .map(
@@ -359,15 +357,15 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                           key: UniqueKey(),
                                           value: e,
                                           child: Text(
-                                              "${getNamePoignee(e)} (${getNbAtouts(e, players.length)}+ atouts)")),
+                                              "${e.displayName} (${getNbAtouts(e, players.value.length)}+ atouts)")),
                                     )
                                     .toList(),
                                 onChanged: (PoigneeType? poignee) {
                                   if (poignee != null) {
-                                    setState(() {
-                                      infoEntry!.infoEntry.poignees[0] =
-                                          poignee;
-                                    });
+                                    final p = entry.value.poignees.toList();
+                                    p[0] = poignee;
+                                    entry.value =
+                                        entry.value.copyWith(poignees: p);
                                   }
                                 }),
                           ),
@@ -378,40 +376,35 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Checkbox(
-                            value:
-                                infoEntry!.infoEntry.petitsAuBout.isNotEmpty &&
-                                    infoEntry!.infoEntry.petitsAuBout[0] !=
-                                        Camp.NONE,
+                            value: entry.value.petitsAuBout.isNotEmpty &&
+                                entry.value.petitsAuBout[0] != Camp.NONE,
                             onChanged: (bool? value) {
                               if (value != null) {
-                                setState(() {
-                                  if (infoEntry!
-                                      .infoEntry.petitsAuBout.isEmpty) {
-                                    infoEntry!.infoEntry.petitsAuBout = [
-                                      Camp.ATTACK
-                                    ];
-                                  }
-                                  infoEntry!.infoEntry.petitsAuBout[0] =
-                                      value ? Camp.ATTACK : Camp.NONE;
-                                });
+                                var p = entry.value.petitsAuBout.toList();
+                                if (p.isEmpty) {
+                                  p = [Camp.ATTACK];
+                                }
+                                p[0] = value ? Camp.ATTACK : Camp.NONE;
+                                entry.value =
+                                    entry.value.copyWith(petitsAuBout: p);
                               }
                             }),
                         Text("Petit au bout "),
-                        if (infoEntry!.infoEntry.petitsAuBout.isNotEmpty)
+                        if (entry.value.petitsAuBout.isNotEmpty)
                           DropdownButton<Camp>(
-                              value: infoEntry!.infoEntry.petitsAuBout[0],
+                              value: entry.value.petitsAuBout[0],
                               items: Camp.values
                                   .map((e) => DropdownMenuItem(
-                                        child: Text(getNameCamp(e)),
+                                        child: Text(e.displayName),
                                         value: e,
                                       ))
                                   .toList(),
                               onChanged: (Camp? petit) {
                                 if (petit != null) {
-                                  setState(() {
-                                    infoEntry!.infoEntry.petitsAuBout[0] =
-                                        petit;
-                                  });
+                                  var p = entry.value.petitsAuBout.toList();
+                                  p[0] = petit;
+                                  entry.value =
+                                      entry.value.copyWith(petitsAuBout: p);
                                 }
                               })
                       ],
@@ -425,13 +418,15 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
     );
   }
 
-  bool _validate(InfoEntryPlayerBean infoEntry) {
-    if (infoEntry.player == null) return false;
-    if (players.length < 5) return true;
-    if (infoEntry.withPlayers == null || infoEntry.withPlayers!.isEmpty)
-      return false;
-    if (players.length == 5) return true;
-    if (infoEntry.withPlayers!.length != 2) return false;
+  bool _validate(
+      {required int length,
+      required PlayerBean? attack,
+      required List<PlayerBean?>? withPlayers}) {
+    if (attack == null) return false;
+    if (length < 5) return true;
+    if (withPlayers == null || withPlayers.isEmpty) return false;
+    if (length == 5) return true;
+    if (withPlayers.length != 2) return false;
     return true;
   }
 }

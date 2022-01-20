@@ -17,6 +17,7 @@
 
 # Generated files
 *.g.dart
+*.freezed.dart
 .env.dart
 
 # The .vscode folder contains launch configuration and tasks you configure in

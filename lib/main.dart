@@ -1,4 +1,4 @@
-import 'package:appspector/appspector.dart';
+// import 'package:appspector/appspector.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,26 +10,29 @@ import 'package:tagros_comptes/screen/test_native.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 
-import '.env.dart';
+// import '.env.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  _runAppSpector();
+void main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await _runAppSpector();
   if (kDebugMode) {
     // Stetho.initialize();
   }
   runApp(ProviderScope(child: MyApp()));
 }
-
-void _runAppSpector() {
+/*
+Future<void> _runAppSpector() async {
   var config = Config()
-    ..androidApiKey = environment['appSpector']
-    ..iosApiKey = environment['appSpectorIos']
-  // ..monitors = [Monitors.sqLite, Monitors.fileSystem]
-  ;
+        ..androidApiKey = environment['appSpector']
+        ..iosApiKey = environment['appSpectorIos']
+      // ..monitors = [Monitors.sqLite, Monitors.fileSystem]
+      ;
   AppSpectorPlugin.run(config);
-}
 
+  await AppSpectorPlugin.shared().start();
+  AppSpectorPlugin.shared().sessionUrlListener = (url) => print(url);
+}
+// */
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/dialog/dialog_games.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/main.dart';

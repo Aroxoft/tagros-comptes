@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/bloc/game_db_bloc.dart';
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/screen/menu.dart';
@@ -67,9 +67,9 @@ Future<void> navigateToTableau(BuildContext context,
   }
   await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => BlocProvider(
-        bloc: EntriesDbBloc(game),
-        child: TableauPage(
-          game: game,
-        ),
-      )));
+            bloc: EntriesDbBloc(game),
+            child: TableauPage(
+              game: game,
+            ),
+          )));
 }

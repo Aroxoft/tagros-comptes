@@ -1,4 +1,4 @@
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';

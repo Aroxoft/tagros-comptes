@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/widget/choose_player.dart';
 
@@ -33,7 +33,8 @@ void main() {
             .map((e) => Player(id: null, pseudo: e))
             .toList(),
         initialValue: Player(pseudo: "Aa", id: null),
-        validator: (value) => null, onSaved: (Player? newValue) {  },
+        validator: (value) => null,
+        onSaved: (Player? newValue) {},
       ),
     ));
 

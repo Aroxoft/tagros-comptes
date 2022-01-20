@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:moor/moor.dart';
+import 'package:drift/drift.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
@@ -10,7 +10,7 @@ import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/services/db/platforms/database.dart';
 
-part 'database_moor.g.dart';
+part 'app_database.g.dart';
 
 class Players extends Table {
   IntColumn get id => integer().autoIncrement().nullable()();
@@ -48,7 +48,7 @@ class PlayerGames extends Table {
   IntColumn get game => integer()();
 }
 
-@UseMoor(tables: [Players, Games, InfoEntries, PlayerGames])
+@DriftDatabase(tables: [Players, Games, InfoEntries, PlayerGames])
 class MyDatabase extends _$MyDatabase {
   static const int DATABASE_VERSION = 1;
 
@@ -144,7 +144,7 @@ class MyDatabase extends _$MyDatabase {
       // Select all players that are included in any game that we found
       final playerQuery = select(playerGames)
           .join([innerJoin(players, players.id.equalsExp(playerGames.player))])
-            ..where(playerGames.game.isIn(ids));
+        ..where(playerGames.game.isIn(ids));
 
       return playerQuery.watch().map((rows) {
         // Store the list of players for each game

@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:tagros_comptes/bloc/bloc_provider.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
+
 class EntriesDbBloc implements BlocBase {
   // Create a broadcast controller that allows this stream to be listened
   // to multiple times. This is the primary, if not only, type of stream we'll be using.
-
 
   // Output stream. This one will be used within our pages to display the entries.
   Stream<List<InfoEntryPlayerBean>> infoEntries;

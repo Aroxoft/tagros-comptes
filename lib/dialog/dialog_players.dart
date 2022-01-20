@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
 import 'package:tagros_comptes/types/functions.dart';
 import 'package:tagros_comptes/widget/choose_player.dart';
@@ -30,7 +30,7 @@ class DialogChoosePlayers extends StatelessWidget {
 
 class DialogPlayerBody extends StatefulWidget {
   final DoAfterChosen doAfterChosen;
-  const DialogPlayerBody({Key? key,required this.doAfterChosen})
+  const DialogPlayerBody({Key? key, required this.doAfterChosen})
       : super(key: key);
   @override
   _DialogPlayerBodyState createState() => _DialogPlayerBodyState();

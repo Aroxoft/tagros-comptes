@@ -1,7 +1,7 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/services/db/database_moor.dart';
+import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
@@ -11,6 +11,7 @@ import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 import 'package:tagros_comptes/widget/boxed.dart';
 import 'package:tagros_comptes/widget/selectable_tag.dart';
+
 class AddModifyEntry extends StatefulWidget {
   static String routeName = "/addModify";
 
@@ -145,10 +146,10 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: players.length,
                                     itemBuilder: (BuildContext context,
-                                        int index) =>
+                                            int index) =>
                                         SelectableTag(
                                             selected:
-                                            infoEntry!.withPlayers![0] ==
+                                                infoEntry!.withPlayers![0] ==
                                                     players[index],
                                             text: players[index].name,
                                             onPressed: () {
@@ -187,10 +188,10 @@ class _AddModifyEntryState extends State<AddModifyEntry> {
                                     scrollDirection: Axis.horizontal,
                                     itemCount: players.length,
                                     itemBuilder: (BuildContext context,
-                                        int index) =>
+                                            int index) =>
                                         SelectableTag(
                                             selected:
-                                            infoEntry!.withPlayers![1] ==
+                                                infoEntry!.withPlayers![1] ==
                                                     players[index],
                                             text: players[index].name,
                                             onPressed: () {

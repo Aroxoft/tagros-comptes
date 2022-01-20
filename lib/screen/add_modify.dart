@@ -165,7 +165,7 @@ class AddModifyEntry extends HookConsumerWidget {
                                             text: players.value[index].name,
                                             onPressed: () {
                                               final wPlayers =
-                                                  withPlayers.value!;
+                                                  withPlayers.value!.toList();
                                               if (withPlayers.value?[0] ==
                                                   players.value[index]) {
                                                 wPlayers[0] = null;
@@ -205,7 +205,7 @@ class AddModifyEntry extends HookConsumerWidget {
                                             text: players.value[index].name,
                                             onPressed: () {
                                               final wPlayers =
-                                                  withPlayers.value!;
+                                                  withPlayers.value!.toList();
                                               if (withPlayers.value?[1] ==
                                                   players.value[index]) {
                                                 wPlayers[1] = null;

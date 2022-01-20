@@ -22,7 +22,7 @@ class Games extends Table {
 
   IntColumn get nbPlayers => integer()();
 
-  DateTimeColumn get date => dateTime().nullable()();
+  DateTimeColumn get date => dateTime()();
 }
 
 @DataClassName("InfoEntry")

@@ -69,75 +69,77 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SingleChildScrollView(
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        AutocompleteFormField(
-                          playerDb,
-                          onSaved: (newValue) {
-                            setState(() {
-                              if (players.contains(newValue)) {
-                                errorMessage =
-                                    "Tous les noms doivent être différents";
-                                return;
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          AutocompleteFormField(
+                            playerDb,
+                            onSaved: (newValue) {
+                              setState(() {
+                                if (players.contains(newValue)) {
+                                  errorMessage =
+                                      "Tous les noms doivent être différents";
+                                  return;
+                                }
+                                if (newValue == null ||
+                                    newValue.pseudo.isEmpty) {
+                                  errorMessage = 'Veuillez entrer un nom';
+                                  return;
+                                }
+                                errorMessage = null;
+                                players.add(newValue);
+                              });
+                            },
+                            initialValue: Player(id: null, pseudo: ""),
+                            validator: (value) {
+                              final nbPlayers = players.length;
+                              if (!NbPlayers.values
+                                  .map((e) => e.number)
+                                  .contains(nbPlayers)) {
+                                return "Une partie avec $nbPlayers joueur${nbPlayers != 1 ? "s" : ""} n'existe pas";
                               }
-                              if (newValue == null ||
-                                  newValue.pseudo.isEmpty) {
-                                errorMessage = 'Veuillez entrer un nom';
-                                return;
-                              }
-                              errorMessage = null;
-                              players.add(newValue);
-                            });
-                          },
-                          initialValue: Player(id: null, pseudo: ""),
-                          validator: (value) {
-                            final nbPlayers = players.length;
-                            if (!NbPlayers.values
-                                .map((e) => e.number)
-                                .contains(nbPlayers)) {
-                              return "Une partie avec $nbPlayers joueur${nbPlayers != 1 ? "s" : ""} n'existe pas";
-                            }
-                            return null;
-                          },
-                          database: ref.watch(databaseProvider),
-                        ),
-                        Wrap(
-                          direction: Axis.horizontal,
-                          spacing: 2,
-                          runSpacing: 3,
-                          alignment: WrapAlignment.spaceEvenly,
-                          children: List.generate(
-                              players.length,
-                              (index) => Chip(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(2),
-                                    ),
-                                    elevation: 20,
-                                    labelStyle:
-                                        const TextStyle(color: Colors.white),
-                                    padding: EdgeInsets.zero,
-                                    label: Text(players[index].pseudo),
-                                    backgroundColor: Colors.pink,
-                                    deleteIcon: const Icon(Icons.delete),
-                                    deleteButtonTooltipMessage: "Supprimer",
-                                    deleteIconColor: Colors.white,
-                                    onDeleted: () {
-                                      setState(() {
-                                        players.removeAt(index);
-                                      });
-                                    },
-                                  )),
-                        ),
-                        if (errorMessage != null)
-                          Text(
-                            errorMessage!,
-                            style: const TextStyle(color: Colors.red),
-                          )
-                      ]),
+                              return null;
+                            },
+                            database: ref.watch(databaseProvider),
+                          ),
+                          Wrap(
+                            direction: Axis.horizontal,
+                            spacing: 2,
+                            runSpacing: 3,
+                            alignment: WrapAlignment.spaceEvenly,
+                            children: List.generate(
+                                players.length,
+                                (index) => Chip(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(2),
+                                      ),
+                                      elevation: 20,
+                                      labelStyle:
+                                          const TextStyle(color: Colors.white),
+                                      padding: EdgeInsets.zero,
+                                      label: Text(players[index].pseudo),
+                                      backgroundColor: Colors.pink,
+                                      deleteIcon: const Icon(Icons.delete),
+                                      deleteButtonTooltipMessage: "Supprimer",
+                                      deleteIconColor: Colors.white,
+                                      onDeleted: () {
+                                        setState(() {
+                                          players.removeAt(index);
+                                        });
+                                      },
+                                    )),
+                          ),
+                          if (errorMessage != null)
+                            Text(
+                              errorMessage!,
+                              style: const TextStyle(color: Colors.red),
+                            )
+                        ]),
+                  ),
                 ),
                 ElevatedButton(
                     onPressed: () {

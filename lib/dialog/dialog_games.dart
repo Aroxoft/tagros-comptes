@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class DialogChooseGame extends ConsumerWidget {
   const DialogChooseGame({Key? key}) : super(key: key);
@@ -36,7 +37,8 @@ class DialogChooseGame extends ConsumerWidget {
                         motion: const ScrollMotion(),
                         children: [
                           SlidableAction(
-                            foregroundColor: Colors.red,
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
                             icon: Icons.delete,
                             onPressed: (context) {
                               ref
@@ -70,10 +72,12 @@ class DialogChooseGame extends ConsumerWidget {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Text(timeago.format(games[index].game.date)),
                               Text(
-                                  "${games[index].game.date?.toIso8601String()}"),
-                              Text(
-                                games[index].players.map((e) => e.pseudo).join(", "),
+                                games[index]
+                                    .players
+                                    .map((e) => e.pseudo)
+                                    .join(", "),
                                 overflow: TextOverflow.ellipsis,
                               )
                             ]),

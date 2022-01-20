@@ -9,7 +9,7 @@ import 'package:tagros_comptes/screen/tableau.dart';
 import 'package:tagros_comptes/screen/test_native.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
-
+import 'package:timeago/timeago.dart' as timeago;
 // import '.env.dart';
 
 void main() {
@@ -18,6 +18,8 @@ void main() {
   if (kDebugMode) {
     // Stetho.initialize();
   }
+  timeago.setLocaleMessages('fr', timeago.FrMessages());
+  timeago.setLocaleMessages('en', timeago.EnMessages());
   runApp(ProviderScope(child: MyApp()));
 }
 /*

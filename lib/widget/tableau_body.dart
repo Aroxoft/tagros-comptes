@@ -172,7 +172,7 @@ class TableauBody extends ConsumerWidget {
                             }
                             return Expanded(
                               child: Text(
-                                gains[index].toString(),
+                                gains[index].toStringAsFixed(1),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: gains[index] >= 0

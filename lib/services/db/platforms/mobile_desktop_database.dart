@@ -23,10 +23,10 @@ class Database {
       } else {
         dbFolder = Directory(join(
             (await getApplicationDocumentsDirectory()).parent.path,
-            'databases/fertility/'));
+            'databases/'));
       }
 
-      final file = File(join(dbFolder.path, 'fertility.db'));
+      final file = File(join(dbFolder.path, 'points.db'));
       if (kDebugMode) {
         print('path db: ${file.absolute.path}');
       }

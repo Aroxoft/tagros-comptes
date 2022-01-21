@@ -1,4 +1,5 @@
 // import 'package:appspector/appspector.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -81,7 +82,7 @@ Future<void> navigateToTableau(BuildContext context,
     {required GameWithPlayers game, required MyDatabase appDatabase}) async {
   if (game.game.id == null) {
     final idGame = await appDatabase.newGame(game);
-    game.game = game.game.copyWith(id: idGame);
+    game.game = game.game.copyWith(id: Value(idGame));
   }
   await Navigator.of(context).push(MaterialPageRoute(
     builder: (context) => ProviderScope(

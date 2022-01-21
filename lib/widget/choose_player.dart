@@ -1,4 +1,5 @@
 // import 'package:autocomplete_textfield/autocomplete_textfield.dart';
+import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
@@ -196,7 +197,7 @@ class AutocompleteFormField extends FormField<Player> {
       // Create in DB
       final player = Player(id: null, pseudo: text.trim());
       final id = await database.newPlayer(player: player);
-      added = player.copyWith(id: id);
+      added = player.copyWith(id: Value(id));
     }
     state.didChange(added);
 

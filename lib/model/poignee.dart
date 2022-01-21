@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 
 enum PoigneeType { simple, double, triple, none }
 
@@ -81,13 +82,13 @@ extension PoigneExtension on PoigneeType {
   String get displayName {
     switch(this) {
       case PoigneeType.simple:
-        return "simple";
+        return S.current.poigneTypeSimple;
       case PoigneeType.double:
-        return "double";
+        return S.current.poigneTypeDouble;
       case PoigneeType.triple:
-        return "triple";
+        return S.current.poigneTypeTriple;
       case PoigneeType.none:
-        return "non";
+        return S.current.poigneTypeNone;
     }
   }
 }

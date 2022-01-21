@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/dialog/dialog_games.dart';
 import 'package:tagros_comptes/dialog/dialog_players.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/screen/test_native.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/types/functions.dart';
-
 class MenuScreen extends StatelessWidget {
   static const routeName = "/menu";
 
@@ -16,7 +16,7 @@ class MenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Compteur Tagros"),
+          title: Text(S.of(context).appTitle),
           actions: <Widget>[
             IconButton(
                 icon: const Icon(Icons.settings),

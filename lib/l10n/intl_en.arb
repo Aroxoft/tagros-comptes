@@ -1,0 +1,57 @@
+{
+  "@@locale": "en",
+  "errorSameName": "All the names should be different",
+  "errorPseudoEmpty": "Please enter a name",
+  "appTitle": "Tagros counter",
+  "theAttack": "the attack",
+  "theDefense": "the defense",
+  "points": "points",
+  "addModifyOudler": "{count, plural, zero{ oudlers} one{ oudler} other{ oudlers}}",
+  "@addModifyOudler": {
+    "description": "nb oudlers in the add/modify screen",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "addModifyBonus": "Bonus",
+  "addModifyPoignee": "Handful",
+  "addModifyPetitAuBout": "One at the End",
+  "addModifySecondPartner": "Partenaire numéro 2",
+  "addModifyFirstPartner": "{tagros, select, tagros{Partner number 1} tarot{Partner} other{None}}",
+  "@addModifyFirstPartner": {
+    "description": "First partner or only partner",
+    "placeholders": {
+      "tagros": {}
+    }
+  },
+  "poigneTypeSimple": "simple",
+  "poigneTypeDouble": "double",
+  "poigneTypeTriple": "triple",
+  "poigneTypeNone": "none",
+  "addModifyTitleAttack": "Attack",
+  "addModifyAppBarTitle": "{add, select, add{Add a game} other{Edit a game}}",
+  "@addModifyAppBarTitle": {
+    "description": "Add or modify screen title",
+    "placeholders": {
+      "add": {}
+    }
+  },
+  "addModifyMissingTitle": "Information is missing",
+  "addModifyMissingMessage": "In order to validate, please fill the missing information",
+  "preneur": "Taker",
+  "addModifyTitleContract": "Contract",
+  "addModifyFor": "Pour",
+  "addModifyContractType": "Type",
+  "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ trumps)}}",
+  "@addModifyPoigneeNbTrumps": {
+    "description": "A poignee corresponds to how many trumps",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "poigneeName": {
+        "type": "String"
+      }
+    }
+  }
+}

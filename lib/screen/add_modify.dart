@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
@@ -14,7 +15,6 @@ import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 import 'package:tagros_comptes/widget/boxed.dart';
 import 'package:tagros_comptes/widget/selectable_tag.dart';
-
 class AddModifyEntry extends HookConsumerWidget {
   static String routeName = "/addModify";
 
@@ -68,7 +68,8 @@ class AddModifyEntry extends HookConsumerWidget {
     }, [0]);
     return Scaffold(
       appBar: AppBar(
-        title: Text("${add.value ? "Ajout" : "Modification"} d'une partie"),
+        title: Text(
+            S.of(context).addModifyAppBarTitle(add.value ? 'add' : 'modify')),
       ),
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
@@ -84,9 +85,8 @@ class AddModifyEntry extends HookConsumerWidget {
                   withPlayers: withPlayers.value));
             } else {
               Flushbar(
-                title: "Il manque des informations",
-                message:
-                    "Pour pouvoir valider, veuillez ajouter les informations manquantes",
+                title: S.of(context).addModifyMissingTitle,
+                message: S.of(context).addModifyMissingMessage,
                 duration: const Duration(seconds: 3),
               ).show(context);
             }
@@ -100,7 +100,7 @@ class AddModifyEntry extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Boxed(
-                title: "Attaque",
+                title: S.of(context).addModifyTitleAttack,
                 child: Column(
                   children: <Widget>[
                     Row(
@@ -108,7 +108,7 @@ class AddModifyEntry extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Expanded(flex: 2, child: Text("Preneur")),
+                          Expanded(flex: 2, child: Text(S.of(context).preneur)),
                           Expanded(
                             flex: 5,
                             child: Container(
@@ -144,15 +144,17 @@ class AddModifyEntry extends HookConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Expanded(
-                              flex: 2,
-                              child: Text(
-                                  "Partenaire${players.value.length > 5 ? " numéro 1" : ""}"),
-                            ),
+                                flex: 2,
+                                child: Text(S.of(context).addModifyFirstPartner(
+                                    players.value.length > 5
+                                        ? Tagros.tagros
+                                        : Tagros.tarot))),
                             Expanded(
                               flex: 5,
                               child: Container(
                                 height: 35,
-                                padding: const EdgeInsets.symmetric(vertical: 2),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2),
                                 child: ListView.builder(
                                     reverse: true,
                                     scrollDirection: Axis.horizontal,
@@ -184,9 +186,9 @@ class AddModifyEntry extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            const Expanded(
+                            Expanded(
                               flex: 2,
-                              child: Text("Partenaire numéro 2"),
+                              child: Text(S.of(context).addModifySecondPartner),
                             ),
                             Expanded(
                               flex: 5,
@@ -223,7 +225,7 @@ class AddModifyEntry extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          const Text("Type"),
+                          Text(S.of(context).addModifyContractType),
                           DropdownButton(
                               value: entry.value.prise,
                               items: Prise.values
@@ -240,20 +242,23 @@ class AddModifyEntry extends HookConsumerWidget {
                 ),
               ),
               Boxed(
-                  title: "Contrat",
+                  title: S.of(context).addModifyTitleContract,
                   child: Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          const Text("Pour "),
+                          Text(S.of(context).addModifyFor),
                           DropdownButton<bool>(
                               value: entry.value.pointsForAttack,
-                              items: ["l'attaque", "la défense"]
+                              items: [
+                                S.of(context).theAttack,
+                                S.of(context).theDefense
+                              ]
                                   .map((e) => DropdownMenuItem<bool>(
                                       key: UniqueKey(),
-                                      value: e == "l'attaque",
+                                      value: e == S.of(context).theAttack,
                                       child: Text(e)))
                                   .toList(),
                               onChanged: (bool? value) {
@@ -291,11 +296,12 @@ class AddModifyEntry extends HookConsumerWidget {
                                     borderRadius: BorderRadius.circular(5),
                                     gapPadding: 1),
                               ),
-                              keyboardType: const TextInputType.numberWithOptions(
-                                  decimal: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      decimal: true),
                             ),
                           ),
-                          const Text(" points"),
+                          Text(S.of(context).points),
                         ],
                       ),
                       Row(
@@ -321,13 +327,15 @@ class AddModifyEntry extends HookConsumerWidget {
                                   }
                                 }
                               }),
-                          Text(" bout${entry.value.nbBouts != 1 ? "s" : ""}")
+                          Text(S
+                              .of(context)
+                              .addModifyOudler(entry.value.nbBouts))
                         ],
                       )
                     ],
                   )),
               Boxed(
-                  title: "Bonus",
+                  title: S.of(context).addModifyBonus,
                   child: Column(children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -348,29 +356,36 @@ class AddModifyEntry extends HookConsumerWidget {
                                 entry.value = entry.value.copyWith(poignees: p);
                               }
                             }),
-                        const Text("Poignée "),
+                        Text(S.of(context).addModifyPoignee),
                         if (entry.value.poignees.isNotEmpty)
-                          Expanded(
-                            child: DropdownButton<PoigneeType>(
-                                value: entry.value.poignees[0],
-                                isExpanded: true,
-                                items: PoigneeType.values
-                                    .map(
-                                      (e) => DropdownMenuItem<PoigneeType>(
-                                          key: UniqueKey(),
-                                          value: e,
-                                          child: Text(
-                                              "${e.displayName} (${getNbAtouts(e, players.value.length)}+ atouts)")),
-                                    )
-                                    .toList(),
-                                onChanged: (PoigneeType? poignee) {
-                                  if (poignee != null) {
-                                    final p = entry.value.poignees.toList();
-                                    p[0] = poignee;
-                                    entry.value =
-                                        entry.value.copyWith(poignees: p);
-                                  }
-                                }),
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 16),
+                              child: DropdownButton<PoigneeType>(
+                                  value: entry.value.poignees[0],
+                                  isExpanded: true,
+                                  items: PoigneeType.values
+                                      .map(
+                                        (e) => DropdownMenuItem<PoigneeType>(
+                                            key: UniqueKey(),
+                                            value: e,
+                                            child: Text(S
+                                                .of(context)
+                                                .addModifyPoigneeNbTrumps(
+                                                    getNbAtouts(
+                                                        e, players.value.length),
+                                                    e.displayName))),
+                                      )
+                                      .toList(),
+                                  onChanged: (PoigneeType? poignee) {
+                                    if (poignee != null) {
+                                      final p = entry.value.poignees.toList();
+                                      p[0] = poignee;
+                                      entry.value =
+                                          entry.value.copyWith(poignees: p);
+                                    }
+                                  }),
+                            ),
                           ),
                       ],
                     ),
@@ -392,24 +407,29 @@ class AddModifyEntry extends HookConsumerWidget {
                                     entry.value.copyWith(petitsAuBout: p);
                               }
                             }),
-                        const Text("Petit au bout "),
+                        Text(S.of(context).addModifyPetitAuBout),
                         if (entry.value.petitsAuBout.isNotEmpty)
-                          DropdownButton<Camp>(
-                              value: entry.value.petitsAuBout[0],
-                              items: Camp.values
-                                  .map((e) => DropdownMenuItem(
-                                        value: e,
-                                        child: Text(e.displayName),
-                                      ))
-                                  .toList(),
-                              onChanged: (Camp? petit) {
-                                if (petit != null) {
-                                  final p = entry.value.petitsAuBout.toList();
-                                  p[0] = petit;
-                                  entry.value =
-                                      entry.value.copyWith(petitsAuBout: p);
-                                }
-                              })
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: DropdownButton<Camp>(
+                                  value: entry.value.petitsAuBout[0],
+                                  items: Camp.values
+                                      .map((e) => DropdownMenuItem(
+                                            value: e,
+                                            child: Text(e.displayName),
+                                          ))
+                                      .toList(),
+                                  onChanged: (Camp? petit) {
+                                    if (petit != null) {
+                                      final p = entry.value.petitsAuBout.toList();
+                                      p[0] = petit;
+                                      entry.value =
+                                          entry.value.copyWith(petitsAuBout: p);
+                                    }
+                                  }),
+                            ),
+                          )
                       ],
                     )
                   ])),
@@ -439,3 +459,4 @@ class AddModifyArguments {
 
   AddModifyArguments({required this.infoEntry, required this.players});
 }
+enum Tagros { tagros, tarot }

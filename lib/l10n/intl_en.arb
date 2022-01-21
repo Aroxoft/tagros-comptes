@@ -2,6 +2,15 @@
   "@@locale": "en",
   "errorSameName": "All the names should be different",
   "errorPseudoEmpty": "Please enter a name",
+  "errorGameNbPlayers": "A game with {count, plural, zero{no players} one{one player} other{{count} players}} does not exist",
+  "@errorGameNbPlayers": {
+    "description": "When selecting the wrong number of players",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "appTitle": "Tagros counter",
   "theAttack": "the attack",
   "theDefense": "the defense",
@@ -10,7 +19,9 @@
   "@addModifyOudler": {
     "description": "nb oudlers in the add/modify screen",
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "int"
+      }
     }
   },
   "addModifyBonus": "Bonus",
@@ -28,6 +39,9 @@
   "poigneTypeDouble": "double",
   "poigneTypeTriple": "triple",
   "poigneTypeNone": "none",
+  "campTypeAttack": "Attack",
+  "campTypeDefense": "Defense",
+  "campTypeNone": "None",
   "addModifyTitleAttack": "Attack",
   "addModifyAppBarTitle": "{add, select, add{Add a game} other{Edit a game}}",
   "@addModifyAppBarTitle": {
@@ -51,6 +65,58 @@
       },
       "poigneeName": {
         "type": "String"
+      }
+    }
+  },
+  "dialogGamesNoData": "No data",
+  "dialogGamesNoGames": "No saved games",
+  "nbPlayers": "{nbPlayers} players",
+  "@nbPlayers": {
+    "description": "how many players",
+    "placeholders": {
+      "nbPlayers": {
+        "type": "int"
+      }
+    }
+  },
+  "dialogPlayersDelete": "Delete",
+  "ok": "OK",
+  "newGame": "New game",
+  "toContinue": "Continue",
+  "priseTypePrise": "Prise",
+  "priseTypeGarde": "Garde",
+  "priseTypeGardeSans": "Garde-sans",
+  "priseTypeGardeContre": "Garde-contre",
+  "successAddingGame": "Success adding game",
+  "tableNoData": "No Data",
+  "tableNoEntry": "No entries",
+  "infoEntryString": "{playerName} took a {prise} {withPlayers, select, onePlayer{(with {player1})} twoPlayers{(with {player1} and {player2})} other{alone}}, {points} points for {campPoints}, {nbBouts, plural, zero{no oudlers} one{1 oudler} other{{nbBouts} oudlers}} for {campPoints}.",
+  "@infoEntryString": {
+    "description": "A human readable entry",
+    "placeholders": {
+      "withPlayers": {
+        "type": "String"
+      },
+      "playerName": {
+        "type": "String"
+      },
+      "prise": {
+        "type": "String"
+      },
+      "player1": {
+        "type": "String"
+      },
+      "player2": {
+        "type": "String"
+      },
+      "points": {
+        "type": "double"
+      },
+      "campPoints": {
+        "type": "String"
+      },
+      "nbBouts": {
+        "type": "int"
       }
     }
   }

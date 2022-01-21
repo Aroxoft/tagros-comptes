@@ -51,11 +51,11 @@ class MenuBody extends StatelessWidget {
                               date: DateTime.now()),
                           players: players)));
             },
-            child: const Text("Nouvelle partie"),
+            child: Text(S.of(context).newGame),
           ),
         ),
         ElevatedButton(
-            child: const Text("Continuer"),
+            child: Text(S.of(context).toContinue),
             onPressed: () {
               showDialog(
                 context: context,

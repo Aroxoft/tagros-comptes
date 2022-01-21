@@ -7,7 +7,7 @@ import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/state/providers.dart';
-
+import 'package:tagros_comptes/generated/l10n.dart';
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;
 
@@ -44,8 +44,8 @@ class TableauBody extends ConsumerWidget {
             }
             final sums = snapshot.data;
             if (sums == null) {
-              return const Center(
-                child: Text("No Data"),
+              return Center(
+                child: Text(S.of(context).tableNoData),
               );
             }
             return Padding(
@@ -87,20 +87,20 @@ class TableauBody extends ConsumerWidget {
             );
           }
           if (!snapshot.hasData) {
-            return const Center(
+            return  Center(
               child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text("No data"),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(S.of(context).tableNoData),
               ),
             );
           }
           final entries = snapshot.data;
           if (entries == null || entries.isEmpty) {
-            return const Expanded(
+            return Expanded(
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("No data"),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(S.of(context).tableNoEntry),
                 ),
               ),
             );

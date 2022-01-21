@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/types/functions.dart';
 import 'package:tagros_comptes/widget/choose_player.dart';
-
 class DialogChoosePlayers extends StatelessWidget {
   final DoAfterChosen doAfterChosen;
 
@@ -80,13 +80,12 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                             onSaved: (newValue) {
                               setState(() {
                                 if (players.contains(newValue)) {
-                                  errorMessage =
-                                      "Tous les noms doivent être différents";
+                                  errorMessage = S.of(context).errorSameName;
                                   return;
                                 }
                                 if (newValue == null ||
                                     newValue.pseudo.isEmpty) {
-                                  errorMessage = 'Veuillez entrer un nom';
+                                  errorMessage = S.of(context).errorPseudoEmpty;
                                   return;
                                 }
                                 errorMessage = null;
@@ -99,7 +98,9 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                               if (!NbPlayers.values
                                   .map((e) => e.number)
                                   .contains(nbPlayers)) {
-                                return "Une partie avec $nbPlayers joueur${nbPlayers != 1 ? "s" : ""} n'existe pas";
+                                return S
+                                    .of(context)
+                                    .errorGameNbPlayers(nbPlayers);
                               }
                               return null;
                             },
@@ -114,8 +115,7 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                                 players.length,
                                 (index) => Chip(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(2),
+                                        borderRadius: BorderRadius.circular(2),
                                       ),
                                       elevation: 20,
                                       labelStyle:
@@ -124,7 +124,8 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                                       label: Text(players[index].pseudo),
                                       backgroundColor: Colors.pink,
                                       deleteIcon: const Icon(Icons.delete),
-                                      deleteButtonTooltipMessage: "Supprimer",
+                                      deleteButtonTooltipMessage:
+                                          S.of(context).dialogPlayersDelete,
                                       deleteIconColor: Colors.white,
                                       onDeleted: () {
                                         setState(() {
@@ -148,7 +149,7 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                         widget.doAfterChosen(players);
                       }
                     },
-                    child: const Text("OK"))
+                    child: Text(S.of(context).ok))
               ]);
         },
       ),

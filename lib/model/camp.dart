@@ -1,16 +1,16 @@
 import 'package:collection/collection.dart';
-
+import 'package:tagros_comptes/generated/l10n.dart';
 enum Camp { attack, defense, none }
 
 extension CampExt on Camp {
   String get displayName {
     switch (this) {
       case Camp.attack:
-        return "attaque";
+        return S.current.campTypeAttack;
       case Camp.defense:
-        return "défense";
+        return S.current.campTypeDefense;
       case Camp.none:
-        return "aucun";
+        return S.current.campTypeNone;
     }
   }
 }

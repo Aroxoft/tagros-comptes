@@ -36,12 +36,13 @@ class EntriesDbBloc {
   final AppDatabase _database;
 
   EntriesDbBloc(GameWithPlayers game, {required AppDatabase database})
-      : assert(game.game.id != null),
+      : assert(game.game.id.present),
         _database = database,
         _game = game,
         // Watch entries
-        infoEntries =
-            database.watchInfoEntriesInGame(game.game.id!).asBroadcastStream() {
+        infoEntries = database.gamesDao
+            .watchInfoEntriesInGame(game.game.id.value)
+            .asBroadcastStream() {
     sum = infoEntries.map((event) => calculateSum(event,
         game.players.map((e) => PlayerBean.fromDb(e)).whereNotNull().toList()));
 

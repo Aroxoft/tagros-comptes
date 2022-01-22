@@ -46,8 +46,7 @@ class MenuBody extends StatelessWidget {
                   doAfter: (players) => navigateToTableau(context,
                       appDatabase: ref.read(databaseProvider),
                       game: GameWithPlayers(
-                          game: Game(
-                              id: null,
+                          game: GamesCompanion.insert(
                               nbPlayers: players.length,
                               date: DateTime.now()),
                           players: players)));

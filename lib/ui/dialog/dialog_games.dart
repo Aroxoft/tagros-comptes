@@ -16,7 +16,8 @@ class DialogChooseGame extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       content: StreamBuilder<List<GameWithPlayers>>(
-          stream: ref.watch(databaseProvider).watchAllGames(),
+          stream: ref.watch(databaseProvider
+              .select((value) => value.gamesDao.watchAllGamesDrift())),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text("Error: ${snapshot.error}");
@@ -72,7 +73,7 @@ class DialogChooseGame extends ConsumerWidget {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(timeago.format(games[index].game.date)),
+                              Text(timeago.format(games[index].game.date.value)),
                               Text(
                                 games[index]
                                     .players

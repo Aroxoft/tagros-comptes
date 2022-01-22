@@ -1,17 +1,16 @@
-import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tagros_comptes/model/camp.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
-import 'package:tagros_comptes/model/info_entry.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
-import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/services/db/players_dao.dart';
 
 part 'app_database.g.dart';
+
+const bool kDebuggingDatabase = false;
 
 class Players extends Table {
   IntColumn get id => integer().autoIncrement().nullable()();
@@ -20,7 +19,7 @@ class Players extends Table {
 }
 
 class Games extends Table {
-  IntColumn get id => integer().autoIncrement().nullable()();
+  IntColumn get id => integer().autoIncrement()();
 
   IntColumn get nbPlayers => integer()();
 
@@ -31,13 +30,13 @@ class Games extends Table {
 class InfoEntries extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  IntColumn get game => integer()();
+  IntColumn get game => integer().references(Games, #id)();
 
-  IntColumn get player => integer()();
+  IntColumn get player => integer().references(Players, #id)();
 
-  IntColumn get with1 => integer().nullable()();
+  IntColumn get with1 => integer().nullable().references(Players, #id)();
 
-  IntColumn get with2 => integer().nullable()();
+  IntColumn get with2 => integer().nullable().references(Players, #id)();
 
   RealColumn get points => real()();
 
@@ -57,9 +56,9 @@ class InfoEntries extends Table {
 class PlayerGames extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  IntColumn get player => integer()();
+  IntColumn get player => integer().references(Players, #id)();
 
-  IntColumn get game => integer()();
+  IntColumn get game => integer().references(Games, #id)();
 }
 
 @DriftDatabase(
@@ -84,104 +83,22 @@ class AppDatabase extends _$AppDatabase {
           // For example:
         },
         beforeOpen: (details) async {
-          // TODO
+          await customStatement('PRAGMA foreign_keys = ON');
+          if (kDebugMode && kDebuggingDatabase) {
+            final m = Migrator(this);
+            for (final table in allTables) {
+              await m.deleteTable(table.actualTableName);
+              await m.createTable(table);
+            }
+          }
         });
   }
 
   // <editor-fold desc="GET">
-  // loads all entries
-  Future<List<InfoEntry>> get allInfoEntries => select(infoEntries).get();
-
-  Stream<List<InfoEntryPlayerBean>> get watchInfoEntries {
-    final with1 = alias(players, 'w1');
-    final with2 = alias(players, 'w2');
-    final p = alias(players, 'p');
-    final query = select(infoEntries).join([
-      leftOuterJoin(p, p.id.equalsExp(infoEntries.player)),
-      leftOuterJoin(with1, with1.id.equalsExp(infoEntries.with1)),
-      leftOuterJoin(with2, with2.id.equalsExp(infoEntries.with2))
-    ]);
-    return query.watch().map((rows) {
-      return rows.map((row) {
-        return InfoEntryPlayerBean(
-          player: PlayerBean.fromDb(row.readTable(p)),
-          withPlayers: [
-            PlayerBean.fromDb(row.readTable(with1)),
-            PlayerBean.fromDb(row.readTable(with2))
-          ].whereNotNull().toList(),
-          infoEntry: InfoEntryBean.fromDb(row.readTable(infoEntries)),
-        );
-      }).toList();
-    });
-  }
-
-  Stream<List<InfoEntryPlayerBean>> watchInfoEntriesInGame(int gameId) {
-    final with1 = alias(players, 'w1');
-    final with2 = alias(players, 'w2');
-    final p = alias(players, 'p');
-    final query =
-        (select(infoEntries)..where((tbl) => tbl.game.equals(gameId))).join([
-      leftOuterJoin(p, p.id.equalsExp(infoEntries.player)),
-      leftOuterJoin(with1, with1.id.equalsExp(infoEntries.with1)),
-      leftOuterJoin(with2, with2.id.equalsExp(infoEntries.with2))
-    ]);
-
-    return query.watch().map((rows) {
-      return rows.map((row) {
-        return InfoEntryPlayerBean(
-            player: PlayerBean.fromDb(row.readTableOrNull(p)),
-            withPlayers: [
-              PlayerBean.fromDb(row.readTableOrNull(with1)),
-              PlayerBean.fromDb(row.readTableOrNull(with2))
-            ].whereNotNull().toList(),
-            infoEntry: InfoEntryBean.fromDb(row.readTable(infoEntries)));
-      }).toList();
-    });
-  }
-
-  Future<List<InfoEntry>> allInfoEntriesInGame(int idGame) =>
-      (select(infoEntries)..where((tbl) => infoEntries.game.equals(idGame)))
-          .get();
 
   Stream<List<Player>> get watchAllPlayers => select(players).watch();
 
   Future<List<Player>> get allPlayers => select(players).get();
-
-  Stream<List<GameWithPlayers>> watchAllGames() {
-    // Start by watching all games
-    final Stream<List<Game>> gameStream = select(games).watch();
-    return gameStream.switchMap((games) {
-      // This method is called whenever the list of games changes. For each
-      // game, now we want to load all the players in it
-      // Create a map from id to game, for performance reasons
-      final idToGame = {for (var game in games) game.id: game};
-      final ids = idToGame.keys;
-
-      // Select all players that are included in any game that we found
-      final playerQuery = select(playerGames)
-          .join([innerJoin(players, players.id.equalsExp(playerGames.player))])
-        ..where(playerGames.game.isIn(ids));
-
-      return playerQuery.watch().map((rows) {
-        // Store the list of players for each game
-        final idToPlayers = <int, List<Player>>{};
-
-        // For each player (row) that is included in a game, put it in the map of players
-        for (final row in rows) {
-          final player = row.readTable(players);
-          final id = row.readTable(playerGames).game;
-
-          idToPlayers.putIfAbsent(id, () => []).add(player);
-        }
-
-        // Finally, merge the map of games with the map of players
-        return [
-          for (var id in ids)
-            GameWithPlayers(game: idToGame[id]!, players: idToPlayers[id] ?? [])
-        ];
-      });
-    });
-  }
 
   //</editor-fold>
 
@@ -198,7 +115,7 @@ class AppDatabase extends _$AppDatabase {
       }
     }
     return into(infoEntries).insert(InfoEntriesCompanion.insert(
-      game: game.game.id!,
+      game: game.game.id.value,
       player: infoEntry.player!.id!,
       points: infoEntry.infoEntry.points,
       prise: toDbPrise(infoEntry.infoEntry.prise),
@@ -213,7 +130,7 @@ class AppDatabase extends _$AppDatabase {
 
   Future<int> newGame(GameWithPlayers gameWithPlayers) {
     return transaction(() async {
-      final Game game = gameWithPlayers.game;
+      final GamesCompanion game = gameWithPlayers.game;
 
       final idGame =
           await into(games).insert(game, mode: InsertMode.insertOrReplace);
@@ -292,13 +209,13 @@ class AppDatabase extends _$AppDatabase {
   Future<void> deleteGame(GameWithPlayers gameWithPlayers) async {
     return transaction(() async {
       await (delete(infoEntries)
-            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id)))
+            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id.value)))
           .go();
       await (delete(playerGames)
-            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id)))
+            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id.value)))
           .go();
       await (delete(games)
-            ..where((tbl) => tbl.id.equals(gameWithPlayers.game.id)))
+            ..where((tbl) => tbl.id.equals(gameWithPlayers.game.id.value)))
           .go();
     });
   }

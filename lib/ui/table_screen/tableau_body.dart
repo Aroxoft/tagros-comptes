@@ -7,7 +7,7 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/ui/screen/add_modify.dart';
+import 'package:tagros_comptes/ui/entry_screen/add_modify.dart';
 
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;

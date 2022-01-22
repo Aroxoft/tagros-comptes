@@ -9,11 +9,10 @@ import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/clean_players_screen/clean_players_screen.dart';
+import 'package:tagros_comptes/ui/entry_screen/add_modify.dart';
 import 'package:tagros_comptes/ui/guide_screen/guide_screen.dart';
 import 'package:tagros_comptes/ui/premium_screen/buy_screen.dart';
-import 'package:tagros_comptes/ui/screen/add_modify.dart';
 import 'package:tagros_comptes/ui/screen/menu.dart';
-import 'package:tagros_comptes/ui/screen/test_native.dart';
 import 'package:tagros_comptes/ui/settings_screen/settings_screen.dart';
 import 'package:tagros_comptes/ui/table_screen/tableau.dart';
 import 'package:tagros_comptes/ui/theme_screen/theme_screen.dart';
@@ -77,7 +76,6 @@ class MyApp extends StatelessWidget {
       home: MenuScreen(),
       routes: <String, WidgetBuilder>{
         MenuScreen.routeName: (context) => MenuScreen(),
-        TestNative.routeName: (context) => TestNative(),
         AddModifyEntry.routeName: (context) => const AddModifyEntry(),
         SettingsScreen.routeName: (context) => const SettingsScreen(),
         ThemeScreen.routeName: (context) => const ThemeScreen(),

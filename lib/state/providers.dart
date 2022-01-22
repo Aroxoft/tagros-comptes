@@ -1,9 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/bloc/entry_db_bloc.dart';
-import 'package:tagros_comptes/bloc/game_notifier.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/services/db/platforms/database.dart';
+import 'package:tagros_comptes/state/bloc/entry_db_bloc.dart';
+import 'package:tagros_comptes/state/bloc/game_notifier.dart';
 
 final databaseProvider = Provider<MyDatabase>((ref) {
   final db = MyDatabase(Database.openConnection());

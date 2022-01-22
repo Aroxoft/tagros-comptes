@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/types/functions.dart';
+import 'package:tagros_comptes/model/types/functions.dart';
 
 class SelectableTag extends StatelessWidget {
   final String text;

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
+import 'package:tagros_comptes/model/types/functions.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/types/functions.dart';
 import 'package:tagros_comptes/ui/widget/choose_player.dart';
 
 class DialogChoosePlayers extends StatelessWidget {

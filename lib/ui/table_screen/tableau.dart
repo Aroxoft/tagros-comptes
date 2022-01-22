@@ -8,7 +8,7 @@ import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/ui/screen/add_modify.dart';
+import 'package:tagros_comptes/ui/entry_screen/add_modify.dart';
 import 'package:tagros_comptes/ui/table_screen/tableau_body.dart';
 
 class TableauPage extends ConsumerWidget {

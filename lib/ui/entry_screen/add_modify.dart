@@ -12,8 +12,8 @@ import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
-import 'package:tagros_comptes/ui/widget/boxed.dart';
-import 'package:tagros_comptes/ui/widget/selectable_tag.dart';
+import 'package:tagros_comptes/ui/entry_screen/boxed.dart';
+import 'package:tagros_comptes/ui/entry_screen/selectable_tag.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 
 class AddModifyEntry extends HookConsumerWidget {

@@ -117,32 +117,33 @@ class TableauBody extends ConsumerWidget {
                   // var key = GlobalKey<SlidableState>();
                   return Slidable(
                     key: ValueKey(index),
-                    startActionPane:
-                        ActionPane(motion: const ScrollMotion(), children: [
-                      SlidableAction(
-                        backgroundColor: Colors.amber,
-                        icon: Icons.edit,
-                        foregroundColor: Colors.white,
-                        onPressed: (context) async {
-                          final modified = await Navigator.of(context)
-                              .pushNamed(AddModifyEntry.routeName,
-                                  arguments: AddModifyArguments(
-                                      players:
-                                          players.map((e) => e.toDb).toList(),
-                                      infoEntry: entries[index]));
-                          if (modified != null) {
-                            ref
-                                .read(entriesProvider)
-                                .inModifyEntry
-                                .add(modified as InfoEntryPlayerBean);
-                          }
-                        },
-                      ),
-                    ]),
+                    startActionPane: ActionPane(
+                        extentRatio: 0.3,
+                        motion: const ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            backgroundColor: Colors.amber,
+                            icon: Icons.edit,
+                            foregroundColor: Colors.white,
+                            onPressed: (context) async {
+                              final modified = await Navigator.of(context)
+                                  .pushNamed(AddModifyEntry.routeName,
+                                      arguments: AddModifyArguments(
+                                          players: players
+                                              .map((e) => e.toDb)
+                                              .toList(),
+                                          infoEntry: entries[index]));
+                              if (modified != null) {
+                                ref
+                                    .read(entriesProvider)
+                                    .inModifyEntry
+                                    .add(modified as InfoEntryPlayerBean);
+                              }
+                            },
+                          ),
+                        ]),
                     endActionPane: ActionPane(
-                      dismissible: DismissiblePane(
-                        onDismissed: () {},
-                      ),
+                      extentRatio: 0.3,
                       motion: const ScrollMotion(),
                       children: [
                         SlidableAction(

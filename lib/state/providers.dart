@@ -5,8 +5,8 @@ import 'package:tagros_comptes/services/db/platforms/database.dart';
 import 'package:tagros_comptes/state/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/state/bloc/game_notifier.dart';
 
-final databaseProvider = Provider<MyDatabase>((ref) {
-  final db = MyDatabase(Database.openConnection());
+final databaseProvider = Provider<AppDatabase>((ref) {
+  final db = AppDatabase(Database.openConnection());
   ref.onDispose(() {
     db.close();
   });

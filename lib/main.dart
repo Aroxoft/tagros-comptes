@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> navigateToTableau(BuildContext context,
-    {required GameWithPlayers game, required MyDatabase appDatabase}) async {
+    {required GameWithPlayers game, required AppDatabase appDatabase}) async {
   if (game.game.id == null) {
     final idGame = await appDatabase.newGame(game);
     game.game = game.game.copyWith(id: Value(idGame));

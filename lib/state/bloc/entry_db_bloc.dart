@@ -33,9 +33,9 @@ class EntriesDbBloc {
       _deleteEntryController.sink;
 
   final GameWithPlayers _game;
-  final MyDatabase _database;
+  final AppDatabase _database;
 
-  EntriesDbBloc(GameWithPlayers game, {required MyDatabase database})
+  EntriesDbBloc(GameWithPlayers game, {required AppDatabase database})
       : assert(game.game.id != null),
         _database = database,
         _game = game,

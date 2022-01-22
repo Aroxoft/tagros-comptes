@@ -5,11 +5,11 @@ import 'package:tagros_comptes/services/db/app_database.dart';
 
 class GameNotifier {
   final _deleteGameController = StreamController<GameWithPlayers>.broadcast();
-  final MyDatabase _database;
+  final AppDatabase _database;
 
   StreamSink<GameWithPlayers> get inDeleteGame => _deleteGameController.sink;
 
-  GameNotifier({required MyDatabase database}) : _database = database {
+  GameNotifier({required AppDatabase database}) : _database = database {
     _deleteGameController.stream.listen(_handleDeleteGame);
   }
 

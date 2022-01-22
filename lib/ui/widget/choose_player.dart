@@ -119,7 +119,7 @@ class AutocompleteFormField extends FormField<Player> {
       {required FormFieldSetter<Player> onSaved,
       required FormFieldValidator<Player> validator,
       required Player initialValue,
-      required MyDatabase database,
+      required AppDatabase database,
       bool autoValidate = false})
       : super(
           onSaved: onSaved,
@@ -187,7 +187,7 @@ class AutocompleteFormField extends FormField<Player> {
 
   static Future<Player> _checkForPseudoInDb(
       String text, FormFieldState<Player> state, List<Player> suggestions,
-      {required MyDatabase database}) async {
+      {required AppDatabase database}) async {
     Player added;
     if (suggestions.any((element) => element.pseudo.trim() == text.trim())) {
       // We have this player in DB

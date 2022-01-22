@@ -34,7 +34,7 @@ void main() {
   });
 
   testWidgets('Choose player test', (WidgetTester tester) async {
-    final db = MyDatabase(Database.openConnection());
+    final db = AppDatabase(Database.openConnection());
     // Build our app and trigger a frame.
     await tester.pumpWidget(ProviderScope(
       child: Material(

@@ -60,12 +60,14 @@ class PlayerGames extends Table {
   IntColumn get game => integer()();
 }
 
-@DriftDatabase(tables: [Players, Games, InfoEntries, PlayerGames])
-class MyDatabase extends _$MyDatabase {
+@DriftDatabase(
+  tables: [Players, Games, InfoEntries, PlayerGames],
+)
+class AppDatabase extends _$AppDatabase {
   static const int databaseVersion = 1;
 
   // We tell the database where to store the data with this constructor
-  MyDatabase(QueryExecutor conn) : super(conn);
+  AppDatabase(QueryExecutor conn) : super(conn);
 
   // Bump this number whenever we change or add a table definition
   @override

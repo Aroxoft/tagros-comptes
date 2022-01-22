@@ -1,9 +1,9 @@
-import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/model/camp.dart';
-import 'package:tagros_comptes/model/info_entry.dart';
-import 'package:tagros_comptes/model/info_entry_player.dart';
-import 'package:tagros_comptes/model/player.dart';
-import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/model/game/camp.dart';
+import 'package:tagros_comptes/model/game/info_entry.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
+import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/model/game/prise.dart';
+import 'package:tagros_comptes/services/calculous/calculus.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:tagros_comptes/calculous/calculus.dart';
-import 'package:tagros_comptes/model/game_with_players.dart';
-import 'package:tagros_comptes/model/info_entry_player.dart';
-import 'package:tagros_comptes/model/player.dart';
+import 'package:tagros_comptes/model/game/game_with_players.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
+import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/services/calculous/calculus.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 
 class EntriesDbBloc {

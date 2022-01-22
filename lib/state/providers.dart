@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/services/db/platforms/database.dart';
@@ -28,7 +28,8 @@ final cleanPlayerProvider = ChangeNotifierProvider<CleanPlayersVM>((ref) {
   return CleanPlayersVM(ref.watch(playerDaoProvider));
 });
 
-final choosePlayerProvider = ChangeNotifierProvider.autoDispose<ChoosePlayerVM>((ref) {
+final choosePlayerProvider =
+    ChangeNotifierProvider.autoDispose<ChoosePlayerVM>((ref) {
   return ChoosePlayerVM(ref.watch(playerDaoProvider));
 });
 

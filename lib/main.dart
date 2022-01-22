@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/clean_players_screen/clean_players_screen.dart';

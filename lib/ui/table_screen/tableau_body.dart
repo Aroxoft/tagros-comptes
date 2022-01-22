@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/calculous/calculus.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/model/info_entry_player.dart';
-import 'package:tagros_comptes/model/player.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
+import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/services/calculous/calculus.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/entry_screen/add_modify.dart';
 

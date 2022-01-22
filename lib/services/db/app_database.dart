@@ -1,10 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
-import 'package:tagros_comptes/model/camp.dart';
-import 'package:tagros_comptes/model/game_with_players.dart';
-import 'package:tagros_comptes/model/info_entry_player.dart';
-import 'package:tagros_comptes/model/poignee.dart';
-import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/model/game/camp.dart';
+import 'package:tagros_comptes/model/game/game_with_players.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
+import 'package:tagros_comptes/model/game/poignee.dart';
+import 'package:tagros_comptes/model/game/prise.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/services/db/players_dao.dart';
 

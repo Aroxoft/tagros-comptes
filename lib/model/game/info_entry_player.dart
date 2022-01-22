@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/model/info_entry.dart';
-import 'package:tagros_comptes/model/player.dart';
-import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/model/game/info_entry.dart';
+import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/model/game/prise.dart';
 
 part 'info_entry_player.freezed.dart';
 

@@ -1,8 +1,8 @@
-import 'package:tagros_comptes/model/camp.dart';
-import 'package:tagros_comptes/model/info_entry_player.dart';
-import 'package:tagros_comptes/model/player.dart';
-import 'package:tagros_comptes/model/poignee.dart';
-import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/model/game/camp.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
+import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/model/game/poignee.dart';
+import 'package:tagros_comptes/model/game/prise.dart';
 
 Map<String, double> calculateGains(
     InfoEntryPlayerBean infoEntryPlayer, List<PlayerBean> playersList) {

@@ -1,12 +1,12 @@
 import 'package:drift/drift.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tagros_comptes/model/camp.dart';
-import 'package:tagros_comptes/model/game_with_players.dart';
-import 'package:tagros_comptes/model/info_entry.dart';
-import 'package:tagros_comptes/model/info_entry_player.dart';
-import 'package:tagros_comptes/model/player.dart';
-import 'package:tagros_comptes/model/poignee.dart';
-import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/model/game/camp.dart';
+import 'package:tagros_comptes/model/game/game_with_players.dart';
+import 'package:tagros_comptes/model/game/info_entry.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
+import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/model/game/poignee.dart';
+import 'package:tagros_comptes/model/game/prise.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 
 part 'games_dao.g.dart';

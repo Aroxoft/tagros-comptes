@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tagros_comptes/model/camp.dart';
-import 'package:tagros_comptes/model/poignee.dart';
-import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/model/game/camp.dart';
+import 'package:tagros_comptes/model/game/poignee.dart';
+import 'package:tagros_comptes/model/game/prise.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 
 part 'info_entry.freezed.dart';

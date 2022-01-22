@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:tagros_comptes/model/game_with_players.dart';
+import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 
 class GameNotifier {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/nb_players.dart';
@@ -33,31 +34,18 @@ class DialogChoosePlayers extends StatelessWidget {
   }
 }
 
-class DialogPlayerBody extends ConsumerStatefulWidget {
-  final DoAfterChosen doAfterChosen;
-
+class DialogPlayerBody extends HookConsumerWidget {
   const DialogPlayerBody({Key? key, required this.doAfterChosen})
       : super(key: key);
+  final DoAfterChosen doAfterChosen;
 
   @override
-  _DialogPlayerBodyState createState() => _DialogPlayerBodyState();
-}
-
-class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
-  late List<Player> players;
-  String? errorMessage;
-
-  @override
-  void initState() {
-    super.initState();
-    players = [];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final players = useState(<Player>[]);
+    final errorMessage = useState<String?>(null);
+    final formKey = useState(GlobalKey<FormState>());
     return Form(
-      key: formKey,
+      key: formKey.value,
       child: StreamBuilder<List<Player>>(
         stream: ref.watch(databaseProvider).watchAllPlayers,
         builder: (BuildContext context, AsyncSnapshot<List<Player>> snapshot) {
@@ -79,23 +67,24 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                           AutocompleteFormField(
                             playerDb,
                             onSaved: (newValue) {
-                              setState(() {
-                                if (players.contains(newValue)) {
-                                  errorMessage = S.of(context).errorSameName;
-                                  return;
-                                }
-                                if (newValue == null ||
-                                    newValue.pseudo.isEmpty) {
-                                  errorMessage = S.of(context).errorPseudoEmpty;
-                                  return;
-                                }
-                                errorMessage = null;
-                                players.add(newValue);
-                              });
+                              if (players.value.contains(newValue)) {
+                                errorMessage.value =
+                                    S.of(context).errorSameName;
+                                return;
+                              }
+                              if (newValue == null || newValue.pseudo.isEmpty) {
+                                errorMessage.value =
+                                    S.of(context).errorPseudoEmpty;
+                                return;
+                              }
+                              errorMessage.value = null;
+                              final newPlayers = players.value.toList();
+                              newPlayers.add(newValue);
+                              players.value = newPlayers;
                             },
                             initialValue: Player(id: null, pseudo: ""),
                             validator: (value) {
-                              final nbPlayers = players.length;
+                              final nbPlayers = players.value.length;
                               if (!NbPlayers.values
                                   .map((e) => e.number)
                                   .contains(nbPlayers)) {
@@ -113,31 +102,32 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                             runSpacing: 3,
                             alignment: WrapAlignment.spaceEvenly,
                             children: List.generate(
-                                players.length,
+                                players.value.length,
                                 (index) => Chip(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(2),
                                       ),
-                                      elevation: 20,
+                                      elevation: 8,
                                       labelStyle:
                                           const TextStyle(color: Colors.white),
                                       padding: EdgeInsets.zero,
-                                      label: Text(players[index].pseudo),
+                                      label: Text(players.value[index].pseudo),
                                       backgroundColor: Colors.pink,
                                       deleteIcon: const Icon(Icons.delete),
                                       deleteButtonTooltipMessage:
                                           S.of(context).dialogPlayersDelete,
                                       deleteIconColor: Colors.white,
                                       onDeleted: () {
-                                        setState(() {
-                                          players.removeAt(index);
-                                        });
+                                        final newPlayers =
+                                            players.value.toList();
+                                        newPlayers.removeAt(index);
+                                        players.value = newPlayers;
                                       },
                                     )),
                           ),
-                          if (errorMessage != null)
+                          if (errorMessage.value != null)
                             Text(
-                              errorMessage!,
+                              errorMessage.value!,
                               style: const TextStyle(color: Colors.red),
                             )
                         ]),
@@ -145,9 +135,9 @@ class _DialogPlayerBodyState extends ConsumerState<DialogPlayerBody> {
                 ),
                 ElevatedButton(
                     onPressed: () {
-                      if (formKey.currentState?.validate() ?? false) {
+                      if (formKey.value.currentState?.validate() ?? false) {
                         Navigator.of(context).pop();
-                        widget.doAfterChosen(players);
+                        doAfterChosen(players.value);
                       }
                     },
                     child: Text(S.of(context).ok))

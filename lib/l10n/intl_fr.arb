@@ -43,10 +43,18 @@
   "successAddingGame": "Partie ajoutée avec succès",
   "tableNoData": "Pas d'information",
   "tableNoEntry": "Aucune partie",
-  "infoEntryString": "{prise} de {playerName} {withPlayers, select, onePlayer{(avec {player1})} twoPlayers{(avec {player1} et {player2})} other{tout seul}}, {points} points pour {campPoints}, {nbBouts, plural, zero{aucun bout} one{1 bout} other{{nbBouts} bouts}} pour {campPoints}.",
+  "infoEntryString": "{prise} de {playerName} {withPlayers, select, onePlayer{(avec {player1})} twoPlayers{(avec {player1} et {player2})} other{tout(e) seul(e)}}, {points} points pour {campPoints}, {nbBouts, plural, zero{aucun bout} one{1 bout} other{{nbBouts} bouts}} pour {campPoints}.",
   "settingsTitle": "Options",
   "settingsCleanUnusedPlayers": "Faire du ménage dans les joueurs",
   "settingsTheme": "Thème",
   "settingsBuyPremium": "Acheter un abonnement premium",
-  "settingsGuide": "Guide"
+  "settingsGuide": "Guide",
+  "cleanupUnusedPlayersTitle": "Joueurs non utilisés",
+  "actionDelete": "Supprimer",
+  "actionCancel": "Annuler",
+  "deleteAllDialogContent": "Cette action ne peut pas être annulée",
+  "deleteAllDialogTitle": "Voulez-vous supprimer tous les joueurs inutilisés ?",
+  "actionDeleteAllUnused": "Supprimer tous les joueurs inutilisés",
+  "errorUnusedPlayers": "Erreur en récupérant la liste des joueurs inutilisés : {error}",
+  "playersUnusedEmpty": "Pas de joueurs inutilisés"
 }

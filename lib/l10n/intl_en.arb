@@ -124,5 +124,21 @@
   "settingsCleanUnusedPlayers": "Clean unused players",
   "settingsTheme": "Theme",
   "settingsBuyPremium": "Buy premium subscription",
-  "settingsGuide": "Guide"
+  "settingsGuide": "Guide",
+  "cleanupUnusedPlayersTitle": "Cleanup unused players",
+  "actionDelete": "Delete",
+  "actionCancel": "Cancel",
+  "deleteAllDialogContent": "This action cannot be undone",
+  "deleteAllDialogTitle": "Do you want to delete all unused players?",
+  "actionDeleteAllUnused": "Delete all unused players",
+  "errorUnusedPlayers": "Error fetching unused players: {error}",
+  "@errorUnusedPlayers": {
+    "description": "When there is an error fetching unused players in DB",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "playersUnusedEmpty": "No players are unused"
 }

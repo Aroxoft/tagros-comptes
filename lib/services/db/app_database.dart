@@ -8,6 +8,8 @@ import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
+import 'package:tagros_comptes/services/db/games_dao.dart';
+import 'package:tagros_comptes/services/db/players_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -62,6 +64,7 @@ class PlayerGames extends Table {
 
 @DriftDatabase(
   tables: [Players, Games, InfoEntries, PlayerGames],
+  daos: [PlayersDao, GamesDao],
 )
 class AppDatabase extends _$AppDatabase {
   static const int databaseVersion = 1;

@@ -1,0 +1,11 @@
+-- @formatter:off
+import 'app_database.dart';
+-- @formatter:on
+
+-- all players not in games
+unusedPlayers:
+select id, pseudo
+from players
+where id not in
+-- all players in games
+      (select distinct player from player_games);

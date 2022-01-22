@@ -140,5 +140,7 @@
       }
     }
   },
-  "playersUnusedEmpty": "No players are unused"
+  "playersUnusedEmpty": "No players are unused",
+  "chooseDialogNoItemsFound": "No players found with this name. To create it, click on the '+' button on the right",
+  "hintSearchPlayer": "Search player"
 }

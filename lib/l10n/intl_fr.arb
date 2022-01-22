@@ -28,7 +28,7 @@
   "addModifyTitleContract": "Contrat",
   "addModifyFor": "Pour",
   "addModifyContractType": "Type",
-  "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ atoutttttts)}}",
+  "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ atouts)}}",
   "dialogGamesNoData": "Pas d'information",
   "dialogGamesNoGames": "Pas de parties enregistrées",
   "nbPlayers": "{nbPlayers} joueurs",
@@ -56,5 +56,7 @@
   "deleteAllDialogTitle": "Voulez-vous supprimer tous les joueurs inutilisés ?",
   "actionDeleteAllUnused": "Supprimer tous les joueurs inutilisés",
   "errorUnusedPlayers": "Erreur en récupérant la liste des joueurs inutilisés : {error}",
-  "playersUnusedEmpty": "Pas de joueurs inutilisés"
+  "playersUnusedEmpty": "Pas de joueurs inutilisés",
+  "chooseDialogNoItemsFound": "Pas de joueurs trouvés avec ce nom. Pour le créer, cliquer sur le bouton '+' à droite",
+  "hintSearchPlayer": "Chercher un joueur"
 }

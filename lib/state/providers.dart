@@ -6,6 +6,7 @@ import 'package:tagros_comptes/services/db/platforms/database.dart';
 import 'package:tagros_comptes/services/db/players_dao.dart';
 import 'package:tagros_comptes/state/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/state/bloc/game_notifier.dart';
+import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
@@ -25,6 +26,10 @@ final gamesDaoProvider = Provider<GamesDao>((ref) {
 
 final cleanPlayerProvider = ChangeNotifierProvider<CleanPlayersVM>((ref) {
   return CleanPlayersVM(ref.watch(playerDaoProvider));
+});
+
+final choosePlayerProvider = ChangeNotifierProvider.autoDispose<ChoosePlayerVM>((ref) {
+  return ChoosePlayerVM(ref.watch(playerDaoProvider));
 });
 
 final gameChangeProvider = Provider<GameNotifier>((ref) {

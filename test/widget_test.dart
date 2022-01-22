@@ -5,12 +5,13 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
-import 'package:tagros_comptes/services/db/platforms/database.dart';
+import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/dialog/dialog_players.dart';
 import 'package:tagros_comptes/ui/widget/choose_player.dart';
 
@@ -34,21 +35,18 @@ void main() {
   });
 
   testWidgets('Choose player test', (WidgetTester tester) async {
-    final db = AppDatabase(Database.openConnection());
     // Build our app and trigger a frame.
     await tester.pumpWidget(ProviderScope(
-      child: Material(
-        child: AutocompleteFormField(
-          ["Aa", "Bb", "CC", "Dd"]
-              .map((e) => Player(id: null, pseudo: e))
-              .toList(),
-          initialValue: Player(pseudo: "Aa", id: null),
-          validator: (value) => null,
-          onSaved: (Player? newValue) {},
-          database: db,
-        ),
+      overrides: [
+        databaseProvider
+            .overrideWithValue(AppDatabase(NativeDatabase.memory())),
+        // todo add suggestions to DB
+      ],
+      child: const Material(
+        child: ChoosePlayer(),
       ),
     ));
+
 
     final finder = find.text("Aa");
     expect(finder, findsOneWidget);

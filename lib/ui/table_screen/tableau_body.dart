@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/calculous/calculus.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
-import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/ui/screen/add_modify.dart';
+
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;
 
@@ -87,7 +88,7 @@ class TableauBody extends ConsumerWidget {
             );
           }
           if (!snapshot.hasData) {
-            return  Center(
+            return Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(S.of(context).tableNoData),
@@ -123,11 +124,12 @@ class TableauBody extends ConsumerWidget {
                         icon: Icons.edit,
                         foregroundColor: Colors.white,
                         onPressed: (context) async {
-                          final modified = await Navigator.of(context).pushNamed(
-                              AddModifyEntry.routeName,
-                              arguments: AddModifyArguments(
-                                  players: players.map((e) => e.toDb).toList(),
-                                  infoEntry: entries[index]));
+                          final modified = await Navigator.of(context)
+                              .pushNamed(AddModifyEntry.routeName,
+                                  arguments: AddModifyArguments(
+                                      players:
+                                          players.map((e) => e.toDb).toList(),
+                                      infoEntry: entries[index]));
                           if (modified != null) {
                             ref
                                 .read(entriesProvider)

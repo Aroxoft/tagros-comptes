@@ -80,7 +80,7 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
 
 extension PoigneExtension on PoigneeType {
   String get displayName {
-    switch(this) {
+    switch (this) {
       case PoigneeType.simple:
         return S.current.poigneTypeSimple;
       case PoigneeType.double:

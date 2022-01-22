@@ -8,6 +8,7 @@ import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 class DialogChooseGame extends ConsumerWidget {
   const DialogChooseGame({Key? key}) : super(key: key);
 
@@ -54,12 +55,12 @@ class DialogChooseGame extends ConsumerWidget {
                           leading: CircleAvatar(
                             backgroundColor:
                                 Colors.indigo[Random().nextInt(10) * 100],
-                            child: Text(
-                                games[index].players.length.toString(),
+                            child: Text(games[index].players.length.toString(),
                                 style: const TextStyle(color: Colors.white)),
                           ),
-                          title: Text(S.of(context).nbPlayers(
-                              games[index].players.length)),
+                          title: Text(S
+                              .of(context)
+                              .nbPlayers(games[index].players.length)),
                           subtitle: child,
                           onTap: () {
                             Navigator.of(context).pop();

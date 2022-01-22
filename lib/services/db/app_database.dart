@@ -54,7 +54,9 @@ class InfoEntries extends Table {
 //@DataClassName("player_game")
 class PlayerGames extends Table {
   IntColumn get id => integer().autoIncrement()();
+
   IntColumn get player => integer()();
+
   IntColumn get game => integer()();
 }
 
@@ -137,6 +139,7 @@ class MyDatabase extends _$MyDatabase {
           .get();
 
   Stream<List<Player>> get watchAllPlayers => select(players).watch();
+
   Future<List<Player>> get allPlayers => select(players).get();
 
   Stream<List<GameWithPlayers>> watchAllGames() {
@@ -245,6 +248,7 @@ class MyDatabase extends _$MyDatabase {
     }
     return into(players).insert(playersCompanion!);
   }
+
   //</editor-fold>
 
   //<editor-fold desc="UPDATE">
@@ -293,5 +297,5 @@ class MyDatabase extends _$MyDatabase {
           .go();
     });
   }
-  //</editor-fold>
+//</editor-fold>
 }

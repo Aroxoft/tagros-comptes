@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+
 enum Camp { attack, defense, none }
 
 extension CampExt on Camp {

@@ -9,10 +9,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/dialog/dialog_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/services/db/platforms/database.dart';
-import 'package:tagros_comptes/widget/choose_player.dart';
+import 'package:tagros_comptes/ui/dialog/dialog_players.dart';
+import 'package:tagros_comptes/ui/widget/choose_player.dart';
 
 void main() {
   testWidgets('Show dialog players', (WidgetTester tester) async {

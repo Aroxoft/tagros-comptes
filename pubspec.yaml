@@ -36,11 +36,8 @@ dependencies:
   hooks_riverpod: ^2.0.0-dev.0
   intl: ^0.17.0
   lint: ^1.8.2
-  #  sqflite: ^1.0.0
-  #  moor_ffi: ^0.4.0 # Contains code that will run the actual queries
   path: ^1.8.0
   path_provider: ^2.0.8
-  #  autocomplete_textfield: ^1.7.3
   #  flutter_stetho: ^0.5.2
   rxdart: ^0.27.3
   sqlite3_flutter_libs: ^0.5.0

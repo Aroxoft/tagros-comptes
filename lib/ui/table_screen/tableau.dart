@@ -7,9 +7,10 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
 import 'package:tagros_comptes/model/info_entry_player.dart';
 import 'package:tagros_comptes/model/player.dart';
-import 'package:tagros_comptes/screen/add_modify.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/widget/tableau_body.dart';
+import 'package:tagros_comptes/ui/screen/add_modify.dart';
+import 'package:tagros_comptes/ui/table_screen/tableau_body.dart';
+
 class TableauPage extends ConsumerWidget {
   const TableauPage({Key? key, required this.game}) : super(key: key);
   final GameWithPlayers game;
@@ -29,10 +30,7 @@ class TableauPage extends ConsumerWidget {
                     AddModifyArguments(players: game.players, infoEntry: null));
             if (res != null) {
               final info = res as InfoEntryPlayerBean;
-              ref
-                  .read(entriesProvider)
-                  .inAddEntry
-                  .add(info);
+              ref.read(entriesProvider).inAddEntry.add(info);
               Flushbar(
                 flushbarStyle: FlushbarStyle.GROUNDED,
                 flushbarPosition: FlushbarPosition.BOTTOM,

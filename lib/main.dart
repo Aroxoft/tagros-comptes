@@ -6,12 +6,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/game_with_players.dart';
-import 'package:tagros_comptes/screen/add_modify.dart';
-import 'package:tagros_comptes/screen/menu.dart';
-import 'package:tagros_comptes/screen/tableau.dart';
-import 'package:tagros_comptes/screen/test_native.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/ui/screen/add_modify.dart';
+import 'package:tagros_comptes/ui/screen/menu.dart';
+// import 'package:tagros_comptes/ui/settings_screen/settings_screen.dart';
+import 'package:tagros_comptes/ui/table_screen/tableau.dart';
+import 'package:tagros_comptes/ui/screen/test_native.dart';
+// import 'package:tagros_comptes/ui/theme_screen/theme_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 // import '.env.dart';
 
@@ -25,6 +27,7 @@ void main() {
   timeago.setLocaleMessages('en', timeago.EnMessages());
   runApp(ProviderScope(child: MyApp()));
 }
+
 /*
 Future<void> _runAppSpector() async {
   var config = Config()
@@ -66,8 +69,8 @@ class MyApp extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                   primary: Colors.amber,
                   onPrimary: Colors.black,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10)))),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 10)))),
       home: MenuScreen(),
       routes: <String, WidgetBuilder>{
         MenuScreen.routeName: (context) => MenuScreen(),

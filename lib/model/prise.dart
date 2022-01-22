@@ -1,4 +1,5 @@
 import 'package:tagros_comptes/generated/l10n.dart';
+
 enum Prise { petite, garde, gardeSans, gardeContre }
 
 extension PriseExt on Prise {
@@ -14,8 +15,9 @@ extension PriseExt on Prise {
         return 6;
     }
   }
+
   String get displayName {
-    switch(this) {
+    switch (this) {
       case Prise.petite:
         return S.current.priseTypePrise;
       case Prise.garde:

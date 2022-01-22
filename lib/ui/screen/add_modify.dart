@@ -12,9 +12,10 @@ import 'package:tagros_comptes/model/player.dart';
 import 'package:tagros_comptes/model/poignee.dart';
 import 'package:tagros_comptes/model/prise.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/ui/widget/boxed.dart';
+import 'package:tagros_comptes/ui/widget/selectable_tag.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
-import 'package:tagros_comptes/widget/boxed.dart';
-import 'package:tagros_comptes/widget/selectable_tag.dart';
+
 class AddModifyEntry extends HookConsumerWidget {
   static String routeName = "/addModify";
 
@@ -30,8 +31,8 @@ class AddModifyEntry extends HookConsumerWidget {
             .players
             .last));
     final withPlayers = useState<List<PlayerBean?>?>(null);
-    final args = useMemoized(
-        () => ModalRoute.of(context)!.settings.arguments! as AddModifyArguments);
+    final args = useMemoized(() =>
+        ModalRoute.of(context)!.settings.arguments! as AddModifyArguments);
     // final infoEntry = useState(InfoEntryPlayerBean(
     //     player: PlayerBean.fromDb(
     //         (ModalRoute.of(context)!.settings.arguments as AddModifyArguments)
@@ -47,7 +48,7 @@ class AddModifyEntry extends HookConsumerWidget {
       InfoEntryPlayerBean? info = args.infoEntry;
       if (kDebugMode) {
         print(
-          "So we ${info == null ? "add" : "modify"} an entry, we have the players: $players");
+            "So we ${info == null ? "add" : "modify"} an entry, we have the players: $players");
       }
       add.value = false;
       if (info == null) {
@@ -194,7 +195,8 @@ class AddModifyEntry extends HookConsumerWidget {
                               flex: 5,
                               child: Container(
                                 height: 35,
-                                padding: const EdgeInsets.symmetric(vertical: 2),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2),
                                 child: ListView.builder(
                                     reverse: true,
                                     scrollDirection: Axis.horizontal,
@@ -274,7 +276,8 @@ class AddModifyEntry extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                            constraints: BoxConstraints.loose(const Size(60, 35)),
+                            constraints:
+                                BoxConstraints.loose(const Size(60, 35)),
                             child: TextFormField(
                               inputFormatters: [HalfDecimalInputFormatter()],
                               initialValue: entry.value.points.toString(),
@@ -372,8 +375,8 @@ class AddModifyEntry extends HookConsumerWidget {
                                             child: Text(S
                                                 .of(context)
                                                 .addModifyPoigneeNbTrumps(
-                                                    getNbAtouts(
-                                                        e, players.value.length),
+                                                    getNbAtouts(e,
+                                                        players.value.length),
                                                     e.displayName))),
                                       )
                                       .toList(),
@@ -422,7 +425,8 @@ class AddModifyEntry extends HookConsumerWidget {
                                       .toList(),
                                   onChanged: (Camp? petit) {
                                     if (petit != null) {
-                                      final p = entry.value.petitsAuBout.toList();
+                                      final p =
+                                          entry.value.petitsAuBout.toList();
                                       p[0] = petit;
                                       entry.value =
                                           entry.value.copyWith(petitsAuBout: p);
@@ -459,4 +463,5 @@ class AddModifyArguments {
 
   AddModifyArguments({required this.infoEntry, required this.players});
 }
+
 enum Tagros { tagros, tarot }

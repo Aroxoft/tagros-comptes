@@ -12,6 +12,7 @@ class TestNative extends StatefulWidget {
 class _TestNativeState extends State<TestNative> {
   static const platform = MethodChannel('com.aroxoft.tagros.points/info');
   String _message = "No messages yet...";
+
   @override
   void initState() {
     super.initState();

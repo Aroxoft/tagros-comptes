@@ -119,5 +119,10 @@
         "type": "int"
       }
     }
-  }
+  },
+  "settingsTitle": "Settings",
+  "settingsCleanUnusedPlayers": "Clean unused players",
+  "settingsTheme": "Theme",
+  "settingsBuyPremium": "Buy premium subscription",
+  "settingsGuide": "Guide"
 }

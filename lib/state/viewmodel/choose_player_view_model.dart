@@ -18,8 +18,6 @@ class ChoosePlayerVM extends ChangeNotifier {
 
   int get nbPlayers => _selectedPlayers.length;
 
-  bool get hasError => _error != null;
-
   String? get error => _error;
 
   void addPlayer(Player player) {

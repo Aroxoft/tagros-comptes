@@ -9,24 +9,29 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/dialog/dialog_games.dart';
 import 'package:tagros_comptes/ui/dialog/dialog_players.dart';
 import 'package:tagros_comptes/ui/settings_screen/settings_screen.dart';
+import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class MenuScreen extends StatelessWidget {
   static const routeName = "/menu";
 
+  const MenuScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).appTitle),
-          actions: <Widget>[
-            IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(SettingsScreen.routeName);
-                })
-          ],
-        ),
-        body: const MenuBody());
+    return BackgroundGradient(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text(S.of(context).appTitle),
+            actions: <Widget>[
+              IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(SettingsScreen.routeName);
+                  })
+            ],
+          ),
+          body: const MenuBody()),
+    );
   }
 }
 
@@ -47,8 +52,7 @@ class MenuBody extends StatelessWidget {
                       appDatabase: ref.read(databaseProvider),
                       game: GameWithPlayers(
                           game: GamesCompanion.insert(
-                              nbPlayers: players.length,
-                              date: DateTime.now()),
+                              nbPlayers: players.length, date: DateTime.now()),
                           players: players)));
             },
             child: Text(S.of(context).newGame),

@@ -3,10 +3,14 @@ import 'package:drift/drift.dart' show Value;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/game/game_with_players.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
+import 'package:tagros_comptes/model/theme/theme.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/services/theme/theme_service.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/clean_players_screen/clean_players_screen.dart';
 import 'package:tagros_comptes/ui/entry_screen/add_modify.dart';
@@ -19,12 +23,21 @@ import 'package:tagros_comptes/ui/theme_screen/theme_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 // import '.env.dart';
 
-void main() {
+Future<void> main() async {
   // WidgetsFlutterBinding.ensureInitialized();
   // await _runAppSpector();
   if (kDebugMode) {
     // Stetho.initialize();
   }
+  await Hive.initFlutter();
+  Hive.registerAdapter(ColorAdapter());
+  Hive.registerAdapter(ThemeColorAdapter());
+  await Hive.openBox(ThemeService.optionsBox);
+  await Hive.openBox<ThemeColor>(
+    ThemeService.themeBox,
+    compactionStrategy: (entries, deletedEntries) => deletedEntries > 20,
+  );
+
   timeago.setLocaleMessages('fr', timeago.FrMessages());
   timeago.setLocaleMessages('en', timeago.EnMessages());
   runApp(ProviderScope(child: MyApp()));
@@ -43,10 +56,10 @@ Future<void> _runAppSpector() async {
   AppSpectorPlugin.shared().sessionUrlListener = (url) => print(url);
 }
 // */
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Flutter Demo',
       localizationsDelegates: const [
@@ -56,26 +69,10 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-      theme: ThemeData(
-          // This is the theme of your application.
-          //
-          // Try running your application with "flutter run". You'll see the
-          // application has a blue toolbar. Then, without quitting the app, try
-          // changing the primarySwatch below to Colors.green and then invoke
-          // "hot reload" (press "r" in the console where you ran "flutter run",
-          // or simply save your changes to "hot reload" in a Flutter IDE).
-          // Notice that the counter didn't reset back to zero; the application
-          // is not restarted.
-          primarySwatch: Colors.blue,
-          elevatedButtonTheme: ElevatedButtonThemeData(
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.amber,
-                  onPrimary: Colors.black,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 10)))),
-      home: MenuScreen(),
+      theme: ref.watch(themeDataProvider).value,
+      home: const MenuScreen(),
       routes: <String, WidgetBuilder>{
-        MenuScreen.routeName: (context) => MenuScreen(),
+        MenuScreen.routeName: (context) => const MenuScreen(),
         AddModifyEntry.routeName: (context) => const AddModifyEntry(),
         SettingsScreen.routeName: (context) => const SettingsScreen(),
         ThemeScreen.routeName: (context) => const ThemeScreen(),
@@ -96,6 +93,19 @@ Future<void> navigateToTableau(BuildContext context,
   await Navigator.of(context).push(MaterialPageRoute(
     builder: (context) => ProviderScope(
         overrides: [gameProvider.overrideWithValue(game)],
-        child: TableauPage(game: game)),
+        child: const TableauPage()),
   ));
+}
+
+Future<InfoEntryPlayerBean?> navigateToAddModify(BuildContext context,
+    {required GameWithPlayers game,
+    required InfoEntryPlayerBean? infoEntry}) async {
+  final modified = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ProviderScope(
+            overrides: [gameProvider.overrideWithValue(game)],
+            child: const AddModifyEntry(),
+          ),
+      settings:
+          RouteSettings(arguments: AddModifyArguments(infoEntry: infoEntry))));
+  return modified as InfoEntryPlayerBean?;
 }

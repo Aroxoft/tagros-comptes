@@ -1,13 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game/info_entry_player.dart';
 import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/model/theme/theme.dart';
 import 'package:tagros_comptes/services/calculous/calculus.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/ui/entry_screen/add_modify.dart';
 
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;
@@ -16,6 +16,8 @@ class TableauBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeColorProvider).maybeWhen(
+        data: (data) => data, orElse: () => ThemeColor.defaultTheme());
     return Column(children: [
       Padding(
         padding: const EdgeInsets.all(8),
@@ -27,53 +29,55 @@ class TableauBody extends ConsumerWidget {
               (index) => Expanded(
                       child: Text(
                     players[index].name.toUpperCase(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText2
+                        ?.copyWith(color: theme.playerNameColor),
                     textAlign: TextAlign.center,
                   ))),
         ),
       ),
       Container(
-        constraints: const BoxConstraints.expand(height: 4),
-        color: Colors.pink,
-      ),
-      StreamBuilder(
-          stream: ref.watch(entriesProvider.select((value) => value.sum)),
-          builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text("Error: ${snapshot.error}"),
+        decoration: BoxDecoration(
+          border: Border(
+              top: BorderSide(color: theme.horizontalColor, width: 4),
+              bottom: BorderSide(color: theme.horizontalColor, width: 4)),
+        ),
+        child: StreamBuilder(
+            stream: ref.watch(entriesProvider.select((value) => value.sum)),
+            builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error: ${snapshot.error}"),
+                );
+              }
+              final sums = snapshot.data;
+              if (sums == null) {
+                return Center(
+                  child: Text(S.of(context).tableNoData),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: List.generate(sums.length, (index) {
+                    final sum = sums[players[index].name]!;
+                    return Expanded(
+                      child: Text(
+                        sum.toStringAsFixed(1),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: sum < 0
+                                ? theme.negativeSumColor
+                                : theme.positiveSumColor),
+                      ),
+                    );
+                  }),
+                ),
               );
-            }
-            final sums = snapshot.data;
-            if (sums == null) {
-              return Center(
-                child: Text(S.of(context).tableNoData),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: List.generate(sums.length, (index) {
-                  if (kDebugMode) {
-                    print(players[index]);
-                  }
-                  final sum = sums[players[index].name]!;
-                  return Expanded(
-                    child: Text(
-                      sum.toStringAsFixed(1),
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(color: sum < 0 ? Colors.red : Colors.green),
-                    ),
-                  );
-                }),
-              ),
-            );
-          }),
-      Container(
-        constraints: const BoxConstraints.expand(height: 4),
-        color: Colors.pink,
+            }),
       ),
       StreamBuilder<List<InfoEntryPlayerBean>>(
         stream: ref.watch(entriesProvider.select((value) => value.infoEntries)),
@@ -126,18 +130,15 @@ class TableauBody extends ConsumerWidget {
                             icon: Icons.edit,
                             foregroundColor: Colors.white,
                             onPressed: (context) async {
-                              final modified = await Navigator.of(context)
-                                  .pushNamed(AddModifyEntry.routeName,
-                                      arguments: AddModifyArguments(
-                                          players: players
-                                              .map((e) => e.toDb)
-                                              .toList(),
-                                          infoEntry: entries[index]));
+                              final modified = await navigateToAddModify(
+                                  context,
+                                  game: ref.read(gameProvider),
+                                  infoEntry: entries[index]);
                               if (modified != null) {
                                 ref
                                     .read(entriesProvider)
                                     .inModifyEntry
-                                    .add(modified as InfoEntryPlayerBean);
+                                    .add(modified);
                               }
                             },
                           ),
@@ -162,7 +163,7 @@ class TableauBody extends ConsumerWidget {
                       ],
                     ),
                     child: Container(
-                      color: index.isOdd ? Colors.grey : Colors.white,
+                      color: index.isOdd ? Colors.black12 : Colors.white10,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -170,17 +171,14 @@ class TableauBody extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: List.generate(gains.length, (index) {
-                            if (kDebugMode) {
-                              print("Gain[$index] = ${gains[index]}");
-                            }
                             return Expanded(
                               child: Text(
                                 gains[index].toStringAsFixed(1),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: gains[index] >= 0
-                                        ? Colors.grey[850]
-                                        : Colors.red[900]),
+                                        ? theme.positiveEntryColor
+                                        : theme.negativeEntryColor),
                               ),
                             );
                           }),

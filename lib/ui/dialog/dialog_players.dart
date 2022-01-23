@@ -19,7 +19,8 @@ class DialogChoosePlayers extends ConsumerWidget {
       ),
       actions: <Widget>[
         // error display
-        if (ref.watch(choosePlayerProvider.select((value) => value.hasError)))
+        if (ref
+            .watch(choosePlayerProvider.select((value) => value.error != null)))
           Text(ref.watch(choosePlayerProvider.select((value) => value.error!)),
               style: const TextStyle(color: Colors.red)),
         ElevatedButton(
@@ -42,6 +43,7 @@ class DialogPlayerBody extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeColorProvider).value;
     return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -68,16 +70,22 @@ class DialogPlayerBody extends HookConsumerWidget {
                                 ),
                                 elevation: 8,
                                 labelStyle:
-                                    const TextStyle(color: Colors.white),
+                                    TextStyle(color: theme?.chipTextColor),
                                 padding: EdgeInsets.zero,
-                                label: Text(ref.watch(
-                                    choosePlayerProvider.select((value) =>
-                                        value.selectedPlayers[index].pseudo))),
-                                backgroundColor: Colors.pink,
+                                label: Text(
+                                  ref.watch(choosePlayerProvider.select(
+                                      (value) =>
+                                          value.selectedPlayers[index].pseudo)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText2
+                                      ?.copyWith(color: theme?.chipTextColor),
+                                ),
+                                backgroundColor: theme?.chipColor,
                                 deleteIcon: const Icon(Icons.delete),
                                 deleteButtonTooltipMessage:
                                     S.of(context).dialogPlayersDelete,
-                                deleteIconColor: Colors.white,
+                                deleteIconColor: theme?.chipTextColor,
                                 onDeleted: () {
                                   ref
                                       .read(choosePlayerProvider)

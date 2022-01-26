@@ -316,7 +316,6 @@ class ColorPickerDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final orientation = MediaQuery.of(context).orientation;
     final color = useState(initialColor);
     final history = useState(themeColors ?? <Color>[]);
     return AlertDialog(
@@ -328,52 +327,27 @@ class ColorPickerDialog extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             ColorPicker(
-              paletteType: PaletteType.hsv,
               colorHistory: history.value,
               hexInputBar: true,
-              pickerHsvColor: HSVColor.fromColor(color.value),
+              // pickerHsvColor: HSVColor.fromColor(color.value),
+              pickerAreaBorderRadius: BorderRadius.circular(5),
+              labelTypes: const [
+                ColorLabelType.hsv,
+                ColorLabelType.hsl,
+                ColorLabelType.rgb
+              ],
               pickerColor: color.value,
               portraitOnly: true,
               onHistoryChanged: (value) {
                 history.value = value;
               },
-
+              pickerAreaHeightPercent: 0.5,
               enableAlpha: false,
               displayThumbColor: true,
               // colorHistory: themeColors,
               onColorChanged: (value) {
                 color.value = value;
               },
-            ),
-            Offstage(
-              offstage: true,
-              child: SizedBox(
-                width: 300,
-                height: orientation == Orientation.portrait ? 200 : 100,
-                child: BlockPicker(
-                  pickerColor: color.value,
-                  onColorChanged: (value) => color.value = value,
-                  layoutBuilder: (context, colors, child) => GridView.count(
-                    crossAxisCount: orientation == Orientation.portrait ? 8 : 5,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                    children: [for (final c in colors) child(c)],
-                  ),
-                  itemBuilder: (color, isCurrentColor, changeColor) => Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CircleColor(color: color, size: 20),
-                      if (isCurrentColor)
-                        Icon(
-                          Icons.check,
-                          color: color.isLight ? Colors.black : Colors.white,
-                        )
-                    ],
-                  ),
-                  availableColors: history.value,
-                  useInShowDialog: false,
-                ),
-              ),
             ),
           ],
         ),

@@ -9,7 +9,7 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/model/game/info_entry_player.dart';
 import 'package:tagros_comptes/model/theme/theme.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/services/theme/theme_service.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/clean_players_screen/clean_players_screen.dart';
@@ -85,9 +85,9 @@ class MyApp extends ConsumerWidget {
 }
 
 Future<void> navigateToTableau(BuildContext context,
-    {required GameWithPlayers game, required AppDatabase appDatabase}) async {
+    {required GameWithPlayers game, required GamesDao gamesDao}) async {
   if (!game.game.id.present) {
-    final idGame = await appDatabase.newGame(game);
+    final idGame = await gamesDao.newGame(game);
     game.game = game.game.copyWith(id: Value(idGame));
   }
   await Navigator.of(context).push(MaterialPageRoute(

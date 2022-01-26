@@ -81,6 +81,124 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       });
     });
   }
+
+// region Insert
+  Future<int> newEntry(
+      InfoEntryPlayerBean infoEntry, GameWithPlayers game) async {
+    Value<int> with1 = const Value.absent();
+    Value<int> with2 = const Value.absent();
+    if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
+      with1 = Value(infoEntry.withPlayers![0]!.id!);
+      if (infoEntry.withPlayers!.length > 1) {
+        with2 = Value(infoEntry.withPlayers![1]!.id!);
+      }
+    }
+    return into(infoEntries).insert(InfoEntriesCompanion.insert(
+      game: game.game.id.value,
+      player: infoEntry.player!.id!,
+      points: infoEntry.infoEntry.points,
+      prise: toDbPrise(infoEntry.infoEntry.prise),
+      nbBouts: infoEntry.infoEntry.nbBouts,
+      pointsForAttack: Value(infoEntry.infoEntry.pointsForAttack),
+      petitAuBout: Value(toDbPetits(infoEntry.infoEntry.petitsAuBout)),
+      poignee: Value(toDbPoignees(infoEntry.infoEntry.poignees)),
+      with1: with1,
+      with2: with2,
+    ));
+  }
+
+  Future<int> newGame(GameWithPlayers gameWithPlayers) {
+    return transaction(() async {
+      final GamesCompanion game = gameWithPlayers.game;
+
+      final idGame =
+          await into(games).insert(game, mode: InsertMode.insertOrReplace);
+
+      final idPlayers = await _addPlayers(gameWithPlayers.players
+          .map((e) => PlayersCompanion.insert(pseudo: e.pseudo)));
+
+      final playersToInsert = idPlayers.map(
+          (e) => PlayerGamesCompanion(game: Value(idGame), player: Value(e)));
+      await batch((batch) => batch.insertAll(playerGames, playersToInsert));
+
+      return idGame;
+    });
+  }
+
+  Future<List<int>> _addPlayers(Iterable<PlayersCompanion> thePlayers) async {
+    final List<int> playersIds = [];
+    for (final player in thePlayers) {
+      final single = await (select(players)
+            ..where((tbl) => players.pseudo.equals(player.pseudo.value)))
+          .getSingleOrNull();
+      if (single == null) {
+        final id = await _newPlayer(playersCompanion: player);
+        playersIds.add(id);
+      } else {
+        playersIds.add(single.id!);
+      }
+    }
+    return playersIds;
+  }
+
+  Future<int> _newPlayer({Player? player, PlayersCompanion? playersCompanion}) {
+    assert(player != null || playersCompanion != null && player == null);
+    if (player != null) {
+      return into(players)
+          .insert(PlayersCompanion.insert(pseudo: player.pseudo));
+    }
+    return into(players).insert(playersCompanion!);
+  }
+
+// endregion
+
+// region update
+  Future<int> updateEntry(InfoEntryPlayerBean infoEntry) async {
+    Value<int> with1 = const Value.absent();
+    Value<int> with2 = const Value.absent();
+    if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
+      with1 = Value(infoEntry.withPlayers![0]!.id!);
+      if (infoEntry.withPlayers!.length > 1) {
+        with2 = Value(infoEntry.withPlayers![1]!.id!);
+      }
+    }
+
+    return (update(infoEntries)
+          ..where((tbl) => tbl.id.equals(infoEntry.infoEntry.id)))
+        .write(InfoEntriesCompanion(
+      player: Value(infoEntry.player!.id!),
+      points: Value(infoEntry.infoEntry.points),
+      prise: Value(toDbPrise(infoEntry.infoEntry.prise)),
+      nbBouts: Value(infoEntry.infoEntry.nbBouts),
+      pointsForAttack: Value(infoEntry.infoEntry.pointsForAttack),
+      petitAuBout: Value(toDbPetits(infoEntry.infoEntry.petitsAuBout)),
+      poignee: Value(toDbPoignees(infoEntry.infoEntry.poignees)),
+      with1: with1,
+      with2: with2,
+    ));
+  }
+
+// endregion
+
+// region Delete
+  Future<int> deleteEntry(int entryId) async {
+    return (delete(infoEntries)..where((tbl) => tbl.id.equals(entryId))).go();
+  }
+
+  Future<void> deleteGame(GameWithPlayers gameWithPlayers) async {
+    return transaction(() async {
+      await (delete(infoEntries)
+            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id.value)))
+          .go();
+      await (delete(playerGames)
+            ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id.value)))
+          .go();
+      await (delete(games)
+            ..where((tbl) => tbl.id.equals(gameWithPlayers.game.id.value)))
+          .go();
+    });
+  }
+// endregion
 }
 
 extension InfoExt on EntriesInGameResult {

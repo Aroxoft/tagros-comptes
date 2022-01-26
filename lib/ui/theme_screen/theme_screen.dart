@@ -1,20 +1,15 @@
-import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/game/game_with_players.dart';
-import 'package:tagros_comptes/model/game/info_entry.dart';
-import 'package:tagros_comptes/model/game/info_entry_player.dart';
-import 'package:tagros_comptes/model/game/player.dart';
-import 'package:tagros_comptes/model/game/prise.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
-import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/entry_screen/add_modify.dart';
 import 'package:tagros_comptes/ui/screen/menu.dart';
 import 'package:tagros_comptes/ui/table_screen/tableau.dart';
 import 'package:tagros_comptes/ui/theme_screen/preset_themes.dart';
 import 'package:tagros_comptes/ui/theme_screen/theme_customization.dart';
+import 'package:tagros_comptes/ui/theme_screen/theme_fake.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class ThemeScreen extends HookConsumerWidget {
@@ -58,13 +53,7 @@ class ThemeScreen extends HookConsumerWidget {
   }
 }
 
-final _fakeDbProvider = Provider((ref) {
-  final db = FakeDatabase();
-  ref.onDispose(() {
-    db.close();
-  });
-  return db;
-});
+final _fakeDaoProvider = Provider((ref) => FakeGamesDao());
 
 class ThemePreview extends HookConsumerWidget {
   const ThemePreview({
@@ -83,7 +72,7 @@ class ThemePreview extends HookConsumerWidget {
       child: ProviderScope(
         overrides: [
           gameProvider.overrideWithValue(game),
-          databaseProvider.overrideWithValue(ref.watch(_fakeDbProvider)),
+          gamesDaoProvider.overrideWithValue(ref.watch(_fakeDaoProvider)),
           navigationPrefixProvider.overrideWithValue("theme-preview-"),
         ],
         child: ListView(
@@ -111,39 +100,5 @@ class PreviewScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: child)));
-  }
-}
-
-class FakeDatabase extends AppDatabase {
-  FakeDatabase() : super(NativeDatabase.memory());
-
-  @override
-  GamesDao get gamesDao => FakeGamesDao(this);
-}
-
-class FakeGamesDao extends GamesDao {
-  FakeGamesDao(AppDatabase db) : super(db);
-
-  @override
-  Stream<List<InfoEntryPlayerBean>> watchInfoEntriesInGame(int gameId) {
-    return Stream.value([
-      InfoEntryPlayerBean(
-        infoEntry: InfoEntryBean(
-          points: 36,
-          nbBouts: 3,
-          pointsForAttack: true,
-        ),
-        player: PlayerBean(name: "Alice"),
-      ),
-      InfoEntryPlayerBean(
-        infoEntry: InfoEntryBean(
-          points: 55,
-          nbBouts: 2,
-          prise: Prise.garde,
-          pointsForAttack: true,
-        ),
-        player: PlayerBean(name: "Bob"),
-      ),
-    ]);
   }
 }

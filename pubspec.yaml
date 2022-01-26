@@ -39,6 +39,7 @@ dependencies:
   hooks_riverpod: ^1.0.3
   intl: ^0.17.0
   lint: ^1.8.2
+  mockito: ^5.0.17
   path: ^1.8.0
   path_provider: ^2.0.8
   #  flutter_stetho: ^0.5.2

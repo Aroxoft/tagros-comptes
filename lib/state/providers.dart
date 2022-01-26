@@ -38,7 +38,7 @@ final choosePlayerProvider =
 });
 
 final gameChangeProvider = Provider<GameNotifier>((ref) {
-  final gameChange = GameNotifier(database: ref.watch(databaseProvider));
+  final gameChange = GameNotifier(gamesDao: ref.watch(gamesDaoProvider));
   ref.onDispose(() {
     gameChange.dispose();
   });
@@ -73,11 +73,11 @@ final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
 
 final entriesProvider = Provider<EntriesDbBloc>((ref) {
   final entries = EntriesDbBloc(ref.watch(gameProvider),
-      database: ref.watch(databaseProvider));
+      gamesDao: ref.watch(gamesDaoProvider));
   ref.onDispose(() {
     entries.dispose();
   });
   return entries;
-}, dependencies: [gameProvider, databaseProvider]);
+}, dependencies: [gameProvider, gamesDaoProvider]);
 
 final navigationPrefixProvider = Provider<String>((ref) => "");

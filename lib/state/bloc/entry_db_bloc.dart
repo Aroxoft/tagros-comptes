@@ -5,7 +5,7 @@ import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/model/game/info_entry_player.dart';
 import 'package:tagros_comptes/model/game/player.dart';
 import 'package:tagros_comptes/services/calculous/calculus.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/services/db/games_dao.dart';
 
 class EntriesDbBloc {
   // Create a broadcast controller that allows this stream to be listened
@@ -33,14 +33,14 @@ class EntriesDbBloc {
       _deleteEntryController.sink;
 
   final GameWithPlayers _game;
-  final AppDatabase _database;
+  final GamesDao _gamesDao;
 
-  EntriesDbBloc(GameWithPlayers game, {required AppDatabase database})
+  EntriesDbBloc(GameWithPlayers game, {required GamesDao gamesDao})
       : assert(game.game.id.present),
-        _database = database,
+        _gamesDao = gamesDao,
         _game = game,
         // Watch entries
-        infoEntries = database.gamesDao
+        infoEntries = gamesDao
             .watchInfoEntriesInGame(game.game.id.value)
             .asBroadcastStream() {
     sum = infoEntries.map((event) => calculateSum(event,
@@ -61,14 +61,14 @@ class EntriesDbBloc {
 
   Future<void> _handleAddEntry(InfoEntryPlayerBean entry) async {
     // Create the entry in the database
-    await _database.newEntry(entry, _game);
+    await _gamesDao.newEntry(entry, _game);
   }
 
   Future<void> _handleDeleteEntry(InfoEntryPlayerBean entry) async {
-    await _database.deleteEntry(entry.infoEntry.id!);
+    await _gamesDao.deleteEntry(entry.infoEntry.id!);
   }
 
   Future<void> _handleModifyEntry(InfoEntryPlayerBean entry) async {
-    await _database.updateEntry(entry);
+    await _gamesDao.updateEntry(entry);
   }
 }

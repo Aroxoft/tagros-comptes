@@ -67,7 +67,7 @@ class DialogChooseGame extends ConsumerWidget {
                             Navigator.of(context).pop();
                             navigateToTableau(context,
                                 game: games[index],
-                                appDatabase: ref.read(databaseProvider));
+                                gamesDao: ref.read(gamesDaoProvider));
                           },
                         ),
                         child: Column(

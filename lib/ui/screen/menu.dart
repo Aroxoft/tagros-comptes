@@ -49,7 +49,7 @@ class MenuBody extends StatelessWidget {
             onPressed: () {
               showDialogPlayers(context,
                   doAfter: (players) => navigateToTableau(context,
-                      appDatabase: ref.read(databaseProvider),
+                      gamesDao: ref.read(gamesDaoProvider),
                       game: GameWithPlayers(
                           game: GamesCompanion.insert(
                               nbPlayers: players.length, date: DateTime.now()),

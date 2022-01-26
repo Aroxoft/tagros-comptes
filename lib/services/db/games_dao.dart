@@ -84,7 +84,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 
 // region Insert
   Future<int> newEntry(
-      InfoEntryPlayerBean infoEntry, GameWithPlayers game) async {
+      InfoEntryPlayerBean infoEntry, {required GamesCompanion game}) async {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
@@ -93,18 +93,22 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
         with2 = Value(infoEntry.withPlayers![1]!.id!);
       }
     }
-    return into(infoEntries).insert(InfoEntriesCompanion.insert(
-      game: game.game.id.value,
-      player: infoEntry.player!.id!,
-      points: infoEntry.infoEntry.points,
-      prise: toDbPrise(infoEntry.infoEntry.prise),
-      nbBouts: infoEntry.infoEntry.nbBouts,
-      pointsForAttack: Value(infoEntry.infoEntry.pointsForAttack),
-      petitAuBout: Value(toDbPetits(infoEntry.infoEntry.petitsAuBout)),
-      poignee: Value(toDbPoignees(infoEntry.infoEntry.poignees)),
-      with1: with1,
-      with2: with2,
-    ));
+    return transaction(() async {
+      await (update(games)..where((tbl) => tbl.id.equals(game.id.value)))
+          .write(game.copyWith(date: Value(DateTime.now())));
+      return into(infoEntries).insert(InfoEntriesCompanion.insert(
+        game: game.id.value,
+        player: infoEntry.player!.id!,
+        points: infoEntry.infoEntry.points,
+        prise: toDbPrise(infoEntry.infoEntry.prise),
+        nbBouts: infoEntry.infoEntry.nbBouts,
+        pointsForAttack: Value(infoEntry.infoEntry.pointsForAttack),
+        petitAuBout: Value(toDbPetits(infoEntry.infoEntry.petitsAuBout)),
+        poignee: Value(toDbPoignees(infoEntry.infoEntry.poignees)),
+        with1: with1,
+        with2: with2,
+      ));
+    });
   }
 
   Future<int> newGame(GameWithPlayers gameWithPlayers) {
@@ -153,7 +157,8 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 // endregion
 
 // region update
-  Future<int> updateEntry(InfoEntryPlayerBean infoEntry) async {
+  Future<int> updateEntry(InfoEntryPlayerBean infoEntry,
+      {required GamesCompanion game}) async {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
@@ -162,27 +167,34 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
         with2 = Value(infoEntry.withPlayers![1]!.id!);
       }
     }
-
-    return (update(infoEntries)
-          ..where((tbl) => tbl.id.equals(infoEntry.infoEntry.id)))
-        .write(InfoEntriesCompanion(
-      player: Value(infoEntry.player!.id!),
-      points: Value(infoEntry.infoEntry.points),
-      prise: Value(toDbPrise(infoEntry.infoEntry.prise)),
-      nbBouts: Value(infoEntry.infoEntry.nbBouts),
-      pointsForAttack: Value(infoEntry.infoEntry.pointsForAttack),
-      petitAuBout: Value(toDbPetits(infoEntry.infoEntry.petitsAuBout)),
-      poignee: Value(toDbPoignees(infoEntry.infoEntry.poignees)),
-      with1: with1,
-      with2: with2,
-    ));
+    return transaction(() async {
+      await (update(games)..where((tbl) => tbl.id.equals(game.id.value)))
+          .write(game.copyWith(date: Value(DateTime.now())));
+      return (update(infoEntries)
+            ..where((tbl) => tbl.id.equals(infoEntry.infoEntry.id)))
+          .write(InfoEntriesCompanion(
+        player: Value(infoEntry.player!.id!),
+        points: Value(infoEntry.infoEntry.points),
+        prise: Value(toDbPrise(infoEntry.infoEntry.prise)),
+        nbBouts: Value(infoEntry.infoEntry.nbBouts),
+        pointsForAttack: Value(infoEntry.infoEntry.pointsForAttack),
+        petitAuBout: Value(toDbPetits(infoEntry.infoEntry.petitsAuBout)),
+        poignee: Value(toDbPoignees(infoEntry.infoEntry.poignees)),
+        with1: with1,
+        with2: with2,
+      ));
+    });
   }
 
 // endregion
 
 // region Delete
-  Future<int> deleteEntry(int entryId) async {
-    return (delete(infoEntries)..where((tbl) => tbl.id.equals(entryId))).go();
+  Future<int> deleteEntry(int entryId, {required GamesCompanion game}) async {
+    return transaction(() async {
+      await (update(games)..where((tbl) => tbl.id.equals(game.id.value)))
+          .write(game.copyWith(date: Value(DateTime.now())));
+      return (delete(infoEntries)..where((tbl) => tbl.id.equals(entryId))).go();
+    });
   }
 
   Future<void> deleteGame(GameWithPlayers gameWithPlayers) async {

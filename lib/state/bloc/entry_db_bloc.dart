@@ -61,14 +61,14 @@ class EntriesDbBloc {
 
   Future<void> _handleAddEntry(InfoEntryPlayerBean entry) async {
     // Create the entry in the database
-    await _gamesDao.newEntry(entry, _game);
+    await _gamesDao.newEntry(entry, game: _game.game);
   }
 
   Future<void> _handleDeleteEntry(InfoEntryPlayerBean entry) async {
-    await _gamesDao.deleteEntry(entry.infoEntry.id!);
+    await _gamesDao.deleteEntry(entry.infoEntry.id!, game: _game.game);
   }
 
   Future<void> _handleModifyEntry(InfoEntryPlayerBean entry) async {
-    await _gamesDao.updateEntry(entry);
+    await _gamesDao.updateEntry(entry, game: _game.game);
   }
 }

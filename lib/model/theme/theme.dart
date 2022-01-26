@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive/hive.dart';
 import 'package:tagros_comptes/model/theme/colors.dart';
+import 'package:tagros_comptes/util/list_util.dart';
 
 part 'theme.freezed.dart';
 
@@ -134,7 +135,7 @@ class ThemeColor extends Comparable<ThemeColor> with _$ThemeColor {
   factory ThemeColor.custom({required String name}) =>
       _ThemeColor(name: name, preset: false);
 
-  Set<Color> get toColors => {
+  List<Color> get toColors => [
         accentColor,
         appBarColor,
         buttonColor,
@@ -147,15 +148,18 @@ class ThemeColor extends Comparable<ThemeColor> with _$ThemeColor {
         textColor,
         frameColor,
         chipColor,
-        if (backgroundColor != Colors.transparent) backgroundColor,
+        backgroundColor,
         textButtonColor,
         appBarTextColor,
         fabColor,
         onFabColor,
         sliderColor,
-        if (backgroundGradient1 != Colors.transparent) backgroundGradient1,
-        if (backgroundGradient2 != Colors.transparent) backgroundGradient2
-      };
+        backgroundGradient1,
+        backgroundGradient2
+      ]
+          .where((element) => element != Colors.transparent)
+          .unique(toId: (element) => element.value)
+          .toList();
 
   ThemeData get toDataTheme {
     return ThemeData(
@@ -168,6 +172,9 @@ class ThemeColor extends Comparable<ThemeColor> with _$ThemeColor {
         ),
         // for background of dropdown buttons
         canvasColor: averageBackgroundColor,
+        tabBarTheme: TabBarTheme(
+            labelColor: appBarTextColor,
+            unselectedLabelColor: appBarTextColor.withOpacity(0.8)),
         iconTheme: IconThemeData(color: textColor),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(

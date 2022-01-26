@@ -16,8 +16,7 @@ class BackgroundGradient extends ConsumerWidget {
           data: (data) => data.backgroundGradient2,
           orElse: () => Colors.transparent,
         );
-    if (bgGradient1 == Colors.transparent &&
-        bgGradient2 == Colors.transparent) {
+    if (bgGradient1.opacity == 0 && bgGradient2.opacity == 0) {
       return child;
     }
     return Container(

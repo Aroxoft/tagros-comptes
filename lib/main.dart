@@ -29,6 +29,7 @@ Future<void> main() async {
   if (kDebugMode) {
     // Stetho.initialize();
   }
+  await S.load(const Locale('fr'));
   await Hive.initFlutter();
   Hive.registerAdapter(ColorAdapter());
   Hive.registerAdapter(ThemeColorAdapter());

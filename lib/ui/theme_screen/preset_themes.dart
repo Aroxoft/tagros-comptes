@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/state/providers.dart';
@@ -34,7 +36,12 @@ class PresetThemes extends ConsumerWidget {
                         .take(5)
                         .map((e) => Padding(
                               padding: const EdgeInsets.only(right: 2, left: 2),
-                              child: CircleColor(color: e, size: 15),
+                              child: CircleColor(
+                                color: e,
+                                size: 15,
+                                backgroundColor: themesVM
+                                    .selectedTheme.averageBackgroundColor,
+                              ),
                             ))
                         .toList(),
                   ),
@@ -42,24 +49,47 @@ class PresetThemes extends ConsumerWidget {
               ],
             ),
             onTap: () => themesVM.selectTheme(index),
-            trailing: PopupMenuButton(
-              itemBuilder: (context) => [
+            trailing: PopupMenuButton<_OptionsTheme>(
+              onSelected: (value) {
+                switch (value) {
+                  case _OptionsTheme.rename:
+                    showDialog(
+                        context: context,
+                        builder: (context) => RenameDialog(
+                            initialName: theme.name,
+                            onSave: (name) => themesVM.updateTheme(
+                                newTheme: theme.copyWith(name: name))));
+                    break;
+                  case _OptionsTheme.copy:
+                    themesVM.copyTheme(index: index);
+                    break;
+                  case _OptionsTheme.delete:
+                    themesVM.deleteTheme(index: index);
+                    break;
+                }
+              },
+              itemBuilder: (ctx) => [
                 PopupMenuItem(
+                    value: _OptionsTheme.rename,
+                    child: Row(
+                      children: [const Icon(Icons.edit), Text(S.of(context).themeOptionRename)],
+                    )),
+                PopupMenuItem(
+                  value: _OptionsTheme.copy,
                   child: Row(children: [
                     const Icon(Icons.copy),
-                    Text(S.of(context).actionCopy)
+                    Text(S.of(ctx).actionCopy)
                   ]),
-                  onTap: () => themesVM.copyTheme(index: index),
                 ),
                 if (!theme.preset)
                   PopupMenuItem(
+                    value: _OptionsTheme.delete,
                     child: Row(
                       children: [
                         const Icon(Icons.delete_forever),
-                        Text(S.of(context).actionDelete),
+                        Text(S.of(ctx).actionDelete),
                       ],
                     ),
-                    onTap: () => themesVM.deleteTheme(index: index),
                   ),
               ],
             ),
@@ -69,3 +99,38 @@ class PresetThemes extends ConsumerWidget {
         itemCount: themes.length);
   }
 }
+
+class RenameDialog extends HookWidget {
+  const RenameDialog({
+    Key? key,
+    required this.initialName,
+    required this.onSave,
+  }) : super(key: key);
+
+  final String initialName;
+  final void Function(String name) onSave;
+
+  @override
+  Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print("in rename dialog");
+    }
+    final textController = useTextEditingController(text: initialName);
+    return AlertDialog(
+      title: Text(S.of(context).themeRenameDialogTitle),
+      content: TextField(
+        controller: textController,
+      ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              onSave(textController.text);
+              Navigator.of(context).pop();
+            },
+            child: Text(S.of(context).themeRenameDialogActionSave))
+      ],
+    );
+  }
+}
+
+enum _OptionsTheme { rename, delete, copy }

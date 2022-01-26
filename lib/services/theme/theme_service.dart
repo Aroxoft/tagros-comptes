@@ -45,9 +45,11 @@ class ThemeService {
       _box.put(0, ThemeColor.defaultTheme());
       _box.put(1, ThemeColor.purple());
       _box.put(2, ThemeColor.corporate());
-      _box.put(3, ThemeColor.ocean());
+      _box.put(3, ThemeColor.hacker());
       _box.put(4, ThemeColor.pastels());
       _box.put(5, ThemeColor.dark());
+      _box.put(6, ThemeColor.chocolate());
+      _box.put(7, ThemeColor.blackWhite());
     }
     _themeController.value =
         _box.get(_currentId, defaultValue: ThemeColor.defaultTheme())!;

@@ -126,9 +126,11 @@ class TableauBody extends ConsumerWidget {
                         motion: const ScrollMotion(),
                         children: [
                           SlidableAction(
-                            backgroundColor: Colors.amber,
+                            backgroundColor: theme.accentColor,
                             icon: Icons.edit,
-                            foregroundColor: Colors.white,
+                            foregroundColor: theme.accentColor.isLight
+                                ? Colors.black87
+                                : Colors.white70,
                             onPressed: (context) async {
                               final modified = await navigateToAddModify(
                                   context,
@@ -148,9 +150,11 @@ class TableauBody extends ConsumerWidget {
                       motion: const ScrollMotion(),
                       children: [
                         SlidableAction(
-                          backgroundColor: Colors.red,
+                          backgroundColor: theme.accentColor,
                           icon: Icons.delete,
-                          foregroundColor: Colors.white,
+                          foregroundColor: theme.accentColor.isLight
+                              ? Colors.black87
+                              : Colors.white70,
                           onPressed: (context) {
                             ref
                                 .read(entriesProvider)

@@ -17,7 +17,7 @@ class ChoosePlayer extends HookConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: TypeAheadField<Player?>(
+              child: TypeAheadField<Player>(
                 textFieldConfiguration: TextFieldConfiguration(
                   controller: textEditingController,
                   decoration: InputDecoration(
@@ -25,17 +25,27 @@ class ChoosePlayer extends HookConsumerWidget {
                       border: const OutlineInputBorder(),
                       hintText: S.of(context).hintSearchPlayer),
                 ),
+                // autoFlipDirection: true,
+                animationDuration: const Duration(milliseconds: 300),
+                animationStart: 0.5,
+                keepSuggestionsOnLoading: true,
+                loadingBuilder: (context) => const CircularProgressIndicator(),
                 suggestionsCallback: (pattern) => ref.watch(choosePlayerProvider
                     .select((value) => value.updateSuggestions(pattern))),
-                itemBuilder: (context, Player? itemData) {
-                  if (itemData == null) return const SizedBox();
+                itemBuilder: (context, Player itemData) {
                   return ListTile(
                     title: Text(itemData.pseudo),
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Colors.blue.shade200, shape: BoxShape.circle),
-                      child: Text(itemData.id.toString()),
+                    leading: CircleAvatar(
+                      backgroundColor:
+                          Theme.of(context).textTheme.bodyText2?.color,
+                      child: Text(
+                        itemData.id.toString(),
+                        style: TextStyle(
+                            color: ref.watch(themeColorProvider.select(
+                                (value) => value.whenOrNull(
+                                    data: (data) =>
+                                        data.averageBackgroundColor)))),
+                      ),
                     ),
                   );
                 },
@@ -46,12 +56,10 @@ class ChoosePlayer extends HookConsumerWidget {
                         child: Text(S.of(context).chooseDialogNoItemsFound),
                       ));
                 },
-                debounceDuration: const Duration(milliseconds: 500),
+                debounceDuration: const Duration(milliseconds: 200),
                 getImmediateSuggestions: true,
                 onSuggestionSelected: (suggestion) {
-                  if (suggestion != null) {
-                    ref.read(choosePlayerProvider).addPlayer(suggestion);
-                  }
+                  ref.read(choosePlayerProvider).addPlayer(suggestion);
                 },
               ),
             ),

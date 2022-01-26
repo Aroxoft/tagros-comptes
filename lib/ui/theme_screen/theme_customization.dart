@@ -50,6 +50,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleAppBarColor,
           color: theme.appBarColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(appBarColor: color));
           },
@@ -59,6 +60,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubttleAppBarTextColor,
           color: theme.appBarTextColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(appBarTextColor: color));
@@ -78,21 +80,71 @@ class ThemeCustomization extends ConsumerWidget {
           },
         ),
       ),
+      ListTile(
+        title: Text(S.of(context).themeTitleApplicationBackground),
+        subtitle: Text(S.of(context).themeSubtitleApplicationBackground),
+        trailing: DropdownButton<bool>(
+          value: themeVM.isBackgroundGradient,
+          items: [
+            DropdownMenuItem(
+              value: false,
+              child: Text(S.of(context).themeBackgroundChoiceSolid),
+            ),
+            DropdownMenuItem(
+              value: true,
+              child: Text(S.of(context).themeBackgroundChoiceGradient),
+            ),
+          ],
+          onChanged: (value) => themeVM.selectBackgroundType(gradient: value!),
+        ),
+      ),
+      if (!themeVM.isBackgroundGradient)
+        TileColorPicker(
+            title: S.of(context).themeTitleBackgroundColor,
+            subtitle: S.of(context).themeSubtitleBackgroundColor,
+            color: theme.backgroundColor,
+            colorsUsed: colors,
+            backgroundColor: theme.averageBackgroundColor,
+            onSaved: (Color color) {
+              themeVM.updateTheme(
+                  newTheme: theme.copyWith(backgroundColor: color));
+            },
+            context: context),
+      if (themeVM.isBackgroundGradient)
+        TileColorPicker(
+            title: S.of(context).themeTitleGradientFirstColor,
+            subtitle: S.of(context).themeSubtitleGradientFirstColor,
+            color: theme.backgroundGradient1,
+            colorsUsed: colors,
+            backgroundColor: theme.averageBackgroundColor,
+            onSaved: (color) => themeVM.updateTheme(
+                newTheme: theme.copyWith(backgroundGradient1: color)),
+            context: context),
+      if (themeVM.isBackgroundGradient)
+        TileColorPicker(
+            title: S.of(context).themeTitleGradientSecondColor,
+            subtitle: S.of(context).themeSubtitleGradientSecondColor,
+            color: theme.backgroundGradient2,
+            colorsUsed: colors,
+            backgroundColor: theme.averageBackgroundColor,
+            onSaved: (color) => themeVM.updateTheme(
+                newTheme: theme.copyWith(backgroundGradient2: color)),
+            context: context),
       TileColorPicker(
-          title: S.of(context).themeTitleBackgroundColor,
-          subtitle: S.of(context).themeSubtitleBackgroundColor,
-          color: theme.backgroundColor,
+          title: S.of(context).themeTitleTextColor,
+          subtitle: S.of(context).themeSubtitleTextColor,
+          color: theme.textColor,
           colorsUsed: colors,
-          onSaved: (Color color) {
-            themeVM.updateTheme(
-                newTheme: theme.copyWith(backgroundColor: color));
-          },
+          backgroundColor: theme.averageBackgroundColor,
+          onSaved: (color) =>
+              themeVM.updateTheme(newTheme: theme.copyWith(textColor: color)),
           context: context),
       TileColorPicker(
           title: S.of(context).themeTitleButtonColor,
           subtitle: S.of(context).themeSubtitleButtonsColor,
           color: theme.buttonColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(buttonColor: color));
           },
@@ -102,6 +154,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleTextButtonColor,
           color: theme.textButtonColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(textButtonColor: color));
@@ -112,6 +165,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleSliderColor,
           color: theme.sliderColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(sliderColor: color));
           },
@@ -121,6 +175,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleAccentColor,
           color: theme.accentColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(accentColor: color));
           },
@@ -130,6 +185,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleActionButtonColor,
           color: theme.fabColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(fabColor: color));
           },
@@ -139,6 +195,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleTextOnActionButtonColor,
           color: theme.onFabColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(onFabColor: color));
           },
@@ -151,6 +208,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitlePositiveNumberColor,
           color: theme.positiveEntryColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(positiveEntryColor: color));
@@ -161,6 +219,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleNegativeNumberColor,
           color: theme.negativeEntryColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(negativeEntryColor: color));
@@ -173,6 +232,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitlePositiveNumberTitleColor,
           color: theme.positiveSumColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(positiveSumColor: color));
@@ -183,6 +243,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleNegativeNumberTitleColor,
           color: theme.negativeSumColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(negativeSumColor: color));
@@ -193,6 +254,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleHorizontalLineColor,
           color: theme.horizontalColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(horizontalColor: color));
@@ -203,18 +265,20 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitlePlayerNamesColor,
           color: theme.playerNameColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(
                 newTheme: theme.copyWith(playerNameColor: color));
           },
           context: context),
       const Divider(),
-      _title(S.of(context).themeSectionAddmodifyEntryScreen),
+      _title(S.of(context).themeSectionAddModifyEntryScreen),
       TileColorPicker(
           title: S.of(context).themeTitleTitlesFrameColor,
           subtitle: S.of(context).themeSubtitleTitlesFrameColor,
           color: theme.frameColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(frameColor: color));
           },
@@ -224,6 +288,7 @@ class ThemeCustomization extends ConsumerWidget {
           subtitle: S.of(context).themeSubtitleChipColor,
           color: theme.chipColor,
           colorsUsed: colors,
+          backgroundColor: theme.averageBackgroundColor,
           onSaved: (Color color) {
             themeVM.updateTheme(newTheme: theme.copyWith(chipColor: color));
           },
@@ -238,13 +303,15 @@ class TileColorPicker extends StatelessWidget {
       required this.title,
       required this.subtitle,
       required this.color,
+      required this.backgroundColor,
       required this.onSaved,
-      this.colorsUsed,
+      required this.colorsUsed,
       required this.context})
       : super(key: key);
   final String title;
   final String subtitle;
   final Color color;
+  final Color backgroundColor;
   final void Function(Color color) onSaved;
   final List<Color>? colorsUsed;
   final BuildContext context;
@@ -254,7 +321,7 @@ class TileColorPicker extends StatelessWidget {
     return ListTile(
       title: Text(title),
       subtitle: Text(subtitle),
-      trailing: CircleColor(color: color),
+      trailing: CircleColor(color: color, backgroundColor: backgroundColor),
       onTap: () {
         showDialog(
           context: context,
@@ -274,10 +341,12 @@ class CircleColor extends StatelessWidget {
   const CircleColor({
     Key? key,
     required this.color,
+    required this.backgroundColor,
     this.size = 35,
   }) : super(key: key);
 
   final Color color;
+  final Color backgroundColor;
   final double size;
 
   @override
@@ -289,11 +358,13 @@ class CircleColor extends StatelessWidget {
           border: Border.all(color: Colors.black),
           shape: BoxShape.circle,
           color: color,
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
                 blurRadius: 5,
-                offset: Offset(1, 1),
-                color: Colors.black87,
+                offset: const Offset(1, 1),
+                color: backgroundColor.isVeryDark
+                    ? Colors.white70
+                    : Colors.black87,
                 blurStyle: BlurStyle.normal)
           ]),
     );

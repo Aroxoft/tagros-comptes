@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/model/theme/theme.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/table_screen/tableau_body.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
@@ -25,18 +26,30 @@ class TableauPage extends ConsumerWidget {
             // key: ValueKey("${ref.watch(navigationPrefixProvider)}tableau-fab"),
             heroTag: UniqueKey(),
             onPressed: () async {
-              final info =
-                  await navigateToAddModify(context, game: game, infoEntry: null);
+              final info = await navigateToAddModify(context,
+                  game: game, infoEntry: null);
               if (info != null) {
                 ref.read(entriesProvider).inAddEntry.add(info);
+                final theme = ref.read(themeColorProvider).maybeWhen(
+                    orElse: () => ThemeColor.defaultTheme(),
+                    data: (data) => data);
                 Flushbar(
                   flushbarStyle: FlushbarStyle.GROUNDED,
                   flushbarPosition: FlushbarPosition.BOTTOM,
                   title: S.of(context).successAddingGame,
                   duration: const Duration(seconds: 2),
                   message: info.toString(),
-                  backgroundGradient: const LinearGradient(
-                    colors: [Colors.blueGrey, Colors.teal],
+                  backgroundGradient: LinearGradient(
+                    colors: [
+                      if (theme.backgroundGradient1.opacity != 0)
+                        theme.backgroundGradient1
+                      else
+                        theme.averageBackgroundColor.darken(0.3),
+                      if (theme.backgroundGradient2.opacity != 0)
+                        theme.backgroundGradient2
+                      else
+                        theme.averageBackgroundColor.lighten(0.3),
+                    ],
                   ),
                 ).show(context);
                 if (kDebugMode) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/model/theme/theme.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
@@ -12,6 +13,12 @@ class CleanPlayersScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final slidableColor = ref.watch(themeColorProvider.select((value) => value
+        .maybeWhen(
+          data: (data) => data,
+          orElse: () => ThemeColor.defaultTheme(),
+        )
+        .accentColor));
     return BackgroundGradient(
       child: Scaffold(
         appBar: AppBar(
@@ -77,7 +84,10 @@ class CleanPlayersScreen extends ConsumerWidget {
                         children: [
                           SlidableAction(
                             icon: Icons.delete,
-                            backgroundColor: Colors.red,
+                            backgroundColor: slidableColor,
+                            foregroundColor: slidableColor.isLight
+                                ? Colors.black87
+                                : Colors.white70,
                             onPressed: (context) {
                               ref
                                   .read(cleanPlayerProvider)

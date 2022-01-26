@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game/game_with_players.dart';
+import 'package:tagros_comptes/model/theme/theme.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -29,6 +28,8 @@ class DialogChooseGame extends ConsumerWidget {
             if (games == null || games.isEmpty) {
               return Text(S.of(context).dialogGamesNoGames);
             }
+            final theme = ref.watch(themeColorProvider).maybeWhen(
+                data: (data) => data, orElse: () => ThemeColor.defaultTheme());
             return SingleChildScrollView(
               child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -39,8 +40,10 @@ class DialogChooseGame extends ConsumerWidget {
                         motion: const ScrollMotion(),
                         children: [
                           SlidableAction(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
+                            backgroundColor: theme.accentColor,
+                            foregroundColor: theme.accentColor.isLight
+                                ? Colors.black87
+                                : Colors.white70,
                             icon: Icons.delete,
                             onPressed: (context) {
                               ref
@@ -54,11 +57,12 @@ class DialogChooseGame extends ConsumerWidget {
                       child: Consumer(
                         builder: (context, ref, child) => ListTile(
                           leading: CircleAvatar(
-                            backgroundColor:
-                                Colors.indigo[Random().nextInt(10) * 100],
-                            child: Text(games[index].players.length.toString(),
-                                style: const TextStyle(color: Colors.white)),
-                          ),
+                              backgroundColor:
+                                  Theme.of(context).textTheme.bodyText2?.color,
+                              child: Text(
+                                  games[index].players.length.toString(),
+                                  style: TextStyle(
+                                      color: theme.averageBackgroundColor))),
                           title: Text(S
                               .of(context)
                               .nbPlayers(games[index].players.length)),
@@ -73,7 +77,8 @@ class DialogChooseGame extends ConsumerWidget {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(timeago.format(games[index].game.date.value)),
+                              Text(
+                                  timeago.format(games[index].game.date.value)),
                               Text(
                                 games[index]
                                     .players

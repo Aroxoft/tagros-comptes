@@ -206,5 +206,9 @@
   "themeNamePastels": "Pastels",
   "themeNameDark": "Dark",
   "themeNameBlackWhite": "Black'n'white",
-  "themeNameChocolate": "Chocolate"
+  "themeNameChocolate": "Chocolate",
+  "guidePlaceHolderText": "Coming soon...",
+  "guideTitle": "Guide",
+  "buyScreenTitle": "Premium advantages",
+  "buyScreenPlaceholderText": "Coming soon..."
 }

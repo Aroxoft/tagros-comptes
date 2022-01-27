@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class BuyScreen extends StatelessWidget {
@@ -8,6 +9,14 @@ class BuyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BackgroundGradient(child: Container());
+    return BackgroundGradient(
+        child: Scaffold(
+      appBar: AppBar(
+        title: Text(S.of(context).buyScreenTitle),
+      ),
+      body: Center(
+        child: Text(S.of(context).buyScreenPlaceholderText),
+      ),
+    ));
   }
 }

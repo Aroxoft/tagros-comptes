@@ -118,5 +118,9 @@
   "themeNamePastels": "Pastel",
   "themeNameDark": "Nuit",
   "themeNameBlackWhite": "Noir et blanc",
-  "themeNameChocolate": "Chocolat"
+  "themeNameChocolate": "Chocolat",
+  "guidePlaceHolderText": "À venir bientôt...",
+  "guideTitle": "Guide",
+  "buyScreenTitle": "Avantages premium",
+  "buyScreenPlaceholderText": "À venir bientôt..."
 }

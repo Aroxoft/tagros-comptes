@@ -20,6 +20,15 @@ class ChoosePlayer extends HookConsumerWidget {
               child: TypeAheadField<Player>(
                 textFieldConfiguration: TextFieldConfiguration(
                   controller: textEditingController,
+                  onSubmitted: (value) {
+                    if (textEditingController.text.isNotEmpty) {
+                      ref
+                          .read(choosePlayerProvider)
+                          .checkForPseudoInDb(textEditingController.text);
+                      textEditingController.clear();
+                    }
+                  },
+                  textInputAction: TextInputAction.go,
                   decoration: InputDecoration(
                       suffixIcon: const Icon(Icons.search),
                       border: const OutlineInputBorder(),
@@ -60,15 +69,18 @@ class ChoosePlayer extends HookConsumerWidget {
                 getImmediateSuggestions: true,
                 onSuggestionSelected: (suggestion) {
                   ref.read(choosePlayerProvider).addPlayer(suggestion);
+                  textEditingController.clear();
                 },
               ),
             ),
             IconButton(
                 onPressed: () async {
-                  ref
-                      .read(choosePlayerProvider)
-                      .checkForPseudoInDb(textEditingController.text);
-                  textEditingController.clear();
+                  if (textEditingController.text.isNotEmpty) {
+                    ref
+                        .read(choosePlayerProvider)
+                        .checkForPseudoInDb(textEditingController.text);
+                    textEditingController.clear();
+                  }
                 },
                 icon: const Icon(Icons.add)),
           ],

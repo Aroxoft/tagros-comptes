@@ -31,6 +31,7 @@ class AddModifyEntry extends HookConsumerWidget {
     final playersArg = ref.watch(gameProvider.select((value) => value.players));
     final playerAttack = useState(PlayerBean.fromDb(playersArg.last));
     final withPlayers = useState<List<PlayerBean?>?>(null);
+    final textPointsController = useTextEditingController(text: "0");
     final args = useMemoized(() =>
         ModalRoute.of(context)?.settings.arguments as AddModifyArguments?);
     // final infoEntry = useState(InfoEntryPlayerBean(
@@ -66,6 +67,7 @@ class AddModifyEntry extends HookConsumerWidget {
       playerAttack.value = info.player;
       entry.value = info.infoEntry;
       withPlayers.value = info.withPlayers;
+      textPointsController.text = info.infoEntry.points.toStringAsFixed(1);
     }, [0]);
     return BackgroundGradient(
       child: Scaffold(
@@ -300,8 +302,13 @@ class AddModifyEntry extends HookConsumerWidget {
                               constraints:
                                   BoxConstraints.loose(const Size(60, 35)),
                               child: TextFormField(
+                                controller: textPointsController,
+                                onTap: () => textPointsController.selection =
+                                    TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset:
+                                            textPointsController.text.length),
                                 inputFormatters: [HalfDecimalInputFormatter()],
-                                initialValue: entry.value.points.toString(),
                                 onChanged: (String value) {
                                   final points = value.isEmpty
                                       ? 0

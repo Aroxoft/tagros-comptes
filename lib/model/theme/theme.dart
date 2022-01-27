@@ -209,7 +209,7 @@ class ThemeColor extends Comparable<ThemeColor> with _$ThemeColor {
 
   factory ThemeColor.dark() => _ThemeColor(
         name: S.current.themeNameDark,
-        accentColor: const Color(0xff4a3626),
+        accentColor: const Color(0xffffffff),
         appBarColor: const Color(0xff344a53),
         buttonColor: const Color(0xff98afba),
         positiveEntryColor: const Color(0xffffffff),
@@ -322,12 +322,17 @@ preset: true,);''';
                 borderRadius: BorderRadius.circular(20))),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: accentColor,
-          border: OutlineInputBorder(borderSide: BorderSide(color: textColor)),
+          hintStyle: TextStyle(color: textColor.withOpacity(0.7)),
+          border: OutlineInputBorder(
+              borderSide: BorderSide(color: textColor),
+              borderRadius: BorderRadius.circular(5)),
           suffixIconColor: accentColor,
+          contentPadding: const EdgeInsets.only(left: 10, right: 10),
           iconColor: accentColor,
           prefixIconColor: accentColor,
-          focusedBorder:
-              OutlineInputBorder(borderSide: BorderSide(color: accentColor)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: accentColor),
+              borderRadius: BorderRadius.circular(5)),
           filled: true,
           fillColor:
               averageBackgroundColor.isLight ? Colors.black12 : Colors.white12,
@@ -358,10 +363,22 @@ preset: true,);''';
         primaryTextTheme: const TextTheme()
             .apply(bodyColor: textColor, displayColor: textColor),
         dividerTheme: DividerThemeData(color: textColor.withOpacity(0.8)),
-        chipTheme: ChipThemeData.fromDefaults(
-            primaryColor: chipColor,
-            secondaryColor: chipColor,
-            labelStyle: TextStyle(color: chipTextColor)),
+        chipTheme: ChipThemeData(
+            backgroundColor: chipColor,
+            brightness: Brightness.dark,
+            selectedColor: chipColor,
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            deleteIconColor: chipTextColor,
+            padding: EdgeInsets.zero,
+            disabledColor: chipColor.withAlpha(127),
+            secondarySelectedColor: chipColor,
+            pressElevation: 0,
+            // primaryColor: chipColor,
+            // secondaryColor: chipColor,
+            labelStyle: TextStyle(color: chipTextColor),
+            secondaryLabelStyle: TextStyle(color: chipTextColor)),
         textTheme: const TextTheme(
           subtitle1: TextStyle(),
           bodyText1: TextStyle(),

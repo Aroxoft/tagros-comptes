@@ -274,7 +274,10 @@ class AddModifyEntry extends HookConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Text(S.of(context).addModifyFor),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Text(S.of(context).addModifyFor),
+                            ),
                             DropdownButton<bool>(
                                 value: entry.value.pointsForAttack,
                                 items: [
@@ -316,23 +319,15 @@ class AddModifyEntry extends HookConsumerWidget {
                                   entry.value = entry.value.copyWith(
                                       points: (points * 2).round() / 2);
                                 },
-                                decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.only(
-                                      left: 10, right: 10),
-                                  border: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.lightGreen,
-                                          width: 2,
-                                          style: BorderStyle.solid),
-                                      borderRadius: BorderRadius.circular(5),
-                                      gapPadding: 1),
-                                ),
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
                                         decimal: true),
                               ),
                             ),
-                            Text(S.of(context).points),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 4),
+                              child: Text(S.of(context).points),
+                            ),
                           ],
                         ),
                         Row(
@@ -358,9 +353,12 @@ class AddModifyEntry extends HookConsumerWidget {
                                     }
                                   }
                                 }),
-                            Text(S
-                                .of(context)
-                                .addModifyOudler(entry.value.nbBouts))
+                            Padding(
+                              padding: const EdgeInsets.only(left: 2),
+                              child: Text(S
+                                  .of(context)
+                                  .addModifyOudler(entry.value.nbBouts)),
+                            )
                           ],
                         )
                       ],

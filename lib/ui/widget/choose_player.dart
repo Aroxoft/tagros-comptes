@@ -31,13 +31,14 @@ class ChoosePlayer extends HookConsumerWidget {
                   textInputAction: TextInputAction.go,
                   decoration: InputDecoration(
                       suffixIcon: const Icon(Icons.search),
-                      border: const OutlineInputBorder(),
+                      // border: const OutlineInputBorder(),
                       hintText: S.of(context).hintSearchPlayer),
                 ),
                 // autoFlipDirection: true,
                 animationDuration: const Duration(milliseconds: 300),
-                animationStart: 0.5,
+                animationStart: 0.25,
                 keepSuggestionsOnLoading: true,
+                minCharsForSuggestions: 1,
                 loadingBuilder: (context) => const CircularProgressIndicator(),
                 suggestionsCallback: (pattern) => ref.watch(choosePlayerProvider
                     .select((value) => value.updateSuggestions(pattern))),
@@ -62,10 +63,13 @@ class ChoosePlayer extends HookConsumerWidget {
                   return SizedBox(
                       height: 100,
                       child: Center(
-                        child: Text(S.of(context).chooseDialogNoItemsFound),
+                        child: Text(
+                          S.of(context).chooseDialogNoItemsFound,
+                          textAlign: TextAlign.center,
+                        ),
                       ));
                 },
-                debounceDuration: const Duration(milliseconds: 200),
+                debounceDuration: const Duration(milliseconds: 300),
                 getImmediateSuggestions: true,
                 onSuggestionSelected: (suggestion) {
                   ref.read(choosePlayerProvider).addPlayer(suggestion);

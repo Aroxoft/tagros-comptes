@@ -18,8 +18,12 @@ class SelectableTag extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = ref.watch(themeColorProvider
-        .select((value) => value.whenOrNull(data: (data) => data.chipColor)));
+    final color = ref.watch(themeColorProvider.select((value) => value
+        .maybeWhen(
+          data: (data) => data,
+          orElse: () => ThemeColor.defaultTheme(),
+        )
+        .chipColor));
     final textColorSelected = ref.watch(themeColorProvider.select(
         (value) => value.whenOrNull(data: (data) => data.chipTextColor)));
     final textColorUnselected =
@@ -37,12 +41,10 @@ class SelectableTag extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(12),
               color: selected ? color : Colors.transparent,
-              border: Border.all(
-                  color: color ?? Colors.transparent,
-                  style: BorderStyle.solid,
-                  width: 2)),
+              border:
+                  Border.all(color: color, style: BorderStyle.solid, width: 2)),
           child: Text(
             text,
             style: TextStyle(

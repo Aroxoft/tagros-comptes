@@ -96,6 +96,8 @@ class AddModifyEntry extends HookConsumerWidget {
                   title: S.of(context).addModifyMissingTitle,
                   message: S.of(context).addModifyMissingMessage,
                   duration: const Duration(seconds: 3),
+                  titleColor: Theme.of(context).textTheme.bodyText2?.color,
+                  messageColor: Theme.of(context).textTheme.bodyText2?.color,
                   backgroundGradient: LinearGradient(colors: [
                     if (theme.backgroundGradient1.opacity != 0)
                       theme.backgroundGradient1

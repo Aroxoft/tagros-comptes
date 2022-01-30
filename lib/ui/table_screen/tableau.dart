@@ -38,6 +38,8 @@ class TableauPage extends ConsumerWidget {
                   flushbarPosition: FlushbarPosition.BOTTOM,
                   title: S.of(context).successAddingGame,
                   duration: const Duration(seconds: 2),
+                  titleColor: theme.textColor,
+                  messageColor: theme.textColor,
                   message: info.toString(),
                   backgroundGradient: LinearGradient(
                     colors: [

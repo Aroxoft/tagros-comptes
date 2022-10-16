@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/state/providers.dart';
 
 class BackgroundGradient extends ConsumerWidget {
-  const BackgroundGradient({Key? key, required this.child}) : super(key: key);
+  const BackgroundGradient({super.key, required this.child});
   final Widget child;
 
   @override
@@ -19,7 +19,7 @@ class BackgroundGradient extends ConsumerWidget {
     if (bgGradient1.opacity == 0 && bgGradient2.opacity == 0) {
       return child;
     }
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,

@@ -12,7 +12,7 @@ import 'package:tagros_comptes/ui/table_screen/tableau_body.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class TableauPage extends ConsumerWidget {
-  const TableauPage({Key? key}) : super(key: key);
+  const TableauPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

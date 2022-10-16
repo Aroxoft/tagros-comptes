@@ -7,7 +7,7 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/theme_screen/theme_customization.dart';
 
 class PresetThemes extends ConsumerWidget {
-  const PresetThemes({Key? key}) : super(key: key);
+  const PresetThemes({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -72,7 +72,10 @@ class PresetThemes extends ConsumerWidget {
                 PopupMenuItem(
                     value: _OptionsTheme.rename,
                     child: Row(
-                      children: [const Icon(Icons.edit), Text(S.of(context).themeOptionRename)],
+                      children: [
+                        const Icon(Icons.edit),
+                        Text(S.of(context).themeOptionRename)
+                      ],
                     )),
                 PopupMenuItem(
                   value: _OptionsTheme.copy,
@@ -102,10 +105,10 @@ class PresetThemes extends ConsumerWidget {
 
 class RenameDialog extends HookWidget {
   const RenameDialog({
-    Key? key,
+    super.key,
     required this.initialName,
     required this.onSave,
-  }) : super(key: key);
+  });
 
   final String initialName;
   final void Function(String name) onSave;

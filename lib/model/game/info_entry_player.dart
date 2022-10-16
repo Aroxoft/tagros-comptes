@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/model/game/info_entry.dart';

@@ -8,8 +8,7 @@ import 'package:tagros_comptes/ui/widget/choose_player.dart';
 class DialogChoosePlayers extends ConsumerWidget {
   final DoAfterChosen doAfterChosen;
 
-  const DialogChoosePlayers({Key? key, required this.doAfterChosen})
-      : super(key: key);
+  const DialogChoosePlayers({super.key, required this.doAfterChosen});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,8 +36,7 @@ class DialogChoosePlayers extends ConsumerWidget {
 }
 
 class DialogPlayerBody extends HookConsumerWidget {
-  const DialogPlayerBody({Key? key, required this.doAfterChosen})
-      : super(key: key);
+  const DialogPlayerBody({super.key, required this.doAfterChosen});
   final DoAfterChosen doAfterChosen;
 
   @override

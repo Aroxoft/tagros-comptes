@@ -14,7 +14,7 @@ part 'games_dao.g.dart';
 @DriftAccessor(
     tables: [Games, InfoEntries, Players], include: {'games_queries.drift'})
 class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
-  GamesDao(AppDatabase db) : super(db);
+  GamesDao(super.db);
 
   Stream<List<InfoEntryPlayerBean>> watchInfoEntriesInGame(int gameId) {
     return entriesInGame(gameId: gameId)
@@ -83,8 +83,8 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
   }
 
 // region Insert
-  Future<int> newEntry(
-      InfoEntryPlayerBean infoEntry, {required GamesCompanion game}) async {
+  Future<int> newEntry(InfoEntryPlayerBean infoEntry,
+      {required GamesCompanion game}) async {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
@@ -171,7 +171,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       await (update(games)..where((tbl) => tbl.id.equals(game.id.value)))
           .write(game.copyWith(date: Value(DateTime.now())));
       return (update(infoEntries)
-            ..where((tbl) => tbl.id.equals(infoEntry.infoEntry.id)))
+            ..where((tbl) => tbl.id.equalsNullable(infoEntry.infoEntry.id)))
           .write(InfoEntriesCompanion(
         player: Value(infoEntry.player!.id!),
         points: Value(infoEntry.infoEntry.points),

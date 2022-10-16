@@ -3,7 +3,7 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class GuideScreen extends StatelessWidget {
-  const GuideScreen({Key? key}) : super(key: key);
+  const GuideScreen({super.key});
   static const routeName = '/guide';
 
   @override

@@ -14,7 +14,7 @@ import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 class MenuScreen extends StatelessWidget {
   static const routeName = "/menu";
 
-  const MenuScreen({Key? key}) : super(key: key);
+  const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class MenuScreen extends StatelessWidget {
 }
 
 class MenuBody extends StatelessWidget {
-  const MenuBody({Key? key}) : super(key: key);
+  const MenuBody({super.key});
 
   @override
   Widget build(BuildContext context) {

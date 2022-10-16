@@ -3,7 +3,7 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class BuyScreen extends StatelessWidget {
-  const BuyScreen({Key? key}) : super(key: key);
+  const BuyScreen({super.key});
 
   static const routeName = '/buy';
 

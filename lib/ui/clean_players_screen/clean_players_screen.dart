@@ -8,7 +8,7 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class CleanPlayersScreen extends ConsumerWidget {
-  const CleanPlayersScreen({Key? key}) : super(key: key);
+  const CleanPlayersScreen({super.key});
   static const routeName = '/cleanup';
 
   @override

@@ -13,7 +13,7 @@ import 'package:tagros_comptes/ui/theme_screen/theme_fake.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class ThemeScreen extends HookConsumerWidget {
-  const ThemeScreen({Key? key}) : super(key: key);
+  const ThemeScreen({super.key});
   static const routeName = '/theme';
 
   @override
@@ -57,15 +57,15 @@ final _fakeDaoProvider = Provider((ref) => FakeGamesDao());
 
 class ThemePreview extends HookConsumerWidget {
   const ThemePreview({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final game = GameWithPlayers(players: [
-      Player(pseudo: "Alice"),
-      Player(pseudo: "Bob"),
-      Player(pseudo: "Charline")
+      const Player(pseudo: "Alice"),
+      const Player(pseudo: "Bob"),
+      const Player(pseudo: "Charline")
     ], game: Game(id: 1, nbPlayers: 3, date: DateTime.now()).toCompanion(true));
     return SizedBox(
       height: 200,
@@ -89,7 +89,7 @@ class ThemePreview extends HookConsumerWidget {
 }
 
 class PreviewScreen extends StatelessWidget {
-  const PreviewScreen({Key? key, required this.child}) : super(key: key);
+  const PreviewScreen({super.key, required this.child});
   final Widget child;
 
   @override

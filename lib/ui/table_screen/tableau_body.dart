@@ -12,7 +12,7 @@ import 'package:tagros_comptes/state/providers.dart';
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;
 
-  const TableauBody({Key? key, required this.players}) : super(key: key);
+  const TableauBody({super.key, required this.players});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +37,7 @@ class TableauBody extends ConsumerWidget {
                   ))),
         ),
       ),
-      Container(
+      DecoratedBox(
         decoration: BoxDecoration(
           border: Border(
               top: BorderSide(color: theme.horizontalColor, width: 4),
@@ -166,7 +166,7 @@ class TableauBody extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    child: Container(
+                    child: ColoredBox(
                       color: index.isOdd ? Colors.black12 : Colors.white10,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),

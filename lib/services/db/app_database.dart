@@ -64,7 +64,7 @@ class AppDatabase extends _$AppDatabase {
   static const int databaseVersion = 1;
 
   // We tell the database where to store the data with this constructor
-  AppDatabase(QueryExecutor conn) : super(conn);
+  AppDatabase(super.conn);
 
   // Bump this number whenever we change or add a table definition
   @override

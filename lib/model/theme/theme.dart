@@ -7,7 +7,6 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/util/list_util.dart';
 
 part 'theme.freezed.dart';
-
 part 'theme.g.dart';
 
 @freezed
@@ -307,13 +306,13 @@ preset: true,);''';
         primaryIconTheme: IconThemeData(color: textColor),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-              primary: buttonColor,
-              onPrimary: textButtonColor,
+              foregroundColor: textButtonColor,
+              backgroundColor: buttonColor,
               padding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
         ),
         textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(primary: textColor)),
+            style: TextButton.styleFrom(foregroundColor: textColor)),
         dialogTheme: DialogTheme(
             backgroundColor: averageBackgroundColor,
             titleTextStyle:

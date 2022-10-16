@@ -11,7 +11,7 @@ const _minFontSizeAppbar = 17;
 const _maxFontSizeAppbar = 22;
 
 class ThemeCustomization extends ConsumerWidget {
-  const ThemeCustomization({Key? key}) : super(key: key);
+  const ThemeCustomization({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -299,15 +299,14 @@ class ThemeCustomization extends ConsumerWidget {
 
 class TileColorPicker extends StatelessWidget {
   const TileColorPicker(
-      {Key? key,
+      {super.key,
       required this.title,
       required this.subtitle,
       required this.color,
       required this.backgroundColor,
       required this.onSaved,
       required this.colorsUsed,
-      required this.context})
-      : super(key: key);
+      required this.context});
   final String title;
   final String subtitle;
   final Color color;
@@ -339,11 +338,11 @@ class TileColorPicker extends StatelessWidget {
 
 class CircleColor extends StatelessWidget {
   const CircleColor({
-    Key? key,
+    super.key,
     required this.color,
     required this.backgroundColor,
     this.size = 35,
-  }) : super(key: key);
+  });
 
   final Color color;
   final Color backgroundColor;
@@ -378,12 +377,12 @@ class ColorPickerDialog extends HookConsumerWidget {
   final void Function(Color color) onSaved;
 
   const ColorPickerDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.initialColor,
     this.themeColors,
     required this.onSaved,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

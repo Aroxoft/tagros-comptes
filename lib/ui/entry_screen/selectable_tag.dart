@@ -10,11 +10,10 @@ class SelectableTag extends ConsumerWidget {
   final bool selected;
 
   const SelectableTag(
-      {Key? key,
+      {super.key,
       required this.text,
       required this.onPressed,
-      this.selected = true})
-      : super(key: key);
+      this.selected = true});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

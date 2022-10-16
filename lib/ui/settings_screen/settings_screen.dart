@@ -7,7 +7,7 @@ import 'package:tagros_comptes/ui/theme_screen/theme_screen.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
   static const routeName = '/settings';
 
   @override

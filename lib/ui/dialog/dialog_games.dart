@@ -9,7 +9,7 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class DialogChooseGame extends ConsumerWidget {
-  const DialogChooseGame({Key? key}) : super(key: key);
+  const DialogChooseGame({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

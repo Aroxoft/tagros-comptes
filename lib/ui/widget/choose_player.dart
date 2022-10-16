@@ -7,7 +7,7 @@ import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 
 class ChoosePlayer extends HookConsumerWidget {
-  const ChoosePlayer({Key? key}) : super(key: key);
+  const ChoosePlayer({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -21,7 +21,7 @@ import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 class AddModifyEntry extends HookConsumerWidget {
   static String routeName = "/addModify";
 
-  const AddModifyEntry({Key? key}) : super(key: key);
+  const AddModifyEntry({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,6 +68,7 @@ class AddModifyEntry extends HookConsumerWidget {
       entry.value = info.infoEntry;
       withPlayers.value = info.withPlayers;
       textPointsController.text = info.infoEntry.points.toStringAsFixed(1);
+      return null;
     }, [0]);
     return BackgroundGradient(
       child: Scaffold(

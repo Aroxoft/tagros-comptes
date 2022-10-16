@@ -14,14 +14,13 @@ class Boxed extends ConsumerWidget {
   final double titleSize;
 
   const Boxed(
-      {Key? key,
+      {super.key,
       this.borderWidth = 3,
       this.radius = 20,
       required this.child,
       required this.title,
       this.titleWeight = FontWeight.w700,
-      this.titleSize = 18})
-      : super(key: key);
+      this.titleSize = 18});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +36,7 @@ class Boxed extends ConsumerWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(top: 20),
-          child: Container(
+          child: DecoratedBox(
             decoration: BoxDecoration(
                 border: Border.all(color: frameColor, width: borderWidth),
                 borderRadius: BorderRadius.circular(radius),

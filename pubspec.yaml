@@ -19,7 +19,6 @@ environment:
 
 dependencies:
   another_flushbar: ^1.10.28 #Substitute for toasts and snackbars
-  appspector: ^0.9.0 #For viewing database
   collection: ^1.16.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

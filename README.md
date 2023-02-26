@@ -31,6 +31,7 @@ This application does not take into account "chelem", which is when one camp win
 
 ### Compilation
 
+#### Common
 ```shell script
 export APPSPECTOR=<my-android-appspector-key> # it is for debugging, you can also remove appspector instead
 export APPSPECTORIOS=<my-ios-appspector-key> # same as above
@@ -38,8 +39,26 @@ dart tool/env.dart
 flutter clean # (except the first time)
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
-# for android
+``` 
+
+#### Android
 flutter build apk --split-per-abi
-# ios (only on mac)
+
+#### iOS (only on mac)
+##### First time only:
+```shell
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -runFirstLaunch
+sudo gem install cocoapods
+flutter run -d <ios-device-id> # if not working, then do below
+```
+##### When upgrading dependencies
+```shell
+cd ios/
+pod install
+cd ../
+```
+##### For building
+```shell
 flutter build ios
 ```

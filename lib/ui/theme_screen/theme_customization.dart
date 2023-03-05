@@ -57,7 +57,7 @@ class ThemeCustomization extends ConsumerWidget {
           context: context),
       TileColorPicker(
           title: S.of(context).themeTitleAppBarTextColor,
-          subtitle: S.of(context).themeSubttleAppBarTextColor,
+          subtitle: S.of(context).themeSubtitleAppBarTextColor,
           color: theme.appBarTextColor,
           colorsUsed: colors,
           backgroundColor: theme.averageBackgroundColor,

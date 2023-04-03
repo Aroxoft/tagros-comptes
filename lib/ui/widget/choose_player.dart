@@ -47,7 +47,7 @@ class ChoosePlayer extends HookConsumerWidget {
                     title: Text(itemData.pseudo),
                     leading: CircleAvatar(
                       backgroundColor:
-                          Theme.of(context).textTheme.bodyText2?.color,
+                          Theme.of(context).textTheme.bodyMedium?.color,
                       child: Text(
                         itemData.id.toString(),
                         style: TextStyle(

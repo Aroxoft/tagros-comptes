@@ -31,7 +31,7 @@ class TableauBody extends ConsumerWidget {
                     players[index].name.toUpperCase(),
                     style: Theme.of(context)
                         .textTheme
-                        .bodyText2
+                        .bodyMedium
                         ?.copyWith(color: theme.playerNameColor),
                     textAlign: TextAlign.center,
                   ))),

@@ -58,7 +58,7 @@ class DialogChooseGame extends ConsumerWidget {
                         builder: (context, ref, child) => ListTile(
                           leading: CircleAvatar(
                               backgroundColor:
-                                  Theme.of(context).textTheme.bodyText2?.color,
+                                  Theme.of(context).textTheme.bodyMedium?.color,
                               child: Text(
                                   games[index].players.length.toString(),
                                   style: TextStyle(

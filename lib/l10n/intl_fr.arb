@@ -126,5 +126,8 @@
   "guidePlaceHolderText": "À venir bientôt...",
   "guideTitle": "Guide",
   "buyScreenTitle": "Avantages premium",
-  "buyScreenPlaceholderText": "À venir bientôt..."
+  "buyScreenPlaceholderText": "À venir bientôt...",
+  "themeTabPresetThemes": "Thèmes prédéfinis",
+  "themeTabCustomize": "Personnalisation avancée",
+  "dialogNewGameTitle": "Nouvelle partie, choisir les joueurs"
 }

@@ -13,15 +13,20 @@ class DialogChoosePlayers extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
+      title: Text(S.of(context).dialogNewGameTitle),
       content: DialogPlayerBody(
         doAfterChosen: doAfterChosen,
       ),
       actions: <Widget>[
         // error display
-        if (ref
-            .watch(choosePlayerProvider.select((value) => value.error != null)))
-          Text(ref.watch(choosePlayerProvider.select((value) => value.error!)),
-              style: const TextStyle(color: Colors.red)),
+        ref.watch(choosePlayerProvider.select((value) {
+          final error = value.error;
+          if (error != null) {
+            return Text(error, style: const TextStyle(color: Colors.red));
+          } else {
+            return const SizedBox();
+          }
+        })),
         ElevatedButton(
             onPressed: () {
               if (ref.read(choosePlayerProvider).validatePlayers()) {

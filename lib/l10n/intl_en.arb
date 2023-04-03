@@ -54,7 +54,7 @@
   "addModifyMissingMessage": "In order to validate, please fill the missing information",
   "preneur": "Taker",
   "addModifyTitleContract": "Contract",
-  "addModifyFor": "Pour",
+  "addModifyFor": "For",
   "addModifyContractType": "Type",
   "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ trumps)}}",
   "@addModifyPoigneeNbTrumps": {
@@ -210,5 +210,8 @@
   "guidePlaceHolderText": "Coming soon...",
   "guideTitle": "Guide",
   "buyScreenTitle": "Premium advantages",
-  "buyScreenPlaceholderText": "Coming soon..."
+  "buyScreenPlaceholderText": "Coming soon...",
+  "themeTabPresetThemes": "Preset themes",
+  "themeTabCustomize": "Customize",
+  "dialogNewGameTitle": "New game, choose the players"
 }

@@ -29,9 +29,10 @@ class ThemeScreen extends HookConsumerWidget {
                     .select((value) => value.value?.sliderColor)),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 4,
-                tabs: ["Preset themes", "Customize"]
-                    .map((e) => Tab(text: e))
-                    .toList()),
+                tabs: [
+                  S.of(context).themeTabPresetThemes,
+                  S.of(context).themeTabCustomize
+                ].map((e) => Tab(text: e)).toList()),
           ),
           body: Column(
             children: const [

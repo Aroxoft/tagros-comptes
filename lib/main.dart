@@ -24,7 +24,7 @@ import 'package:timeago/timeago.dart' as timeago;
 // import '.env.dart';
 
 Future<void> main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   // await _runAppSpector();
   if (kDebugMode) {
     // Stetho.initialize();
@@ -62,6 +62,9 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      showSemanticsDebugger: false,
+      debugShowMaterialGrid: false,
       title: 'Flutter Demo',
       localizationsDelegates: const [
         S.delegate,

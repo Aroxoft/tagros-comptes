@@ -97,8 +97,8 @@ class AddModifyEntry extends HookConsumerWidget {
                   title: S.of(context).addModifyMissingTitle,
                   message: S.of(context).addModifyMissingMessage,
                   duration: const Duration(seconds: 3),
-                  titleColor: Theme.of(context).textTheme.bodyText2?.color,
-                  messageColor: Theme.of(context).textTheme.bodyText2?.color,
+                  titleColor: Theme.of(context).textTheme.bodyMedium?.color,
+                  messageColor: Theme.of(context).textTheme.bodyMedium?.color,
                   backgroundGradient: LinearGradient(colors: [
                     if (theme.backgroundGradient1.opacity != 0)
                       theme.backgroundGradient1
@@ -389,9 +389,12 @@ class AddModifyEntry extends HookConsumerWidget {
                                       entry.value.copyWith(poignees: p);
                                 }
                               }),
-                          Text(S.of(context).addModifyPoignee),
+                          Expanded(
+                              flex: 1,
+                              child: Text(S.of(context).addModifyPoignee)),
                           if (entry.value.poignees.isNotEmpty)
-                            Flexible(
+                            Expanded(
+                              flex: 2,
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 16),
                                 child: DropdownButton<PoigneeType>(

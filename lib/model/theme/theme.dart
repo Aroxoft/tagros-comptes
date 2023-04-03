@@ -379,9 +379,9 @@ preset: true,);''';
             labelStyle: TextStyle(color: chipTextColor),
             secondaryLabelStyle: TextStyle(color: chipTextColor)),
         textTheme: const TextTheme(
-          subtitle1: TextStyle(),
-          bodyText1: TextStyle(),
-          bodyText2: TextStyle(),
+          titleMedium: TextStyle(),
+          bodyLarge: TextStyle(),
+          bodyMedium: TextStyle(),
         ).apply(
           bodyColor: textColor,
           displayColor: textColor,

@@ -11,13 +11,13 @@ import 'package:tagros_comptes/ui/dialog/dialog_players.dart';
 import 'package:tagros_comptes/ui/settings_screen/settings_screen.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
-class MenuScreen extends StatelessWidget {
+class MenuScreen extends HookConsumerWidget {
   static const routeName = "/menu";
 
   const MenuScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return BackgroundGradient(
       child: Scaffold(
           appBar: AppBar(
@@ -30,7 +30,11 @@ class MenuScreen extends StatelessWidget {
                   })
             ],
           ),
-          body: const MenuBody()),
+          body: Column(
+            children: const [
+              Expanded(child: MenuBody()),
+            ],
+          )),
     );
   }
 }

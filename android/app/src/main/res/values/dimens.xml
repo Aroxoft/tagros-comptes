@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ad_headline_size">12sp</dimen>
+    <dimen name="ad_body_size">11sp</dimen>
+    <dimen name="ad_advertiser_size">11sp</dimen>
+</resources>

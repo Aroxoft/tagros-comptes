@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tagros points</string>
+    <string name="cd_icon_ad">Advertising icon</string>
+    <string name="ad_notification">Ad</string>
+    <string name="default_headline" translatable="false">Headline</string>
+    <string name="default_body" translatable="false">Body</string>
+    <string name="default_price" translatable="false">Price</string>
+    <string name="default_store" translatable="false">Google Play</string>
+    <string name="default_button" translatable="false">Action Button</string>
+    <string name="default_advertiser" translatable="false">Advertiser</string>
 </resources>

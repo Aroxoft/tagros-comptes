@@ -213,5 +213,6 @@
   "buyScreenPlaceholderText": "Coming soon...",
   "themeTabPresetThemes": "Preset themes",
   "themeTabCustomize": "Customize",
-  "dialogNewGameTitle": "New game, choose the players"
+  "dialogNewGameTitle": "New game, choose the players",
+  "semanticAdBanner": "Ad banner"
 }

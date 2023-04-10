@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
-import 'package:tagros_comptes/model/game/info_entry_player.dart';
 import 'package:tagros_comptes/model/game/player.dart';
+import 'package:tagros_comptes/model/monetization/ad_or_info.dart';
 import 'package:tagros_comptes/model/theme/theme.dart';
 import 'package:tagros_comptes/services/calculous/calculus.dart';
 import 'package:tagros_comptes/state/providers.dart';
@@ -79,10 +80,10 @@ class TableauBody extends ConsumerWidget {
               );
             }),
       ),
-      StreamBuilder<List<InfoEntryPlayerBean>>(
-        stream: ref.watch(entriesProvider.select((value) => value.infoEntries)),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<InfoEntryPlayerBean>> snapshot) {
+      StreamBuilder<List<AdOrInfo>>(
+        stream: ref.watch(entriesProvider.select((value) => value.rows)),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<AdOrInfo>> snapshot) {
           if (snapshot.hasError) {
             return Center(
               child: Padding(
@@ -99,8 +100,8 @@ class TableauBody extends ConsumerWidget {
               ),
             );
           }
-          final entries = snapshot.data;
-          if (entries == null || entries.isEmpty) {
+          final rows = snapshot.data;
+          if (rows == null || rows.isEmpty) {
             return Expanded(
               child: Center(
                 child: Padding(
@@ -112,83 +113,108 @@ class TableauBody extends ConsumerWidget {
           }
           return Expanded(
             child: ListView.builder(
-                itemCount: entries.length,
+                itemCount: rows.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final Map<String, double> calculateGain =
-                      calculateGains(entries[index], players.toList());
-                  final gains =
-                      transformGainsToList(calculateGain, players.toList());
-                  // var key = GlobalKey<SlidableState>();
-                  return Slidable(
-                    key: ValueKey(index),
-                    startActionPane: ActionPane(
-                        extentRatio: 0.3,
-                        motion: const ScrollMotion(),
-                        children: [
-                          SlidableAction(
-                            backgroundColor: theme.accentColor,
-                            icon: Icons.edit,
-                            foregroundColor: theme.accentColor.isLight
-                                ? Colors.black87
-                                : Colors.white70,
-                            onPressed: (context) async {
-                              final modified = await navigateToAddModify(
-                                  context,
-                                  game: ref.read(gameProvider),
-                                  infoEntry: entries[index]);
-                              if (modified != null) {
+                  final row = rows[index];
+                  return row.when(
+                    ad: (ad) => FutureBuilder<AdWithView>(
+                        future: ad,
+                        builder: (context, snapshot) {
+                          return AnimatedSize(
+                            duration: const Duration(milliseconds: 400),
+                            child: SizedBox(
+                              height: snapshot.hasError
+                                  ? 50
+                                  : snapshot.data == null
+                                      ? 0
+                                      : 200,
+                              child: snapshot.hasError
+                                  ? Text(
+                                      "Here my ad should have been ${snapshot.error}")
+                                  : snapshot.hasData
+                                      ? AdWidget(ad: snapshot.data!)
+                                      : const SizedBox(),
+                            ),
+                          );
+                        }),
+                    info: (infoEntryPlayerBean) {
+                      final Map<String, double> calculateGain =
+                          calculateGains(infoEntryPlayerBean, players.toList());
+                      final gains =
+                          transformGainsToList(calculateGain, players.toList());
+                      // var key = GlobalKey<SlidableState>();
+                      return Slidable(
+                        key: ValueKey(index),
+                        startActionPane: ActionPane(
+                            extentRatio: 0.3,
+                            motion: const ScrollMotion(),
+                            children: [
+                              SlidableAction(
+                                backgroundColor: theme.accentColor,
+                                icon: Icons.edit,
+                                foregroundColor: theme.accentColor.isLight
+                                    ? Colors.black87
+                                    : Colors.white70,
+                                onPressed: (context) async {
+                                  final modified = await navigateToAddModify(
+                                      context,
+                                      game: ref.read(gameProvider),
+                                      infoEntry: infoEntryPlayerBean);
+                                  if (modified != null) {
+                                    ref
+                                        .read(entriesProvider)
+                                        .inModifyEntry
+                                        .add(modified);
+                                  }
+                                },
+                              ),
+                            ]),
+                        endActionPane: ActionPane(
+                          extentRatio: 0.3,
+                          motion: const ScrollMotion(),
+                          children: [
+                            SlidableAction(
+                              backgroundColor: theme.accentColor,
+                              icon: Icons.delete,
+                              foregroundColor: theme.accentColor.isLight
+                                  ? Colors.black87
+                                  : Colors.white70,
+                              onPressed: (context) {
                                 ref
                                     .read(entriesProvider)
-                                    .inModifyEntry
-                                    .add(modified);
-                              }
-                            },
-                          ),
-                        ]),
-                    endActionPane: ActionPane(
-                      extentRatio: 0.3,
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          backgroundColor: theme.accentColor,
-                          icon: Icons.delete,
-                          foregroundColor: theme.accentColor.isLight
-                              ? Colors.black87
-                              : Colors.white70,
-                          onPressed: (context) {
-                            ref
-                                .read(entriesProvider)
-                                .inDeleteEntry
-                                .add(entries[index]);
+                                    .inDeleteEntry
+                                    .add(infoEntryPlayerBean);
 
-                            // key.currentState.dismiss(); // todo see
-                          },
+                                // key.currentState.dismiss(); // todo see
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: ColoredBox(
-                      color: index.isOdd ? Colors.black12 : Colors.white10,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: List.generate(gains.length, (index) {
-                            return Expanded(
-                              child: Text(
-                                gains[index].toStringAsFixed(1),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: gains[index] >= 0
-                                        ? theme.positiveEntryColor
-                                        : theme.negativeEntryColor),
-                              ),
-                            );
-                          }),
+                        child: ColoredBox(
+                          color: index.isOdd ? Colors.black12 : Colors.white10,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: List.generate(gains.length, (index) {
+                                return Expanded(
+                                  child: Text(
+                                    gains[index].toStringAsFixed(1),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: gains[index] >= 0
+                                            ? theme.positiveEntryColor
+                                            : theme.negativeEntryColor),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   );
                 }),
           );

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tagros points</string>
+    <string name="cd_icon_ad">Icône de publicité</string>
+    <string name="ad_notification">Pub</string>
 </resources>

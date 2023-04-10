@@ -9,8 +9,12 @@ import 'dart:io';
 
 Future<void> main() async {
   final config = {
-    'appSpector': Platform.environment['APPSPECTOR'],
-    'appSpectorIos': Platform.environment['APPSPECTORIOS'],
+    'androidBannerId': Platform.environment['ANDROID_BANNER_ID'],
+    'iosBannerId': Platform.environment['IOS_BANNER_ID'],
+    'iosAppId': Platform.environment['IOS_APP_ID'],
+    'androidAppId': Platform.environment['ANDROID_APP_ID'],
+    'androidNativeId': Platform.environment['ANDROID_NATIVE_ID'],
+    'iosNativeId': Platform.environment['IOS_NATIVE_ID'],
   };
 
   const filename = 'lib/.env.dart';

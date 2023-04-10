@@ -33,8 +33,11 @@ This application does not take into account "chelem", which is when one camp win
 
 #### Common
 ```shell script
-export APPSPECTOR=<my-android-appspector-key> # it is for debugging, you can also remove appspector instead
-export APPSPECTORIOS=<my-ios-appspector-key> # same as above
+# For ads:
+export ANDROID_BANNER_ID=<banner-id>
+export IOS_BANNER_ID=<ios-banner-id>
+export ANDROID_NATIVE_ID=<native-id>
+export IOS_NATIVE_ID=<ios-native-id>
 dart tool/env.dart
 flutter clean # (except the first time)
 flutter pub get

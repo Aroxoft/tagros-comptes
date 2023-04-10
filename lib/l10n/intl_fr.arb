@@ -129,5 +129,6 @@
   "buyScreenPlaceholderText": "À venir bientôt...",
   "themeTabPresetThemes": "Thèmes prédéfinis",
   "themeTabCustomize": "Personnalisation avancée",
-  "dialogNewGameTitle": "Nouvelle partie, choisir les joueurs"
+  "dialogNewGameTitle": "Nouvelle partie, choisir les joueurs",
+  "semanticAdBanner": "Bannière de publicité"
 }

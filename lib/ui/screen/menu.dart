@@ -9,6 +9,7 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/dialog/dialog_games.dart';
 import 'package:tagros_comptes/ui/dialog/dialog_players.dart';
 import 'package:tagros_comptes/ui/settings_screen/settings_screen.dart';
+import 'package:tagros_comptes/ui/widget/ads/banner/banner_ad_widget.dart';
 import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class MenuScreen extends HookConsumerWidget {
@@ -33,6 +34,8 @@ class MenuScreen extends HookConsumerWidget {
           body: Column(
             children: const [
               Expanded(child: MenuBody()),
+              // ad banner
+              CrossAdWidget(),
             ],
           )),
     );

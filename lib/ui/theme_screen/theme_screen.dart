@@ -74,6 +74,7 @@ class ThemePreview extends HookConsumerWidget {
         overrides: [
           gameProvider.overrideWithValue(game),
           gamesDaoProvider.overrideWithValue(ref.watch(_fakeDaoProvider)),
+          isPremiumProvider.overrideWithValue(true),
           navigationPrefixProvider.overrideWithValue("theme-preview-"),
         ],
         child: ListView(

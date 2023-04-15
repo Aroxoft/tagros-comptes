@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  setup:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,12 +15,20 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter --version
+  generate:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
       - run: flutter pub get
       - name: Generate files (freezed, json_serializable)
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Generate translations
         run: |
           flutter pub global activate intl_utils && flutter pub global run intl_utils:generate
+  test:
+    needs: [ setup, generate ]
+    runs-on: ubuntu-latest
+    steps:
       - name: Analyze code
         run: flutter analyze
       - run: flutter test

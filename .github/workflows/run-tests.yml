@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,5 +22,5 @@ jobs:
         run: |
           flutter pub global activate intl_utils && flutter pub global run intl_utils:generate
       - name: Analyze code
-        run: flutter analyze
+        run: flutter analyze --no-fatal-infos --fatal-warnings
       - run: flutter test

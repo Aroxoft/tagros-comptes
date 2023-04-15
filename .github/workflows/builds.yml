@@ -1,36 +1,15 @@
-name: Run Android build
+name: Run ios build
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_call:
-    secrets:
-      ANDROID_APP_ID:
-        description: 'android_app_id'
-        required: true
-      ANDROID_BANNER_ID:
-        description: 'android_banner_id'
-        required: true
-      ANDROID_NATIVE_ID:
-        description: 'android_native_id'
-        required: true
-      IOS_APP_ID:
-        description: 'ios_app_id'
-        required: true
-      IOS_BANNER_ID:
-        description: 'ios_banner_id'
-        required: true
-      IOS_NATIVE_ID:
-        description: 'ios_native_id'
-        required: true
-      TEST_ADS:
-        description: 'test_ads'
-        required: true
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -78,5 +57,36 @@ jobs:
       - name: Upload app bundle
         uses: actions/upload-artifact@v2
         with:
-          name: app-release
+          name: app-release-aab
           path: build/app/outputs/bundle/release/app-release.aab
+
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          architecture: 'x64'
+      - uses: dart-lang/setup-dart@v1
+        with:
+          channel: 'stable'
+      - run: flutter --version
+      - run: flutter pub get
+      - run: flutter test
+      - name: build the environment
+        env:
+          ANDROID_APP_ID: ${{ secrets.ANDROID_APP_ID }}
+          ANDROID_BANNER_ID: ${{ secrets.ANDROID_BANNER_ID }}
+          ANDROID_NATIVE_ID: ${{ secrets.ANDROID_NATIVE_ID }}
+          IOS_APP_ID: ${{ secrets.IOS_APP_ID }}
+          IOS_BANNER_ID: ${{ secrets.IOS_BANNER_ID }}
+          IOS_NATIVE_ID: ${{ secrets.IOS_NATIVE_ID }}
+          TEST_ADS: ${{ secrets.TEST_ADS }}
+        run: dart tool/env.dart
+      - run: flutter build ios --release --no-codesign
+      - name: Upload ios app
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release-ipa
+          path: build/ios/archive/Runner.xcarchive

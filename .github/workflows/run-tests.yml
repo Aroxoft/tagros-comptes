@@ -21,4 +21,6 @@ jobs:
       - name: Generate translations
         run: |
           flutter pub global activate intl_utils && flutter pub global run intl_utils:generate
+      - name: Analyze code
+        run: flutter analyze
       - run: flutter test

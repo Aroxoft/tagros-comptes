@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
@@ -13,28 +14,41 @@ import 'package:tagros_comptes/ui/widget/background_gradient.dart';
 
 class MenuScreen extends HookConsumerWidget {
   static const routeName = "/menu";
+  final bool _showAds;
 
-  const MenuScreen({super.key});
+  const MenuScreen({super.key, bool showAds = true}) : _showAds = showAds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BackgroundGradient(
       child: Scaffold(
-          appBar: AppBar(
-            title: Text(S.of(context).appTitle),
-            actions: <Widget>[
-              IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(SettingsScreen.routeName);
-                  })
-            ],
-          ),
-          body: Column(
-            children: const [
-              Expanded(child: MenuBody()),
-            ],
-          )),
+        appBar: AppBar(
+          title: Text(S.of(context).appTitle),
+          actions: <Widget>[
+            IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.of(context).pushNamed(SettingsScreen.routeName);
+                })
+          ],
+        ),
+        body: Column(
+          children: [
+            const Expanded(child: MenuBody()),
+            if (_showAds)
+              ref
+                  .watch(bannerAdsProvider(
+                      MediaQuery.of(context).size.width.truncate()))
+                  .when(
+                      data: (ad) => SizedBox(
+                          width: ad.size.width.toDouble(),
+                          height: ad.size.height.toDouble(),
+                          child: AdWidget(ad: ad)),
+                      error: (error, stackTrace) => Text(error.toString()),
+                      loading: () => const CircularProgressIndicator()),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,14 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/model/theme/theme.dart';
+import 'package:tagros_comptes/services/config/env_configuration.dart';
+import 'package:tagros_comptes/services/config/platform_configuration.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/services/db/platforms/database.dart';
@@ -81,3 +88,47 @@ final entriesProvider = Provider<EntriesDbBloc>((ref) {
 }, dependencies: [gameProvider, gamesDaoProvider]);
 
 final navigationPrefixProvider = Provider<String>((ref) => "");
+
+final _platformConfigProvider = Provider<PlatformConfiguration>((ref) {
+  return PlatformConfiguration();
+});
+
+final adsConfigurationProvider = Provider<AdsConfiguration>((ref) {
+  return AdsConfiguration(environment, ref.watch(_platformConfigProvider));
+});
+
+final bannerAdsProvider =
+    FutureProvider.autoDispose.family<BannerAd, int>((ref, width) async {
+  final completer = Completer<BannerAd>();
+  final AnchoredAdaptiveBannerAdSize? size =
+      await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(width);
+  if (size == null) {
+    completer.completeError("size is null");
+  } else {
+    BannerAd(
+      adUnitId:
+          ref.watch(adsConfigurationProvider.select((value) => value.bannerId)),
+      size: size,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          if (kDebugMode) {
+            print("Ad $ad loaded.");
+          }
+          completer.complete(ad as BannerAd);
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          if (kDebugMode) {
+            print("Ad $ad failed to load: $error");
+          }
+          ad.dispose();
+          completer.completeError(error);
+        },
+      ),
+    ).load();
+  }
+  ref.onDispose(() {
+    completer.future.then((value) => value.dispose());
+  });
+  return completer.future;
+});

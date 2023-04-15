@@ -1,10 +1,10 @@
 name: Run ios build
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
+  merge_group:
+    types: [ checks_requested ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -34,7 +34,6 @@ jobs:
           channel: 'stable'
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter test
       - name: build the environment
         env:
           ANDROID_APP_ID: ${{ secrets.ANDROID_APP_ID }}
@@ -45,6 +44,7 @@ jobs:
           IOS_NATIVE_ID: ${{ secrets.IOS_NATIVE_ID }}
           TEST_ADS: ${{ secrets.TEST_ADS }}
         run: dart tool/env.dart
+      - run: flutter test
       - name: Decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -73,7 +73,6 @@ jobs:
           channel: 'stable'
       - run: flutter --version
       - run: flutter pub get
-      - run: flutter test
       - name: build the environment
         env:
           ANDROID_APP_ID: ${{ secrets.ANDROID_APP_ID }}
@@ -84,6 +83,7 @@ jobs:
           IOS_NATIVE_ID: ${{ secrets.IOS_NATIVE_ID }}
           TEST_ADS: ${{ secrets.TEST_ADS }}
         run: dart tool/env.dart
+      - run: flutter test
       - run: flutter build ios --release --no-codesign
       - name: Upload ios app
         uses: actions/upload-artifact@v2

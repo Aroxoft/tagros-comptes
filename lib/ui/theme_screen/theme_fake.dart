@@ -5,8 +5,7 @@ import 'package:tagros_comptes/model/game/player.dart';
 import 'package:tagros_comptes/model/game/prise.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
 
-class FakeGamesDao extends Fake implements GamesDao{
-
+class FakeGamesDao extends Fake implements GamesDao {
   @override
   Stream<List<InfoEntryPlayerBean>> watchInfoEntriesInGame(int gameId) {
     return Stream.value([

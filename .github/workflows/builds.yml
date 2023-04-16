@@ -18,7 +18,7 @@ jobs:
       - name: Outputs versionName
         id: version-name
         run: |
-          echo "::set-output name=versionName::${{ github.ref_name }}"
+          echo "versionName=${{ github.ref_name }}" >> $GITHUB_OUTPUT
       - name: Calculate version code from tag and output it into versionCode
         id: version-code
         run: |
@@ -29,7 +29,7 @@ jobs:
           minor=${tag_array[1]}
           patch=${tag_array[2]}
           version_code=$((major * 1000000 + minor * 1000 + patch))
-          echo "::set-output name=versionCode::$version_code"
+          echo "versionCode=$version_code" >> $GITHUB_OUTPUT
   build-android:
     runs-on: ubuntu-latest
     needs: version
@@ -87,8 +87,8 @@ jobs:
           version_name: ${{ needs.version.outputs.versionName }}
         run: |
           echo "version_code: $version_code"
-          echo "version_name: $versionName"
-          flutter build appbundle --release --version-name $versionName --version-code $version_code
+          echo "version_name: $version_name"
+          flutter build appbundle --release --version-name $version_name --version-code $version_code
       - name: Upload app bundle
         uses: actions/upload-artifact@v3
         with:
@@ -131,8 +131,8 @@ jobs:
           version_name: ${{ needs.version.outputs.versionName }}
         run: |
           echo "version_code: $version_code"
-          echo "version_name: $versionName"
-          flutter build ios --release --no-codesign --version-name $versionName --version-code $version_code
+          echo "version_name: $version_name"
+          flutter build ios --release --no-codesign --version-name $version_name --version-code $version_code
       - name: Upload ios app
         uses: actions/upload-artifact@v3
         with:

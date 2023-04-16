@@ -8,6 +8,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  flutter_version: '3.7.10'
+  java_version: '11'
+
 jobs:
   version:
     runs-on: ubuntu-latest
@@ -35,7 +39,13 @@ jobs:
     needs: version
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - name: Cache Flutter installation
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.flutter_version }}
+      - name: Cache gradle dependencies
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -59,11 +69,19 @@ jobs:
           cache: 'gradle'
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.flutter_version }}
           channel: 'stable'
+      - name: Cache Flutter packages
+        uses: actions/cache@v3
+        with:
+          path: | # get FLUTTER_ROOT from flutter-action
+            ${{ env.FLUTTER_ROOT }}/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 'stable'
-      - run: flutter --version
       - run: flutter pub get
       - name: build the environment
         env:
@@ -100,8 +118,14 @@ jobs:
     needs: version
     steps:
       - uses: actions/checkout@v3
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.flutter_version }}
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.flutter_version }}
           channel: 'stable'
           architecture: 'x64'
       - uses: dart-lang/setup-dart@v1

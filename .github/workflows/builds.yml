@@ -88,7 +88,7 @@ jobs:
         run: |
           echo "version_code: $version_code"
           echo "version_name: $version_name"
-          flutter build appbundle --release --version-name $version_name --version-code $version_code
+          flutter build appbundle --release --build-name $version_name --build-number $version_code
       - name: Upload app bundle
         uses: actions/upload-artifact@v3
         with:
@@ -132,7 +132,7 @@ jobs:
         run: |
           echo "version_code: $version_code"
           echo "version_name: $version_name"
-          flutter build ios --release --no-codesign --version-name $version_name --version-code $version_code
+          flutter build ios --release --no-codesign --build-name $version_name --build-number $version_code
       - name: Upload ios app
         uses: actions/upload-artifact@v3
         with:

@@ -1,10 +1,9 @@
-name: Run ios build
-
+name: Build for Android and iOS
+run-name: >
+  ${{ github.event.pull_request.title }} - ${{ github.workflow }} (#${{ github.run_number }}.${{ github.run_attempt }}) - ${{ github.event_name }} ${{ github.ref }} (from ${{ github.head_ref }} to ${{ github.base_ref }})
 on:
   pull_request:
-    branches: [ main ]
-  merge_group:
-    types: [ checks_requested ]
+    branches: [ main, dev ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -21,7 +20,16 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - uses: actions/setup-java@v2
+      - name: Prepare workspace files - keystore and key.properties
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEY_PROPERTIES_BASE64: ${{ secrets.KEY_PROPERTIES_BASE64 }}
+        run: |
+          echo $KEYSTORE_BASE64 | base64 --decode > "${{ github.workspace }}/android/app/key.jks"
+          echo $KEY_PROPERTIES_BASE64 | base64 --decode > "${{ github.workspace }}/android/key.properties"
+          echo "key.properties file: $(ls -l "${{ github.workspace }}/android/key.properties")"
+          echo "key.jks file: $(ls -l "${{ github.workspace }}/android/app/key.jks")"
+      - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
@@ -31,7 +39,7 @@ jobs:
           channel: 'stable'
       - uses: dart-lang/setup-dart@v1
         with:
-          channel: 'stable'
+          sdk: 'stable'
       - run: flutter --version
       - run: flutter pub get
       - name: build the environment
@@ -50,17 +58,9 @@ jobs:
         run: |
           flutter pub global activate intl_utils && flutter pub global run intl_utils:generate
       - run: flutter test
-      - name: Decode keystore
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        run: echo $KEYSTORE_BASE64 | base64 --decode > android/app/key.jks
-      - name: Decode key.properties
-        env:
-          KEY_PROPERTIES_BASE64: ${{ secrets.KEY_PROPERTIES_BASE64 }}
-        run: echo $KEY_PROPERTIES_BASE64 | base64 --decode > android/key.properties
       - run: flutter build appbundle --release
       - name: Upload app bundle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app-release-aab
           path: build/app/outputs/bundle/release/app-release.aab
@@ -75,7 +75,7 @@ jobs:
           architecture: 'x64'
       - uses: dart-lang/setup-dart@v1
         with:
-          channel: 'stable'
+          sdk: 'stable'
       - run: flutter --version
       - run: flutter pub get
       - name: build the environment
@@ -96,7 +96,7 @@ jobs:
       - run: flutter test
       - run: flutter build ios --release --no-codesign
       - name: Upload ios app
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: app-release-ipa
-          path: build/ios/archive/Runner.xcarchive
+          path: build/ios/iphoneos/Runner.app

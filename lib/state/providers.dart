@@ -97,6 +97,10 @@ final adsConfigurationProvider = Provider<AdsConfiguration>((ref) {
   return AdsConfiguration(environment, ref.watch(_platformConfigProvider));
 });
 
+final nativeAdIdProvider = Provider<String>((ref) {
+  return ref.watch(adsConfigurationProvider.select((value) => value.nativeId));
+});
+
 final bannerAdsProvider =
     FutureProvider.autoDispose.family<BannerAd, int>((ref, width) async {
   final completer = Completer<BannerAd>();

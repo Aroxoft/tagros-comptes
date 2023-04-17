@@ -4,20 +4,64 @@ run-name: >
 
 on:
   pull_request:
-    branches: [ dev, main ]
+    branches: [ dev ]
   merge_group:
     types: [ checks_requested ]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  flutter_version: '3.7.10'
+  java_version: '11'
+
 jobs:
+  format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache Flutter installation
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.flutter_version }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter_version }}
+          channel: 'stable'
+      - name: Cache Flutter packages
+        uses: actions/cache@v3
+        with:
+          path: | # get FLUTTER_ROOT from flutter-action
+            ${{ env.FLUTTER_ROOT }}/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Format code
+        run: dart format . --set-exit-if-changed
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Cache Flutter installation
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.os }}-flutter-install-cache-${{ env.flutter_version }}
       - uses: subosito/flutter-action@v2
         with:
+          flutter-version: ${{ env.flutter_version }}
           channel: 'stable'
+      - name: Cache Flutter packages
+        uses: actions/cache@v3
+        with:
+          path: | # get FLUTTER_ROOT from flutter-action
+            ${{ env.FLUTTER_ROOT }}/.pub-cache
+          key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-cache-
       - run: flutter --version
       - run: flutter pub get
       - name: Generate files (freezed, json_serializable)

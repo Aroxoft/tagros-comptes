@@ -1,0 +1,3 @@
+[submodule "android/fastlane"]
+	path = android/fastlane
+	url = git@github.com:Aroxoft/fastlane-tagros.git

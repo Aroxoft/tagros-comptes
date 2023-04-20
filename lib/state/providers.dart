@@ -19,6 +19,7 @@ import 'package:tagros_comptes/state/bloc/game_notifier.dart';
 import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
+import 'package:tagros_comptes/ui/table_screen/ads_calculator.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase(Database.openConnection());
@@ -93,12 +94,46 @@ final _platformConfigProvider = Provider<PlatformConfiguration>((ref) {
   return PlatformConfiguration();
 });
 
+final adsCalculatorProvider = Provider<AdsCalculator>((ref) {
+  return AdsCalculator();
+});
+
 final adsConfigurationProvider = Provider<AdsConfiguration>((ref) {
   return AdsConfiguration(environment, ref.watch(_platformConfigProvider));
 });
 
 final nativeAdIdProvider = Provider<String>((ref) {
   return ref.watch(adsConfigurationProvider.select((value) => value.nativeId));
+});
+
+final nativeAdProvider =
+    FutureProvider.autoDispose.family<NativeAd, int>((ref, index) {
+  final completer = Completer<NativeAd>();
+  NativeAd(
+    adUnitId:
+        ref.watch(adsConfigurationProvider.select((value) => value.nativeId)),
+    request: const AdRequest(),
+    factoryId: 'listTile',
+    listener: NativeAdListener(
+      onAdLoaded: (Ad ad) {
+        if (kDebugMode) {
+          print('Native Ad loaded: $ad.');
+        }
+        completer.complete(ad as NativeAd);
+      },
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        ad.dispose();
+        if (kDebugMode) {
+          print('Ad failed to load: $error');
+        }
+        completer.completeError(error);
+      },
+    ),
+  ).load();
+  ref.onDispose(() {
+    completer.future.then((value) => value.dispose());
+  });
+  return completer.future;
 });
 
 final bannerAdsProvider =

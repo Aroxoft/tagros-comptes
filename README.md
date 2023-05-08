@@ -37,6 +37,8 @@ export APPSPECTOR=<my-android-appspector-key> # it is for debugging, you can als
 export APPSPECTORIOS=<my-ios-appspector-key> # same as above
 dart tool/env.dart
 flutter clean # (except the first time)
+flutter pub global activate intl_utils # if the first time
+flutter pub global run intl_utils:generate
 flutter pub get
 flutter pub run build_runner build --delete-conflicting-outputs
 ``` 

@@ -4,6 +4,8 @@
 <dict>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-2416708128330660~5670926248</string>
+	<key>GADDelayAppMeasurementInit</key>
+    <true/>
 	<key>SKAdNetworkItems</key>
     <array>
       <dict>

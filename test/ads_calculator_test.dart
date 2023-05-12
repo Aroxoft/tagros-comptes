@@ -1,4 +1,3 @@
-/// Tests for the `AdsCalculator` class
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tagros_comptes/ui/table_screen/ads_calculator.dart';
 

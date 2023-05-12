@@ -11,6 +11,8 @@
     <application
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2416708128330660~5024058989" />
 
        <activity
            android:name=".MainActivity"

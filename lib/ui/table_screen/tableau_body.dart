@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
@@ -18,6 +19,7 @@ class TableauBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeColorProvider).maybeWhen(
         data: (data) => data, orElse: () => ThemeColor.defaultTheme());
+    final adCalculator = ref.watch(adsCalculatorProvider);
     return Column(children: [
       Padding(
         padding: const EdgeInsets.all(8),
@@ -110,15 +112,23 @@ class TableauBody extends ConsumerWidget {
               ),
             );
           }
+          final size = adCalculator.getFullListSize(itemsSize: entries.length);
           return Expanded(
             child: ListView.builder(
-                itemCount: entries.length,
-                itemBuilder: (BuildContext context, int index) {
+                itemCount: size,
+                itemBuilder: (BuildContext context, int i) {
+                  if (adCalculator.isAd(index: i, fullSize: size)) {
+                    return _AdRow(ref: ref, index: i);
+                  }
+                  final index =
+                      adCalculator.getItemIndex(position: i, fullSize: size);
+                  if (index == null) {
+                    return const SizedBox();
+                  }
                   final Map<String, double> calculateGain =
                       calculateGains(entries[index], players.toList());
                   final gains =
                       transformGainsToList(calculateGain, players.toList());
-                  // var key = GlobalKey<SlidableState>();
                   return Slidable(
                     key: ValueKey(index),
                     startActionPane: ActionPane(
@@ -195,5 +205,27 @@ class TableauBody extends ConsumerWidget {
         },
       ),
     ]);
+  }
+}
+
+class _AdRow extends StatelessWidget {
+  const _AdRow({
+    required this.ref,
+    required this.index,
+  });
+
+  final WidgetRef ref;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return ref.watch(nativeAdProvider(index)).when(
+          data: (ad) => SizedBox(height: 50, child: AdWidget(ad: ad)),
+          error: (error, stack) => const SizedBox(),
+          loading: () => const SizedBox(
+            height: 50,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+        );
   }
 }

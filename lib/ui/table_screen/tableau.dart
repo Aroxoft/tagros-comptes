@@ -35,7 +35,7 @@ class TableauPage extends ConsumerWidget {
                     data: (data) => data);
                 Flushbar(
                   flushbarStyle: FlushbarStyle.GROUNDED,
-                  flushbarPosition: FlushbarPosition.BOTTOM,
+                  flushbarPosition: FlushbarPosition.TOP,
                   title: S.of(context).successAddingGame,
                   duration: const Duration(seconds: 2),
                   titleColor: theme.textColor,

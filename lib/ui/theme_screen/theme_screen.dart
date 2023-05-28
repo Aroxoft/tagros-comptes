@@ -79,7 +79,7 @@ class ThemePreview extends HookConsumerWidget {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: const [
-            PreviewScreen(child: MenuScreen()),
+            PreviewScreen(child: MenuScreen(showAds: false)),
             PreviewScreen(child: TableauPage()),
             PreviewScreen(child: AddModifyEntry()),
           ],

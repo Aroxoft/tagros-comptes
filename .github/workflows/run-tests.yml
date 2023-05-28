@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  flutter_version: '3.7.10'
+  flutter_version: '3.10.0'
   java_version: '11'
 
 jobs:
@@ -64,6 +64,16 @@ jobs:
             ${{ runner.os }}-pub-cache-
       - run: flutter --version
       - run: flutter pub get
+      - name: build the environment
+        env:
+          ANDROID_APP_ID: ${{ secrets.ANDROID_APP_ID }}
+          ANDROID_BANNER_ID: ${{ secrets.ANDROID_BANNER_ID }}
+          ANDROID_NATIVE_ID: ${{ secrets.ANDROID_NATIVE_ID }}
+          IOS_APP_ID: ${{ secrets.IOS_APP_ID }}
+          IOS_BANNER_ID: ${{ secrets.IOS_BANNER_ID }}
+          IOS_NATIVE_ID: ${{ secrets.IOS_NATIVE_ID }}
+          TEST_ADS: ${{ secrets.TEST_ADS }}
+        run: dart tool/env.dart
       - name: Generate files (freezed, json_serializable)
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Generate translations

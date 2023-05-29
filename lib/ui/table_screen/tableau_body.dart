@@ -3,10 +3,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game/info_entry_player.dart';
 import 'package:tagros_comptes/model/game/player.dart';
 import 'package:tagros_comptes/model/theme/theme.dart';
+import 'package:tagros_comptes/navigation/router.dart';
 import 'package:tagros_comptes/services/calculous/calculus.dart';
 import 'package:tagros_comptes/state/providers.dart';
 
@@ -46,7 +46,7 @@ class TableauBody extends ConsumerWidget {
               bottom: BorderSide(color: theme.horizontalColor, width: 4)),
         ),
         child: StreamBuilder(
-            stream: ref.watch(entriesProvider.select((value) => value.sum)),
+            stream: ref.watch(entriesProvider.select((value) => value?.sum)),
             builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
               if (snapshot.hasError) {
                 return Center(
@@ -82,7 +82,8 @@ class TableauBody extends ConsumerWidget {
             }),
       ),
       StreamBuilder<List<InfoEntryPlayerBean>>(
-        stream: ref.watch(entriesProvider.select((value) => value.infoEntries)),
+        stream:
+            ref.watch(entriesProvider.select((value) => value?.infoEntries)),
         builder: (BuildContext context,
             AsyncSnapshot<List<InfoEntryPlayerBean>> snapshot) {
           if (snapshot.hasError) {
@@ -141,17 +142,11 @@ class TableauBody extends ConsumerWidget {
                             foregroundColor: theme.accentColor.isLight
                                 ? Colors.black87
                                 : Colors.white70,
-                            onPressed: (context) async {
-                              final modified = await navigateToAddModify(
-                                  context,
-                                  game: ref.read(gameProvider),
-                                  infoEntry: entries[index]);
-                              if (modified != null) {
-                                ref
-                                    .read(entriesProvider)
-                                    .inModifyEntry
-                                    .add(modified);
-                              }
+                            onPressed: (context) {
+                              navigateToAddModify(
+                                context,
+                                infoEntryId: entries[index].infoEntry.id,
+                              );
                             },
                           ),
                         ]),
@@ -168,10 +163,8 @@ class TableauBody extends ConsumerWidget {
                           onPressed: (context) {
                             ref
                                 .read(entriesProvider)
-                                .inDeleteEntry
+                                ?.inDeleteEntry
                                 .add(entries[index]);
-
-                            // key.currentState.dismiss(); // todo see
                           },
                         ),
                       ],

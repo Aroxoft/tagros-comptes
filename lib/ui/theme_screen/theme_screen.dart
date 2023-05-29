@@ -34,8 +34,8 @@ class ThemeScreen extends HookConsumerWidget {
                   S.of(context).themeTabCustomize
                 ].map((e) => Tab(text: e)).toList()),
           ),
-          body: Column(
-            children: const [
+          body: const Column(
+            children: [
               ThemePreview(),
               Expanded(
                 child: TabBarView(
@@ -72,7 +72,7 @@ class ThemePreview extends HookConsumerWidget {
       height: 200,
       child: ProviderScope(
         overrides: [
-          gameProvider.overrideWithValue(game),
+          currentGameProvider.overrideWith((ref) => Future.value(game)),
           gamesDaoProvider.overrideWithValue(ref.watch(_fakeDaoProvider)),
           navigationPrefixProvider.overrideWithValue("theme-preview-"),
         ],

@@ -6,7 +6,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/model/game/game_with_players.dart';
+import 'package:tagros_comptes/model/game/info_entry_player.dart';
 import 'package:tagros_comptes/model/theme/theme.dart';
+import 'package:tagros_comptes/navigation/router.dart';
 import 'package:tagros_comptes/services/config/env_configuration.dart';
 import 'package:tagros_comptes/services/config/platform_configuration.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
@@ -53,10 +55,29 @@ final gameChangeProvider = Provider<GameNotifier>((ref) {
   return gameChange;
 });
 
-final gameProvider = Provider<GameWithPlayers>((ref) {
-  throw StateError("no game selected");
+final selectedGameIdProvider = Provider<int?>((ref) {
+  return null;
+});
+final selectedInfoEntryIdProvider = Provider<int?>((ref) {
+  return null;
 });
 
+final currentGameProvider = FutureProvider<GameWithPlayers>((ref) {
+  final gameId = ref.watch(selectedGameIdProvider);
+  if (gameId == null) throw StateError("no game selected");
+  return ref.watch(gamesDaoProvider).getGameWithPlayers(gameId);
+}, dependencies: [selectedGameIdProvider]);
+
+final currentPlayersProvider = FutureProvider((ref) async {
+  final game = ref.watch(currentGameProvider).value;
+  return game?.players;
+}, dependencies: [currentGameProvider]);
+
+final currentInfoEntryProvider = FutureProvider<InfoEntryPlayerBean?>((ref) {
+  final entryId = ref.watch(selectedInfoEntryIdProvider);
+  if (entryId == null) return null;
+  return ref.watch(gamesDaoProvider).getInfoEntry(entryId);
+}, dependencies: [selectedInfoEntryIdProvider]);
 // final optionsProvider = StateProvider<ThemeColor>((ref) {
 //   return ThemeColor();
 // });
@@ -79,21 +100,29 @@ final themeColorProvider = StreamProvider<ThemeColor>(
 final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
     (ref) => ThemeScreenViewModel(ref.watch(themeProvider)));
 
-final entriesProvider = Provider<EntriesDbBloc>((ref) {
-  final entries = EntriesDbBloc(ref.watch(gameProvider),
-      gamesDao: ref.watch(gamesDaoProvider));
+final entriesProvider = Provider<EntriesDbBloc?>((ref) {
+  final currentGame = ref.watch(currentGameProvider).value;
+  if (currentGame == null) return null;
+  final entries =
+      EntriesDbBloc(currentGame, gamesDao: ref.watch(gamesDaoProvider));
   ref.onDispose(() {
     entries.dispose();
   });
   return entries;
-}, dependencies: [gameProvider, gamesDaoProvider]);
+}, dependencies: [currentGameProvider, gamesDaoProvider]);
 
 final navigationPrefixProvider = Provider<String>((ref) => "");
 
 final _platformConfigProvider = Provider<PlatformConfiguration>((ref) {
   return PlatformConfiguration();
 });
+// region Navigation
+final routerProvider = Provider<MyRouter>((ref) {
+  return MyRouter();
+});
+// endregion
 
+// region Ads
 final adsCalculatorProvider = Provider<AdsCalculator>((ref) {
   return AdsCalculator();
 });
@@ -171,3 +200,4 @@ final bannerAdsProvider =
   });
   return completer.future;
 });
+// endregion

@@ -21,7 +21,7 @@ const String _defense = "DEFENSE";
 
 List<Camp> fromDbPetit(String? petits) {
   if (petits == null || petits.isEmpty) return [];
-  return (petits.split(",").map((e) {
+  return petits.split(",").map((e) {
     switch (e) {
       case _attack:
         return Camp.attack;
@@ -29,7 +29,7 @@ List<Camp> fromDbPetit(String? petits) {
         return Camp.defense;
     }
     return null;
-  }).whereNotNull())
+  }).whereNotNull()
       .toList();
 }
 

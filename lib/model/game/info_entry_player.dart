@@ -29,7 +29,7 @@ class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
       player?.name ?? '',
       infoEntry.prise.displayName,
       withPlayers?.firstOrNull?.name ?? '',
-      withPlayers?.length == 2 ? (withPlayers?.lastOrNull?.name) ?? '' : '',
+      withPlayers?.length == 2 ? withPlayers?.lastOrNull?.name ?? '' : '',
       infoEntry.points,
       campDesPoints,
       infoEntry.nbBouts,

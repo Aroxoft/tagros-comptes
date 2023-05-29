@@ -14,9 +14,7 @@ class DialogChoosePlayers extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       title: Text(S.of(context).dialogNewGameTitle),
-      content: DialogPlayerBody(
-        doAfterChosen: doAfterChosen,
-      ),
+      content: const DialogPlayerBody(),
       actions: <Widget>[
         // error display
         ref.watch(choosePlayerProvider.select((value) {
@@ -41,8 +39,7 @@ class DialogChoosePlayers extends ConsumerWidget {
 }
 
 class DialogPlayerBody extends HookConsumerWidget {
-  const DialogPlayerBody({super.key, required this.doAfterChosen});
-  final DoAfterChosen doAfterChosen;
+  const DialogPlayerBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

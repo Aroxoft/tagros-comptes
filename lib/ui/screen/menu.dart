@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/model/types/functions.dart';
+import 'package:tagros_comptes/navigation/router.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/ui/dialog/dialog_games.dart';
@@ -65,13 +65,14 @@ class MenuBody extends StatelessWidget {
         Consumer(
           builder: (context, ref, child) => ElevatedButton(
             onPressed: () {
-              showDialogPlayers(context,
-                  doAfter: (players) => navigateToTableau(context,
-                      gamesDao: ref.read(gamesDaoProvider),
-                      game: GameWithPlayers(
-                          game: GamesCompanion.insert(
-                              nbPlayers: players.length, date: DateTime.now()),
-                          players: players)));
+              showDialogPlayers(context, doAfter: (players) async {
+                final gameId = await ref.read(gamesDaoProvider).newGame(
+                    GameWithPlayers(
+                        players: players,
+                        game: GamesCompanion.insert(
+                            nbPlayers: players.length, date: DateTime.now())));
+                navigateToGame(context, gameId: gameId);
+              });
             },
             child: Text(S.of(context).newGame),
           ),

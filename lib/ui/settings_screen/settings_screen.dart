@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/ui/clean_players_screen/clean_players_screen.dart';
 import 'package:tagros_comptes/ui/guide_screen/guide_screen.dart';
@@ -22,25 +23,25 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               title: Text(S.of(context).settingsCleanUnusedPlayers),
               onTap: () {
-                Navigator.of(context).pushNamed(CleanPlayersScreen.routeName);
+                context.goNamed(CleanPlayersScreen.routeName);
               },
             ),
             ListTile(
               title: Text(S.of(context).settingsGuide),
               onTap: () {
-                Navigator.of(context).pushNamed(GuideScreen.routeName);
+                context.goNamed(GuideScreen.routeName);
               },
             ),
             ListTile(
               title: Text(S.of(context).settingsTheme),
               onTap: () {
-                Navigator.of(context).pushNamed(ThemeScreen.routeName);
+                context.goNamed(ThemeScreen.routeName);
               },
             ),
             ListTile(
               title: Text(S.of(context).settingsBuyPremium),
               onTap: () {
-                Navigator.of(context).pushNamed(BuyScreen.routeName);
+                context.goNamed(BuyScreen.routeName);
               },
             ),
           ],

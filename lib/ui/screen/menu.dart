@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
@@ -28,7 +29,7 @@ class MenuScreen extends HookConsumerWidget {
             IconButton(
                 icon: const Icon(Icons.settings),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(SettingsScreen.routeName);
+                  context.goNamed(SettingsScreen.routeName);
                 })
           ],
         ),

@@ -21,7 +21,7 @@
   "campTypeDefense": "Défense",
   "campTypeNone": "Aucun",
   "addModifyTitleAttack": "Attaque",
-  "addModifyAppBarTitle": "{add, select, add{Ajout d'une partie} other{Modification d'une partie}}",
+  "addModifyAppBarTitle": "{add, select, add{Ajout d'une manche} other{Modification d'une manche}}",
   "addModifyMissingTitle": "Il manque des informations",
   "addModifyMissingMessage": "Pour pouvoir valider, veuillez ajouter les informations manquantes",
   "preneur": "Preneur",

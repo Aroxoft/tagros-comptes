@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:tagros_comptes/model/game/game_with_players.dart';
-import 'package:tagros_comptes/model/game/info_entry_player.dart';
-import 'package:tagros_comptes/model/game/player.dart';
-import 'package:tagros_comptes/services/calculous/calculus.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
+import 'package:tagros_comptes/tagros/domain/calculus.dart';
+import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
+import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
+import 'package:tagros_comptes/tagros/domain/game/player.dart';
 
 class EntriesDbBloc {
   // Create a broadcast controller that allows this stream to be listened
@@ -61,7 +61,7 @@ class EntriesDbBloc {
 
   Future<void> _handleAddEntry(InfoEntryPlayerBean entry) async {
     // Create the entry in the database
-    await _gamesDao.newEntry(entry, game: _game.game);
+    await _gamesDao.newEntry(entry, gameId: _game.game.id.value);
   }
 
   Future<void> _handleDeleteEntry(InfoEntryPlayerBean entry) async {

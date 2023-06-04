@@ -48,6 +48,7 @@ dependencies:
   rxdart: ^0.27.7
   sqlite3_flutter_libs: ^0.5.14
   timeago: ^3.3.0
+  tuple: ^2.0.1
   universal_platform: ^1.0.0+1
 
 dev_dependencies:

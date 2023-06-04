@@ -5,21 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/.env.dart';
-import 'package:tagros_comptes/model/game/game_with_players.dart';
-import 'package:tagros_comptes/model/theme/theme.dart';
-import 'package:tagros_comptes/services/config/env_configuration.dart';
-import 'package:tagros_comptes/services/config/platform_configuration.dart';
+import 'package:tagros_comptes/config/env_configuration.dart';
+import 'package:tagros_comptes/config/platform_configuration.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/services/db/platforms/database.dart';
 import 'package:tagros_comptes/services/db/players_dao.dart';
-import 'package:tagros_comptes/services/theme/theme_service.dart';
 import 'package:tagros_comptes/state/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/state/bloc/game_notifier.dart';
 import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
-import 'package:tagros_comptes/ui/table_screen/ads_calculator.dart';
+import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
+import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
+import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
+import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/theme/domain/theme_service.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase(Database.openConnection());
@@ -52,6 +53,30 @@ final gameChangeProvider = Provider<GameNotifier>((ref) {
   });
   return gameChange;
 });
+final selectedGameIdProvider = Provider<int?>((ref) {
+  return null;
+});
+
+final selectedInfoEntryIdProvider = Provider<int?>((ref) {
+  return null;
+});
+
+final currentGameProvider = FutureProvider<GameWithPlayers>((ref) {
+  final gameId = ref.watch(selectedGameIdProvider);
+  if (gameId == null) throw StateError("no game selected");
+  return ref.watch(gamesDaoProvider).getGameWithPlayers(gameId);
+}, dependencies: [selectedGameIdProvider]);
+
+final currentPlayersProvider = FutureProvider((ref) async {
+  final game = ref.watch(currentGameProvider).value;
+  return game?.players;
+}, dependencies: [currentGameProvider]);
+
+final currentInfoEntryProvider = FutureProvider<InfoEntryPlayerBean?>((ref) {
+  final entryId = ref.watch(selectedInfoEntryIdProvider);
+  if (entryId == null) return null;
+  return ref.watch(gamesDaoProvider).getInfoEntry(entryId);
+}, dependencies: [selectedInfoEntryIdProvider]);
 
 final gameProvider = Provider<GameWithPlayers>((ref) {
   throw StateError("no game selected");

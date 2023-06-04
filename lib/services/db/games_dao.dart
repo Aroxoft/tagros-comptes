@@ -1,13 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tagros_comptes/model/game/camp.dart';
-import 'package:tagros_comptes/model/game/game_with_players.dart';
-import 'package:tagros_comptes/model/game/info_entry.dart';
-import 'package:tagros_comptes/model/game/info_entry_player.dart';
-import 'package:tagros_comptes/model/game/player.dart';
-import 'package:tagros_comptes/model/game/poignee.dart';
-import 'package:tagros_comptes/model/game/prise.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/tagros/domain/game/camp.dart';
+import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
+import 'package:tagros_comptes/tagros/domain/game/info_entry.dart';
+import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
+import 'package:tagros_comptes/tagros/domain/game/player.dart';
+import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
+import 'package:tagros_comptes/tagros/domain/game/prise.dart';
 
 part 'games_dao.g.dart';
 
@@ -41,6 +41,27 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
         }
       }
       return gameWithPlayers.values.toList();
+    });
+  }
+
+  Stream<GameWithPlayers> watchGameWithPlayers({required int? gameId}) {
+    if (gameId == null) return const Stream.empty();
+    final gameStream = gameWithPlayers(gameId: gameId).watch();
+    return gameStream.map((event) {
+      GameWithPlayers? game;
+      for (final row in event) {
+        final player = Player(pseudo: row.playerName, id: row.playerId);
+        if (game == null) {
+          game = GameWithPlayers(
+              players: [player],
+              game:
+                  Game(id: row.gameId, nbPlayers: row.nbPlayers, date: row.date)
+                      .toCompanion(true));
+        } else {
+          game.players.add(Player(pseudo: row.playerName, id: row.playerId));
+        }
+      }
+      return game!;
     });
   }
 
@@ -84,7 +105,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 
 // region Insert
   Future<int> newEntry(InfoEntryPlayerBean infoEntry,
-      {required GamesCompanion game}) async {
+      {required int gameId}) async {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
@@ -94,10 +115,9 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       }
     }
     return transaction(() async {
-      await (update(games)..where((tbl) => tbl.id.equals(game.id.value)))
-          .write(game.copyWith(date: Value(DateTime.now())));
-      return into(infoEntries).insert(InfoEntriesCompanion.insert(
-        game: game.id.value,
+      await updateGameDate(gameId: gameId);
+      final id = await into(infoEntries).insert(InfoEntriesCompanion.insert(
+        game: gameId,
         player: infoEntry.player!.id!,
         points: infoEntry.infoEntry.points,
         prise: toDbPrise(infoEntry.infoEntry.prise),
@@ -108,6 +128,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
         with1: with1,
         with2: with2,
       ));
+      return id;
     });
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tagros_comptes/services/config/env_configuration.dart';
-import 'package:tagros_comptes/services/config/platform_configuration.dart';
+import 'package:tagros_comptes/config/env_configuration.dart';
+import 'package:tagros_comptes/config/platform_configuration.dart';
 
 void main() {
   group('Given a test environment', () {

@@ -43,7 +43,7 @@
   "campTypeDefense": "Defense",
   "campTypeNone": "None",
   "addModifyTitleAttack": "Attack",
-  "addModifyAppBarTitle": "{add, select, add{Add a game} other{Edit a game}}",
+  "addModifyAppBarTitle": "{add, select, add{Add a round} other{Edit a round}}",
   "@addModifyAppBarTitle": {
     "description": "Add or modify screen title",
     "placeholders": {

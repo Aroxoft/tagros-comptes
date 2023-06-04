@@ -8,28 +8,44 @@ select entry.id,
        game,
        player    as playerId,
        p.pseudo  as playerName,
-       with1     as with1Id,
-       w1.pseudo as with1Name,
-       with2     as with2Id,
-       w2.pseudo as with2Name,
+       with1     AS with1Id,
+       w1.pseudo AS with1Name,
+       with2     AS with2Id,
+       w2.pseudo AS with2Name,
        points,
        points_for_attack,
        petit_au_bout,
        poignee,
        prise,
        nb_bouts
-from info_entries entry
-         left outer join players p on p.id = entry.player
-         left outer join players w1 on w1.id = entry.with1
-         left outer join players w2 on w2.id = entry.with2
-where entry.game = :gameId;
+FROM info_entries entry
+         LEFT OUTER JOIN players p ON p.id = entry.player
+         LEFT OUTER JOIN players w1 ON w1.id = entry.with1
+         LEFT OUTER JOIN players w2 ON w2.id = entry.with2
+WHERE entry.game = :gameId;
 
-allGamesWithPlayer:
-select g.id     as gameId,
+allGamesWithPlayer AS GameWithPlayersRow:
+SELECT g.id     AS gameId,
        g.nb_players,
        g.date,
-       p.id     as playerId,
-       p.pseudo as playerName
-from games g
-         inner join player_games pg on pg.game = g.id
-         inner join players p on pg.player = p.id;
+       p.id     AS playerId,
+       p.pseudo AS playerName
+FROM games g
+         INNER JOIN player_games pg ON pg.game = g.id
+         INNER JOIN players p ON pg.player = p.id;
+
+gameWithPlayers AS GameWithPlayersRow:
+SELECT g.id     AS gameId,
+       g.nb_players,
+       g.date,
+       p.id     AS playerId,
+       p.pseudo AS playerName
+FROM games g
+         INNER JOIN player_games pg ON pg.game = g.id
+         INNER JOIN players p ON pg.player = p.id
+WHERE g.id = :gameId;
+
+updateGameDate(:gameId AS INTEGER):
+update games
+set date = date()
+where id = :gameId;

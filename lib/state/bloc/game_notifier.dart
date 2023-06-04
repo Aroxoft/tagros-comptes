@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:tagros_comptes/model/game/game_with_players.dart';
 import 'package:tagros_comptes/services/db/games_dao.dart';
+import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 
 class GameNotifier {
   final _deleteGameController = StreamController<GameWithPlayers>.broadcast();

@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/model/game/nb_players.dart';
 import 'package:tagros_comptes/services/db/app_database.dart';
 import 'package:tagros_comptes/services/db/players_dao.dart';
+import 'package:tagros_comptes/tagros/domain/game/nb_players.dart';
 
 class ChoosePlayerVM extends ChangeNotifier {
   ChoosePlayerVM(PlayersDao playersDao)

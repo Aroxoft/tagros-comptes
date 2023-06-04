@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/model/theme/theme.dart';
-import 'package:tagros_comptes/services/theme/theme_service.dart';
+import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/theme/domain/theme_service.dart';
 
 class ThemeScreenViewModel extends ChangeNotifier {
   ThemeScreenViewModel(this._themeService)

@@ -9,10 +9,10 @@ class PlayerBean with _$PlayerBean {
 
   PlayerBean._();
 
-  static PlayerBean? fromDb(Player? player) {
-    if (player == null) return null;
-    return PlayerBean(name: player.pseudo, id: player.id);
-  }
+  factory PlayerBean.fromDb(Player player) => PlayerBean(
+        name: player.pseudo,
+        id: player.id,
+      );
 
   @override
   String toString() {

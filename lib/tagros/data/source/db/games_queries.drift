@@ -47,5 +47,5 @@ WHERE g.id = :gameId;
 
 updateGameDate(:gameId AS INTEGER):
 update games
-set date = date()
+set date = unixepoch()
 where id = :gameId;

@@ -29,7 +29,8 @@ class AddModifyEntry extends HookConsumerWidget {
     final add = useState(false);
     final entry = useState(InfoEntryBean(points: 0, nbBouts: 0));
     final playersArg = ref.watch(gameProvider.select((value) => value.players));
-    final playerAttack = useState(PlayerBean.fromDb(playersArg.last));
+    final ValueNotifier<PlayerBean?> playerAttack =
+        useState(PlayerBean.fromDb(playersArg.last));
     final withPlayers = useState<List<PlayerBean?>?>(null);
     final textPointsController = useTextEditingController(text: "0");
     final args = useMemoized(() =>
@@ -86,7 +87,7 @@ class AddModifyEntry extends HookConsumerWidget {
                   withPlayers: withPlayers.value,
                   attack: playerAttack.value)) {
                 Navigator.of(context).pop(InfoEntryPlayerBean(
-                    player: playerAttack.value,
+                    player: playerAttack.value!,
                     infoEntry: entry.value,
                     withPlayers: withPlayers.value));
               } else {

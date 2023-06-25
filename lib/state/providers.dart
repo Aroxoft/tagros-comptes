@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/config/env_configuration.dart';
 import 'package:tagros_comptes/config/platform_configuration.dart';
-import 'package:tagros_comptes/state/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/state/bloc/game_notifier.dart';
 import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
@@ -18,7 +17,6 @@ import 'package:tagros_comptes/tagros/data/source/db/platforms/database.dart';
 import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
-import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/theme/data/theme_repository_impl.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 import 'package:tagros_comptes/theme/domain/theme_repository.dart';
@@ -33,10 +31,10 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 
 final playerDaoProvider = Provider<PlayersDao>((ref) {
   return ref.watch(databaseProvider.select((value) => value.playersDao));
-});
+}, dependencies: [databaseProvider]);
 final gamesDaoProvider = Provider<GamesDao>((ref) {
   return ref.watch(databaseProvider.select((value) => value.gamesDao));
-});
+}, dependencies: [databaseProvider]);
 
 final cleanPlayerProvider = ChangeNotifierProvider<CleanPlayersVM>((ref) {
   return CleanPlayersVM(ref.watch(playerDaoProvider));
@@ -62,23 +60,6 @@ final selectedInfoEntryIdProvider = Provider<int?>((ref) {
   return null;
 });
 
-final currentGameProvider = FutureProvider<GameWithPlayers>((ref) {
-  final gameId = ref.watch(selectedGameIdProvider);
-  if (gameId == null) throw StateError("no game selected");
-  return ref.watch(gamesDaoProvider).getGameWithPlayers(gameId);
-}, dependencies: [selectedGameIdProvider]);
-
-final currentPlayersProvider = FutureProvider((ref) async {
-  final game = ref.watch(currentGameProvider).value;
-  return game?.players;
-}, dependencies: [currentGameProvider]);
-
-final currentInfoEntryProvider = FutureProvider<InfoEntryPlayerBean?>((ref) {
-  final entryId = ref.watch(selectedInfoEntryIdProvider);
-  if (entryId == null) return null;
-  return ref.watch(gamesDaoProvider).getInfoEntry(entryId);
-}, dependencies: [selectedInfoEntryIdProvider]);
-
 final gameProvider = Provider<GameWithPlayers>((ref) {
   throw StateError("no game selected");
 });
@@ -101,15 +82,6 @@ final themeColorProvider = StreamProvider<ThemeColor>(
 
 final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
     (ref) => ThemeScreenViewModel(ref.watch(themeRepository)));
-
-final entriesProvider = Provider<EntriesDbBloc>((ref) {
-  final entries = EntriesDbBloc(ref.watch(gameProvider),
-      gamesDao: ref.watch(gamesDaoProvider));
-  ref.onDispose(() {
-    entries.dispose();
-  });
-  return entries;
-}, dependencies: [gameProvider, gamesDaoProvider]);
 
 final navigationPrefixProvider = Provider<String>((ref) => "");
 

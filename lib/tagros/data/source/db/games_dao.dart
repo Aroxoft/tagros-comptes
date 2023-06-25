@@ -44,8 +44,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
     });
   }
 
-  Stream<GameWithPlayers> watchGameWithPlayers({required int? gameId}) {
-    if (gameId == null) return const Stream.empty();
+  Stream<GameWithPlayers> watchGameWithPlayers({required int gameId}) {
     final gameStream = gameWithPlayers(gameId: gameId).watch();
     return gameStream.map((event) {
       GameWithPlayers? game;
@@ -118,7 +117,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       await updateGameDate(gameId: gameId);
       final id = await into(infoEntries).insert(InfoEntriesCompanion.insert(
         game: gameId,
-        player: infoEntry.player!.id!,
+        player: infoEntry.player.id!,
         points: infoEntry.infoEntry.points,
         prise: toDbPrise(infoEntry.infoEntry.prise),
         nbBouts: infoEntry.infoEntry.nbBouts,
@@ -179,7 +178,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 
 // region update
   Future<int> updateEntry(InfoEntryPlayerBean infoEntry,
-      {required GamesCompanion game}) async {
+      {required int gameId}) async {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
@@ -189,12 +188,11 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       }
     }
     return transaction(() async {
-      await (update(games)..where((tbl) => tbl.id.equals(game.id.value)))
-          .write(game.copyWith(date: Value(DateTime.now())));
+      await updateGameDate(gameId: gameId);
       return (update(infoEntries)
             ..where((tbl) => tbl.id.equalsNullable(infoEntry.infoEntry.id)))
           .write(InfoEntriesCompanion(
-        player: Value(infoEntry.player!.id!),
+        player: Value(infoEntry.player.id!),
         points: Value(infoEntry.infoEntry.points),
         prise: Value(toDbPrise(infoEntry.infoEntry.prise)),
         nbBouts: Value(infoEntry.infoEntry.nbBouts),
@@ -210,10 +208,9 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 // endregion
 
 // region Delete
-  Future<int> deleteEntry(int entryId, {required GamesCompanion game}) async {
+  Future<int> deleteEntry(int entryId, {required int gameId}) async {
     return transaction(() async {
-      await (update(games)..where((tbl) => tbl.id.equals(game.id.value)))
-          .write(game.copyWith(date: Value(DateTime.now())));
+      await updateGameDate(gameId: gameId);
       return (delete(infoEntries)..where((tbl) => tbl.id.equals(entryId))).go();
     });
   }

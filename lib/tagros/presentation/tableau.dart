@@ -7,8 +7,8 @@ import 'package:tagros_comptes/common/presentation/component/background_gradient
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
+import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/tableau_body.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 
@@ -18,8 +18,6 @@ class TableauPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final game = ref.watch(gameProvider);
-    final tableauRepository =
-        ref.watch(tableauRepositoryProvider(game.game.id.value));
     return BackgroundGradient(
       child: Scaffold(
         appBar: AppBar(
@@ -32,7 +30,9 @@ class TableauPage extends ConsumerWidget {
               final info = await navigateToAddModify(context,
                   game: game, infoEntry: null);
               if (info != null) {
-                ref.read(entriesProvider).inAddEntry.add(info);
+                ref
+                    .read(tableauViewModelProvider(game.game.id.value))
+                    .addEntry(info);
                 final theme = ref.read(themeColorProvider).maybeWhen(
                     orElse: () => ThemeColor.defaultTheme(),
                     data: (data) => data);
@@ -65,6 +65,7 @@ class TableauPage extends ConsumerWidget {
             },
             child: const Icon(Icons.add)),
         body: TableauBody(
+            gameId: game.game.id.value,
             players: game.players
                 .map((e) => PlayerBean.fromDb(e))
                 .whereNotNull()

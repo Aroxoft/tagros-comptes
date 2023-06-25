@@ -55,7 +55,12 @@ class ThemeScreen extends HookConsumerWidget {
   }
 }
 
-final _fakeDaoProvider = Provider((ref) => FakeGamesDao());
+final _fakePlayers = [
+  const Player(pseudo: "Alice"),
+  const Player(pseudo: "Bob"),
+  const Player(pseudo: "Charline")
+];
+final _fakeDaoProvider = Provider((ref) => FakeGamesDao(_fakePlayers));
 
 class ThemePreview extends HookConsumerWidget {
   const ThemePreview({
@@ -64,11 +69,10 @@ class ThemePreview extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final game = GameWithPlayers(players: [
-      const Player(pseudo: "Alice"),
-      const Player(pseudo: "Bob"),
-      const Player(pseudo: "Charline")
-    ], game: Game(id: 1, nbPlayers: 3, date: DateTime.now()).toCompanion(true));
+    final game = GameWithPlayers(
+        players: _fakePlayers,
+        game:
+            Game(id: 1, nbPlayers: 3, date: DateTime.now()).toCompanion(true));
     return SizedBox(
       height: 200,
       child: ProviderScope(
@@ -92,6 +96,7 @@ class ThemePreview extends HookConsumerWidget {
 
 class PreviewScreen extends StatelessWidget {
   const PreviewScreen({super.key, required this.child});
+
   final Widget child;
 
   @override

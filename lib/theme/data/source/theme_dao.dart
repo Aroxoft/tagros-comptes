@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 
-part 'theme_db_source.g.dart';
+part 'theme_dao.g.dart';
 
 @DriftAccessor(tables: [Themes, Configs], include: {'theme_queries.drift'})
 class ThemeDao extends DatabaseAccessor<AppDatabase> with _$ThemeDaoMixin {

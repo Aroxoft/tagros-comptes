@@ -8,7 +8,7 @@ Map<String, double> calculateGains(
     InfoEntryPlayerBean infoEntryPlayer, List<PlayerBean> playersList) {
   final players = playersList.map((e) => e.name).toList();
   // Assert that players in entry exist in the list of players
-  assert(players.contains(infoEntryPlayer.player!.name));
+  assert(players.contains(infoEntryPlayer.player.name));
   if (infoEntryPlayer.withPlayers != null) {
     for (final withPlayer in infoEntryPlayer.withPlayers!) {
       assert(players.contains(withPlayer!.name));
@@ -116,14 +116,14 @@ Map<String, double> calculateGains(
         infoEntryPlayer.player == infoEntryPlayer.withPlayers![0]) {
       // one player against the others
       for (final player in players) {
-        gains[player] = infoEntryPlayer.player!.name == player
+        gains[player] = infoEntryPlayer.player.name == player
             ? mise * (nbPlayers - 1)
             : -mise;
       }
     } else {
       // with 5 players, 2 vs 3
       for (final player in players) {
-        if (player == infoEntryPlayer.player!.name) {
+        if (player == infoEntryPlayer.player.name) {
           gains[player] = mise * 2;
         } else if (player == infoEntryPlayer.withPlayers![0]!.name) {
           gains[player] = mise;
@@ -136,7 +136,7 @@ Map<String, double> calculateGains(
     // TAGROS
     // Common for every tagros
     for (final player in players) {
-      if (player == infoEntryPlayer.player!.name) {
+      if (player == infoEntryPlayer.player.name) {
         // taker
         gains[player] = mise * 2;
       } else if (infoEntryPlayer.withPlayers!

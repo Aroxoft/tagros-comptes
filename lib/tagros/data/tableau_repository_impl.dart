@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
@@ -12,17 +12,17 @@ import 'package:tuple/tuple.dart';
 
 class TableauRepositoryImpl implements TableauRepository {
   final int gameId;
-  final AppDatabase _appDb;
+  final GamesDao _gamesDao;
 
-  TableauRepositoryImpl(this._appDb, {required this.gameId});
+  TableauRepositoryImpl(this._gamesDao, {required this.gameId});
 
   @override
   Stream<GameWithPlayers> get watchPlayers =>
-      _appDb.gamesDao.watchGameWithPlayers(gameId: gameId);
+      _gamesDao.watchGameWithPlayers(gameId: gameId);
 
   @override
   Stream<List<InfoEntryPlayerBean>> get watchInfoEntries =>
-      _appDb.gamesDao.watchInfoEntriesInGame(gameId);
+      _gamesDao.watchInfoEntriesInGame(gameId);
 
   @override
   Stream<Map<String, double>> get watchSums => watchInfoEntries
@@ -36,11 +36,21 @@ class TableauRepositoryImpl implements TableauRepository {
 
   @override
   Future<void> addEntry(InfoEntryPlayerBean entry) async {
-    _appDb.gamesDao.newEntry(entry, gameId: gameId);
+    _gamesDao.newEntry(entry, gameId: gameId);
+  }
+
+  @override
+  Future<void> modifyEntry(InfoEntryPlayerBean entry) async {
+    _gamesDao.updateEntry(entry, gameId: gameId);
+  }
+
+  @override
+  Future<void> deleteEntry(int entryId) async {
+    _gamesDao.deleteEntry(entryId, gameId: gameId);
   }
 }
 
 final tableauRepositoryProvider =
     Provider.family<TableauRepository, int>((ref, gameId) {
-      return TableauRepositoryImpl(ref.watch(databaseProvider), gameId: gameId);
-});
+  return TableauRepositoryImpl(ref.watch(gamesDaoProvider), gameId: gameId);
+}, dependencies: [gamesDaoProvider]);

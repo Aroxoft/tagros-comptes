@@ -10,7 +10,7 @@ part 'info_entry_player.freezed.dart';
 @freezed
 class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
   factory InfoEntryPlayerBean(
-      {required PlayerBean? player,
+      {required PlayerBean player,
       required InfoEntryBean infoEntry,
       List<PlayerBean?>? withPlayers}) = _InfoEntryPlayerBean;
 
@@ -26,7 +26,7 @@ class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
           : withPlayers?.length == 1
               ? 'onePlayer'
               : 'none',
-      player?.name ?? '',
+      player.name,
       infoEntry.prise.displayName,
       withPlayers?.firstOrNull?.name ?? '',
       withPlayers?.length == 2 ? withPlayers?.lastOrNull?.name ?? '' : '',

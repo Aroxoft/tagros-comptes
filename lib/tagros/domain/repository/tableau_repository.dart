@@ -9,4 +9,8 @@ abstract class TableauRepository {
   Stream<Map<String, double>> get watchSums;
 
   Future<void> addEntry(InfoEntryPlayerBean entry);
+
+  Future<void> modifyEntry(InfoEntryPlayerBean entry);
+
+  Future<void> deleteEntry(int entryId);
 }

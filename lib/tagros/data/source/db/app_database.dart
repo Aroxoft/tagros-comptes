@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
-import 'package:tagros_comptes/theme/data/source/theme_db_source.dart';
+import 'package:tagros_comptes/theme/data/source/theme_dao.dart';
 
 part 'app_database.g.dart';
 
@@ -58,9 +58,12 @@ class PlayerGames extends Table {
 }
 
 class Configs extends Table {
-  TextColumn get key => text().unique()();
+  TextColumn get key => text()();
 
   TextColumn get value => text()();
+
+  @override
+  Set<Column<Object>> get primaryKey => {key};
 }
 
 @DataClassName("ThemeDb")

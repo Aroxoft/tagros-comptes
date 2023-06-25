@@ -65,10 +65,11 @@ class EntriesDbBloc {
   }
 
   Future<void> _handleDeleteEntry(InfoEntryPlayerBean entry) async {
-    await _gamesDao.deleteEntry(entry.infoEntry.id!, game: _game.game);
+    await _gamesDao.deleteEntry(entry.infoEntry.id!,
+        gameId: _game.game.id.value);
   }
 
   Future<void> _handleModifyEntry(InfoEntryPlayerBean entry) async {
-    await _gamesDao.updateEntry(entry, game: _game.game);
+    await _gamesDao.updateEntry(entry, gameId: _game.game.id.value);
   }
 }

@@ -8,17 +8,21 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
+import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;
+  final int gameId;
 
-  const TableauBody({super.key, required this.players});
+  const TableauBody({super.key, required this.players, required this.gameId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeColorProvider).maybeWhen(
         data: (data) => data, orElse: () => ThemeColor.defaultTheme());
+    final TableauViewModel tableauVM =
+        ref.watch(tableauViewModelProvider(gameId));
     final adCalculator = ref.watch(adsCalculatorProvider);
     return Column(children: [
       Padding(
@@ -45,12 +49,14 @@ class TableauBody extends ConsumerWidget {
               top: BorderSide(color: theme.horizontalColor, width: 4),
               bottom: BorderSide(color: theme.horizontalColor, width: 4)),
         ),
-        child: StreamBuilder(
-            stream: ref.watch(entriesProvider.select((value) => value.sum)),
+        child: StreamBuilder<Map<String, double>>(
+            stream: tableauVM.sums,
             builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
               if (snapshot.hasError) {
-                return Center(
-                  child: Text("Error: ${snapshot.error}"),
+                return Expanded(
+                  child: SingleChildScrollView(
+                      child: Text(
+                          "Error: ${snapshot.error}\n${snapshot.stackTrace}")),
                 );
               }
               final sums = snapshot.data;
@@ -82,14 +88,14 @@ class TableauBody extends ConsumerWidget {
             }),
       ),
       StreamBuilder<List<InfoEntryPlayerBean>>(
-        stream: ref.watch(entriesProvider.select((value) => value.infoEntries)),
+        stream: tableauVM.entries,
         builder: (BuildContext context,
             AsyncSnapshot<List<InfoEntryPlayerBean>> snapshot) {
           if (snapshot.hasError) {
-            return Center(
+            return Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("ERROR: ${snapshot.error}"),
+                child: Text("ERROR: ${snapshot.error}\n${snapshot.stackTrace}"),
               ),
             );
           }
@@ -147,10 +153,7 @@ class TableauBody extends ConsumerWidget {
                                   game: ref.read(gameProvider),
                                   infoEntry: entries[index]);
                               if (modified != null) {
-                                ref
-                                    .read(entriesProvider)
-                                    .inModifyEntry
-                                    .add(modified);
+                                tableauVM.modifyEntry(modified);
                               }
                             },
                           ),
@@ -166,11 +169,7 @@ class TableauBody extends ConsumerWidget {
                               ? Colors.black87
                               : Colors.white70,
                           onPressed: (context) {
-                            ref
-                                .read(entriesProvider)
-                                .inDeleteEntry
-                                .add(entries[index]);
-
+                            tableauVM.deleteEntry(entries[index].infoEntry.id!);
                             // key.currentState.dismiss(); // todo see
                           },
                         ),

@@ -14,10 +14,14 @@ class PlayersDao extends DatabaseAccessor<AppDatabase> with _$PlayersDaoMixin {
   /// Deletes all unused players (not in any game), and returns the number of
   /// rows affected
   Future<int> deleteAllUnused() async {
-    final unused = await unusedPlayers().get();
-    return (delete(players)
-          ..where((tbl) => tbl.id.isIn(unused.map((e) => e.id).whereNotNull())))
-        .go();
+    return transaction(() async {
+      final unused = await unusedPlayers().get();
+      final deleted = await (delete(players)
+            ..where(
+                (tbl) => tbl.id.isIn(unused.map((e) => e.id).whereNotNull())))
+          .go();
+      return deleted;
+    });
   }
 
   Future<void> deletePlayer(int? idPlayer) async {

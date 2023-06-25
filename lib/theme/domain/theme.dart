@@ -2,44 +2,95 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hive/hive.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 import 'package:tagros_comptes/util/list_util.dart';
 
 part 'theme.freezed.dart';
-part 'theme.g.dart';
 
 @freezed
-class ThemeColor extends Comparable<ThemeColor> with _$ThemeColor {
-  @HiveType(typeId: 1, adapterName: "ThemeColorAdapter")
-  factory ThemeColor({
-    @HiveField(0) @Default(Color(0xff861313)) Color accentColor,
-    @HiveField(1) @Default(Color(0xff393a3e)) Color appBarColor,
-    @HiveField(2) @Default(Color(0xff861313)) Color buttonColor,
-    @HiveField(3) @Default(Color(0xff393a3e)) Color positiveEntryColor,
-    @HiveField(4) @Default(Color(0xff861313)) Color negativeEntryColor,
-    @HiveField(5) @Default(Color(0xff246305)) Color positiveSumColor,
-    @HiveField(6) @Default(Color(0xff861313)) Color negativeSumColor,
-    @HiveField(7) @Default(Color(0xff393a3e)) Color horizontalColor,
-    @HiveField(8) @Default(Color(0xff393a3e)) Color playerNameColor,
-    @HiveField(9) @Default(Color(0xff292f38)) Color textColor,
-    @HiveField(10) @Default(Color(0xff375161)) Color frameColor,
-    @HiveField(11) @Default(Color(0xff393a3e)) Color chipColor,
-    @HiveField(12) @Default(Color(0x00000000)) Color backgroundColor,
-    @HiveField(13) @Default(Color(0xffffffff)) Color textButtonColor,
-    @HiveField(14) @Default(Color(0xffffffff)) Color appBarTextColor,
-    @HiveField(15) @Default(19.0) double appBarTextSize,
-    @HiveField(16) @Default(Color(0xff861313)) Color fabColor,
-    @HiveField(17) @Default(Color(0xffffffff)) Color onFabColor,
-    @HiveField(18) @Default(Color(0xff323747)) Color sliderColor,
-    @HiveField(19) @Default(Color(0xffeee9e4)) Color backgroundGradient1,
-    @HiveField(20) @Default(Color(0xffe7e1d4)) Color backgroundGradient2,
-    @HiveField(21) @Default(true) bool preset,
-    @HiveField(22) required String name,
-    @HiveField(23) @Default(0) int id,
+abstract class ThemeColor extends Comparable<ThemeColor> with _$ThemeColor {
+  const factory ThemeColor({
+    @Default(Color(0xff861313)) Color accentColor,
+    @Default(Color(0xff393a3e)) Color appBarColor,
+    @Default(Color(0xff861313)) Color buttonColor,
+    @Default(Color(0xff393a3e)) Color positiveEntryColor,
+    @Default(Color(0xff861313)) Color negativeEntryColor,
+    @Default(Color(0xff246305)) Color positiveSumColor,
+    @Default(Color(0xff861313)) Color negativeSumColor,
+    @Default(Color(0xff393a3e)) Color horizontalColor,
+    @Default(Color(0xff393a3e)) Color playerNameColor,
+    @Default(Color(0xff292f38)) Color textColor,
+    @Default(Color(0xff375161)) Color frameColor,
+    @Default(Color(0xff393a3e)) Color chipColor,
+    @Default(Color(0x00000000)) Color backgroundColor,
+    @Default(Color(0xffffffff)) Color textButtonColor,
+    @Default(Color(0xffffffff)) Color appBarTextColor,
+    @Default(19.0) double appBarTextSize,
+    @Default(Color(0xff861313)) Color fabColor,
+    @Default(Color(0xffffffff)) Color onFabColor,
+    @Default(Color(0xff323747)) Color sliderColor,
+    @Default(Color(0xffeee9e4)) Color backgroundGradient1,
+    @Default(Color(0xffe7e1d4)) Color backgroundGradient2,
+    @Default(true) bool preset,
+    required String name,
+    @Default(0) int id,
   }) = _ThemeColor;
 
   ThemeColor._();
+
+  factory ThemeColor.fromDb({required ThemeDb theme}) => _ThemeColor(
+        accentColor: Color(theme.accentColor),
+        appBarColor: Color(theme.appBarColor),
+        buttonColor: Color(theme.buttonColor),
+        positiveEntryColor: Color(theme.positiveEntryColor),
+        negativeEntryColor: Color(theme.negativeEntryColor),
+        positiveSumColor: Color(theme.positiveSumColor),
+        negativeSumColor: Color(theme.negativeSumColor),
+        horizontalColor: Color(theme.horizontalColor),
+        playerNameColor: Color(theme.playerNameColor),
+        textColor: Color(theme.textColor),
+        frameColor: Color(theme.frameColor),
+        chipColor: Color(theme.chipColor),
+        backgroundColor: Color(theme.backgroundColor),
+        textButtonColor: Color(theme.textButtonColor),
+        appBarTextColor: Color(theme.appBarTextColor),
+        appBarTextSize: theme.appBarTextSize,
+        fabColor: Color(theme.fabColor),
+        onFabColor: Color(theme.onFabColor),
+        sliderColor: Color(theme.sliderColor),
+        backgroundGradient1: Color(theme.backgroundGradient1),
+        backgroundGradient2: Color(theme.backgroundGradient2),
+        preset: theme.preset,
+        name: theme.name,
+        id: theme.id,
+      );
+
+  ThemeDb get toDbTheme => ThemeDb(
+      id: id,
+      name: name,
+      preset: preset,
+      accentColor: accentColor.value,
+      appBarColor: appBarColor.value,
+      buttonColor: buttonColor.value,
+      positiveEntryColor: positiveEntryColor.value,
+      negativeEntryColor: negativeEntryColor.value,
+      positiveSumColor: positiveSumColor.value,
+      negativeSumColor: negativeSumColor.value,
+      horizontalColor: horizontalColor.value,
+      playerNameColor: playerNameColor.value,
+      textColor: textColor.value,
+      frameColor: frameColor.value,
+      chipColor: chipColor.value,
+      backgroundColor: backgroundColor.value,
+      textButtonColor: textButtonColor.value,
+      appBarTextColor: appBarTextColor.value,
+      appBarTextSize: appBarTextSize,
+      fabColor: fabColor.value,
+      onFabColor: onFabColor.value,
+      sliderColor: sliderColor.value,
+      backgroundGradient1: backgroundGradient1.value,
+      backgroundGradient2: backgroundGradient2.value);
 
   factory ThemeColor.defaultTheme() =>
       _ThemeColor(name: S.current.themeNameClassic);
@@ -411,15 +462,10 @@ preset: true,);''';
   }
 }
 
-class ColorAdapter extends TypeAdapter<Color> {
-  @override
-  Color read(BinaryReader reader) => Color(reader.readInt());
+class ColorAdapter {
+  Color read(int serialized) => Color(serialized);
 
-  @override
-  void write(BinaryWriter writer, Color color) => writer.writeInt(color.value);
-
-  @override
-  int get typeId => 2;
+  int write(Color color) => color.value;
 }
 
 extension ColorUtil on Color {

@@ -1,5 +1,5 @@
 import 'package:mockito/mockito.dart';
-import 'package:tagros_comptes/services/db/games_dao.dart';
+import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';

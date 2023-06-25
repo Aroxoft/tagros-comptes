@@ -1,0 +1,20 @@
+-- @formatter:off
+import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
+-- @formatter:on
+-- themes
+allThemes:
+SELECT *
+FROM themes;
+
+themeById:
+SELECT *
+FROM themes
+WHERE id = :themeId;
+
+selectedTheme:
+-- @formatter:off
+SELECT theme.**
+-- @formatter:on
+FROM configs c
+JOIN themes  theme ON CAST(c.value AS INT) = theme.id
+WHERE c.key = 'selected_theme';

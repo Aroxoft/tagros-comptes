@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 
 part 'players_dao.g.dart';
 

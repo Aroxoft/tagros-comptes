@@ -7,7 +7,7 @@ import 'package:tagros_comptes/common/presentation/component/background_gradient
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/tagros/data/tableau_repository.dart';
+import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/tableau_body.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
@@ -18,7 +18,8 @@ class TableauPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final game = ref.watch(gameProvider);
-    final tableauRepository = ref.watch(tableauRepositoryProvider(game.game.id.value));
+    final tableauRepository =
+        ref.watch(tableauRepositoryProvider(game.game.id.value));
     return BackgroundGradient(
       child: Scaffold(
         appBar: AppBar(

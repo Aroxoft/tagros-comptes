@@ -1,4 +1,4 @@
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 
 class GameWithPlayers {
   GamesCompanion game;

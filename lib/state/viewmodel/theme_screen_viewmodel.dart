@@ -1,16 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
-import 'package:tagros_comptes/theme/domain/theme_service.dart';
+import 'package:tagros_comptes/theme/domain/theme_repository.dart';
 
 class ThemeScreenViewModel extends ChangeNotifier {
-  ThemeScreenViewModel(this._themeService)
+  ThemeScreenViewModel(this._themeRepository)
       : _navigationTabIndex = 0,
         _currentTheme = ThemeColor.defaultTheme(),
         _isBackgroundGradient = false,
-        _allThemes = _themeService.listenableThemes.value.values.toList()
-          ..sort() {
-    _themeService.themeStream.listen((event) {
+        _allThemes = [] {
+    _themeRepository.selectedTheme().listen((event) {
       if (kDebugMode) {
         print("newTheme!\n${event.toCodeString}");
       }
@@ -18,14 +17,14 @@ class ThemeScreenViewModel extends ChangeNotifier {
       _isBackgroundGradient = event.backgroundColor.opacity == 0;
       notifyListeners();
     });
-    _themeService.listenableThemes.addListener(() {
-      _allThemes = _themeService.listenableThemes.value.values.toList()..sort();
+    _themeRepository.allThemes().listen((event) {
+      _allThemes = event..sort();
       notifyListeners();
     });
   }
 
   ThemeColor _currentTheme;
-  final ThemeService _themeService;
+  final ThemeRepository _themeRepository;
   List<ThemeColor> _allThemes;
   bool _isBackgroundGradient;
 
@@ -34,10 +33,7 @@ class ThemeScreenViewModel extends ChangeNotifier {
   bool get isBackgroundGradient => _isBackgroundGradient;
   int _navigationTabIndex;
 
-  int get selectedIndex {
-    final i = allThemes.indexWhere((element) => _currentTheme.id == element.id);
-    return i == -1 ? 0 : i;
-  }
+  int get selectedId => _currentTheme.id;
 
   int get navigationTabIndex => _navigationTabIndex;
 
@@ -72,10 +68,11 @@ class ThemeScreenViewModel extends ChangeNotifier {
         defaultValue: Colors.white,
         isForbidden: (value) => value.opacity == 0,
       );
-      _themeService.modifyTheme.add(_currentTheme.copyWith(
-          backgroundColor: Colors.transparent,
-          backgroundGradient1: g1,
-          backgroundGradient2: g2));
+      _themeRepository.updateTheme(
+          newTheme: _currentTheme.copyWith(
+              backgroundColor: Colors.transparent,
+              backgroundGradient1: g1,
+              backgroundGradient2: g2));
     } else {
       // set the solid color to a non transparent color
       final bg = _fallback<Color>(
@@ -84,8 +81,8 @@ class ThemeScreenViewModel extends ChangeNotifier {
         defaultValue: Colors.white,
         isForbidden: (value) => value.opacity == 0,
       );
-      _themeService.modifyTheme
-          .add(_currentTheme.copyWith(backgroundColor: bg));
+      _themeRepository.updateTheme(
+          newTheme: _currentTheme.copyWith(backgroundColor: bg));
     }
     // notifyListeners();
   }
@@ -95,19 +92,19 @@ class ThemeScreenViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void selectTheme(int index) {
-    _themeService.selectTheme.add(allThemes[index]);
+  void selectTheme(int id) {
+    _themeRepository.selectTheme(id: id);
   }
 
   void updateTheme({required ThemeColor newTheme}) {
-    _themeService.modifyTheme.add(newTheme);
+    _themeRepository.updateTheme(newTheme: newTheme);
   }
 
-  void copyTheme({required int index}) {
-    _themeService.copyTheme.add(allThemes[index]);
+  void copyTheme({required int id}) {
+    _themeRepository.copyTheme(id: id);
   }
 
-  void deleteTheme({required int index}) {
-    _themeService.deleteTheme.add(allThemes[index]);
+  void deleteTheme({required int id}) {
+    _themeRepository.deleteTheme(id: id);
   }
 }

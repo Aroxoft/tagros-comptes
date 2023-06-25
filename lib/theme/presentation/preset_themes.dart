@@ -18,10 +18,10 @@ class PresetThemes extends ConsumerWidget {
           final theme = themes[index];
           return ListTile(
             leading: Checkbox(
-              value: themesVM.selectedIndex == index,
+              value: themesVM.selectedId == theme.id,
               onChanged: (value) {
                 if (value ?? false) {
-                  themesVM.selectTheme(index);
+                  themesVM.selectTheme(theme.id);
                 }
               },
             ),
@@ -48,7 +48,7 @@ class PresetThemes extends ConsumerWidget {
                 ),
               ],
             ),
-            onTap: () => themesVM.selectTheme(index),
+            onTap: () => themesVM.selectTheme(theme.id),
             trailing: PopupMenuButton<_OptionsTheme>(
               onSelected: (value) {
                 switch (value) {
@@ -61,10 +61,10 @@ class PresetThemes extends ConsumerWidget {
                                 newTheme: theme.copyWith(name: name))));
                     break;
                   case _OptionsTheme.copy:
-                    themesVM.copyTheme(index: index);
+                    themesVM.copyTheme(id: theme.id);
                     break;
                   case _OptionsTheme.delete:
-                    themesVM.deleteTheme(index: index);
+                    themesVM.deleteTheme(id: theme.id);
                     break;
                 }
               },

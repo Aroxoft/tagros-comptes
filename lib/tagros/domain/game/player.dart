@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 
 part 'player.freezed.dart';
 

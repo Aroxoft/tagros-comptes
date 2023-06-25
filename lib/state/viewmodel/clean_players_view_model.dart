@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
-import 'package:tagros_comptes/services/db/players_dao.dart';
+import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 
 class CleanPlayersVM extends ChangeNotifier {
   CleanPlayersVM(PlayersDao playersDao)

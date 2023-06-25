@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:tagros_comptes/services/db/games_dao.dart';
+import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 
 class GameNotifier {

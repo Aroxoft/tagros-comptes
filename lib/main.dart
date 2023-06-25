@@ -12,14 +12,12 @@ import 'package:tagros_comptes/common/presentation/menu.dart';
 import 'package:tagros_comptes/common/presentation/settings_screen.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/monetization/presentation/buy_screen.dart';
-import 'package:tagros_comptes/services/db/games_dao.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau.dart';
-import 'package:tagros_comptes/theme/domain/theme.dart';
-import 'package:tagros_comptes/theme/domain/theme_service.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 // import '.env.dart';
@@ -33,13 +31,6 @@ Future<void> main() async {
   }
   await S.load(const Locale('fr'));
   await Hive.initFlutter();
-  Hive.registerAdapter(ColorAdapter());
-  Hive.registerAdapter(ThemeColorAdapter());
-  await Hive.openBox(ThemeService.optionsBox);
-  await Hive.openBox<ThemeColor>(
-    ThemeService.themeBox,
-    compactionStrategy: (entries, deletedEntries) => deletedEntries > 20,
-  );
 
   timeago.setLocaleMessages('fr', timeago.FrMessages());
   timeago.setLocaleMessages('en', timeago.EnMessages());

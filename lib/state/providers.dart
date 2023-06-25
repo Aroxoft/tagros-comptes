@@ -7,20 +7,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/config/env_configuration.dart';
 import 'package:tagros_comptes/config/platform_configuration.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
-import 'package:tagros_comptes/services/db/games_dao.dart';
-import 'package:tagros_comptes/services/db/platforms/database.dart';
-import 'package:tagros_comptes/services/db/players_dao.dart';
 import 'package:tagros_comptes/state/bloc/entry_db_bloc.dart';
 import 'package:tagros_comptes/state/bloc/game_notifier.dart';
 import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
+import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
+import 'package:tagros_comptes/tagros/data/source/db/platforms/database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
+import 'package:tagros_comptes/theme/data/theme_repository_impl.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
-import 'package:tagros_comptes/theme/domain/theme_service.dart';
+import 'package:tagros_comptes/theme/domain/theme_repository.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase(Database.openConnection());
@@ -86,23 +87,20 @@ final gameProvider = Provider<GameWithPlayers>((ref) {
 //   return ThemeColor();
 // });
 
-final themeProvider = Provider<ThemeService>((ref) {
-  final themeService = ThemeService();
-  ref.onDispose(() {
-    themeService.dispose();
-  });
-  return themeService;
-});
+final themeRepository = Provider<ThemeRepository>(
+    (ref) => ThemeRepositoryImpl(ref.watch(databaseProvider).themeDao));
+
 final themeDataProvider = StreamProvider<ThemeData>(
-    (ref) => ref.watch(themeProvider.select((value) => value.themeData)),
-    dependencies: [themeProvider]);
+    (ref) => ref.watch(themeRepository.select((value) => value.themeData)),
+    dependencies: [themeRepository]);
 
 final themeColorProvider = StreamProvider<ThemeColor>(
-    (ref) => ref.watch(themeProvider.select((value) => value.themeStream)),
-    dependencies: [themeProvider]);
+    (ref) =>
+        ref.watch(themeRepository.select((value) => value.selectedTheme())),
+    dependencies: [themeRepository]);
 
 final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
-    (ref) => ThemeScreenViewModel(ref.watch(themeProvider)));
+    (ref) => ThemeScreenViewModel(ref.watch(themeRepository)));
 
 final entriesProvider = Provider<EntriesDbBloc>((ref) {
   final entries = EntriesDbBloc(ref.watch(gameProvider),

@@ -11,6 +11,7 @@ import 'package:tagros_comptes/tagros/domain/repository/tableau_repository.dart'
 import 'package:tuple/tuple.dart';
 
 class TableauRepositoryImpl implements TableauRepository {
+  @override
   final int gameId;
   final GamesDao _gamesDao;
 

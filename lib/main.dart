@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:stack_trace/stack_trace.dart' as stack_trace;
 import 'package:tagros_comptes/common/presentation/clean_players_screen.dart';
 import 'package:tagros_comptes/common/presentation/guide_screen.dart';
 import 'package:tagros_comptes/common/presentation/menu.dart';
@@ -15,11 +16,11 @@ import 'package:tagros_comptes/monetization/presentation/buy_screen.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
-import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 // import '.env.dart';
 
 Future<void> main() async {
@@ -35,6 +36,11 @@ Future<void> main() async {
   timeago.setLocaleMessages('fr', timeago.FrMessages());
   timeago.setLocaleMessages('en', timeago.EnMessages());
   runApp(ProviderScope(child: MyApp()));
+  FlutterError.demangleStackTrace = (StackTrace stackTrace) {
+    if (stackTrace is stack_trace.Trace) return stackTrace.vmTrace;
+    if (stackTrace is stack_trace.Chain) return stackTrace.toTrace().vmTrace;
+    return stackTrace;
+  };
 }
 
 /*
@@ -92,17 +98,4 @@ Future<void> navigateToTableau(BuildContext context,
         overrides: [gameProvider.overrideWithValue(game)],
         child: const TableauPage()),
   ));
-}
-
-Future<InfoEntryPlayerBean?> navigateToAddModify(BuildContext context,
-    {required GameWithPlayers game,
-    required InfoEntryPlayerBean? infoEntry}) async {
-  final modified = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ProviderScope(
-            overrides: [gameProvider.overrideWithValue(game)],
-            child: const AddModifyEntry(),
-          ),
-      settings:
-          RouteSettings(arguments: AddModifyArguments(infoEntry: infoEntry))));
-  return modified as InfoEntryPlayerBean?;
 }

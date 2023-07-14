@@ -1,11 +1,9 @@
 import 'package:another_flushbar/flushbar.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
@@ -17,22 +15,27 @@ class TableauPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final game = ref.watch(gameProvider);
+    final tableauVM = ref.watch(tableauViewModelProvider);
+
     return BackgroundGradient(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(S.current.nbPlayers(game.players.length)),
+          title: StreamBuilder(
+            initialData: 0,
+            stream: tableauVM.nbPlayers,
+            builder: (ctx, snapshot) {
+              return Text(S.current.nbPlayers(snapshot.data ?? 0));
+            },
+          ),
         ),
         floatingActionButton: FloatingActionButton(
             // key: ValueKey("${ref.watch(navigationPrefixProvider)}tableau-fab"),
             heroTag: UniqueKey(),
             onPressed: () async {
-              final info = await navigateToAddModify(context,
-                  game: game, infoEntry: null);
+              final info =
+                  await tableauVM.navigateToAddModify(context, infoEntry: null);
               if (info != null) {
-                ref
-                    .read(tableauViewModelProvider(game.game.id.value))
-                    .addEntry(info);
+                tableauVM.addEntry(info);
                 final theme = ref.read(themeColorProvider).maybeWhen(
                     orElse: () => ThemeColor.defaultTheme(),
                     data: (data) => data);
@@ -64,12 +67,17 @@ class TableauPage extends ConsumerWidget {
               }
             },
             child: const Icon(Icons.add)),
-        body: TableauBody(
-            gameId: game.game.id.value,
-            players: game.players
-                .map((e) => PlayerBean.fromDb(e))
-                .whereNotNull()
-                .toList()),
+        body: StreamBuilder<List<PlayerBean>>(
+            stream: tableauVM.players,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(child: Text(snapshot.error.toString()));
+              }
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return TableauBody(players: snapshot.data!);
+            }),
       ),
     );
   }

@@ -30,13 +30,13 @@ class ChoosePlayerVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> checkForPseudoInDb(String text) async {
+  Future<void> addPlayerByName(String text) async {
     final Player player = await _playersDao.addOrGetByName(name: text);
     _selectedPlayers.add(player);
     notifyListeners();
   }
 
-  Future<List<Player>> updateSuggestions(String query) async {
+  Future<List<Player>> updateSuggestions({required String query}) async {
     return _playersDao.searchForPlayer(query,
         notIn: _selectedPlayers.map((e) => e.id).whereNotNull().toList());
   }

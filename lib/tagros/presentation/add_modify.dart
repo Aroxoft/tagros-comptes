@@ -35,12 +35,6 @@ class AddModifyEntry extends HookConsumerWidget {
     final textPointsController = useTextEditingController(text: "0");
     final args = useMemoized(() =>
         ModalRoute.of(context)?.settings.arguments as AddModifyArguments?);
-    // final infoEntry = useState(InfoEntryPlayerBean(
-    //     player: PlayerBean.fromDb(
-    //         (ModalRoute.of(context)!.settings.arguments as AddModifyArguments)
-    //             .players
-    //             .last),
-    //     infoEntry: InfoEntryBean(points: 0, nbBouts: 0)));
     useEffect(() {
       final playersValue = playersArg.reversed
           .map((e) => PlayerBean.fromDb(e))
@@ -52,7 +46,6 @@ class AddModifyEntry extends HookConsumerWidget {
         print(
             "So we ${info == null ? "add" : "modify"} an entry, we have the players: $players");
       }
-      add.value = false;
       if (info == null) {
         add.value = true;
         final pLength = playersValue.length;

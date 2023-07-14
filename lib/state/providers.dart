@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/config/env_configuration.dart';
 import 'package:tagros_comptes/config/platform_configuration.dart';
-import 'package:tagros_comptes/state/bloc/game_notifier.dart';
 import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
@@ -45,13 +44,6 @@ final choosePlayerProvider =
   return ChoosePlayerVM(ref.watch(playerDaoProvider));
 });
 
-final gameChangeProvider = Provider<GameNotifier>((ref) {
-  final gameChange = GameNotifier(gamesDao: ref.watch(gamesDaoProvider));
-  ref.onDispose(() {
-    gameChange.dispose();
-  });
-  return gameChange;
-});
 final selectedGameIdProvider = Provider<int?>((ref) {
   return null;
 });
@@ -63,10 +55,6 @@ final selectedInfoEntryIdProvider = Provider<int?>((ref) {
 final gameProvider = Provider<GameWithPlayers>((ref) {
   throw StateError("no game selected");
 });
-
-// final optionsProvider = StateProvider<ThemeColor>((ref) {
-//   return ThemeColor();
-// });
 
 final themeRepository = Provider<ThemeRepository>(
     (ref) => ThemeRepositoryImpl(ref.watch(databaseProvider).themeDao));

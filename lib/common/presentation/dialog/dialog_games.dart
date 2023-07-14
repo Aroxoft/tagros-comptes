@@ -47,9 +47,8 @@ class DialogChooseGame extends ConsumerWidget {
                             icon: Icons.delete,
                             onPressed: (context) {
                               ref
-                                  .read(gameChangeProvider)
-                                  .inDeleteGame
-                                  .add(games[index]);
+                                  .read(gamesDaoProvider)
+                                  .deleteGame(games[index]);
                             },
                           )
                         ],

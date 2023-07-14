@@ -3,7 +3,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
@@ -13,16 +12,14 @@ import 'package:tagros_comptes/theme/domain/theme.dart';
 
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;
-  final int gameId;
 
-  const TableauBody({super.key, required this.players, required this.gameId});
+  const TableauBody({super.key, required this.players});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeColorProvider).maybeWhen(
         data: (data) => data, orElse: () => ThemeColor.defaultTheme());
-    final TableauViewModel tableauVM =
-        ref.watch(tableauViewModelProvider(gameId));
+    final TableauViewModel tableauVM = ref.watch(tableauViewModelProvider);
     final adCalculator = ref.watch(adsCalculatorProvider);
     return Column(children: [
       Padding(
@@ -148,10 +145,9 @@ class TableauBody extends ConsumerWidget {
                                 ? Colors.black87
                                 : Colors.white70,
                             onPressed: (context) async {
-                              final modified = await navigateToAddModify(
-                                  context,
-                                  game: ref.read(gameProvider),
-                                  infoEntry: entries[index]);
+                              final modified =
+                                  await tableauVM.navigateToAddModify(context,
+                                      infoEntry: entries[index]);
                               if (modified != null) {
                                 tableauVM.modifyEntry(modified);
                               }

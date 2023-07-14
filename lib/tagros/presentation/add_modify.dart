@@ -1,7 +1,7 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
@@ -13,10 +13,12 @@ import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
 import 'package:tagros_comptes/tagros/domain/game/prise.dart';
+import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/boxed.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/selectable_tag.dart';
-import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/tagros/presentation/widget/snack_utils.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
+import 'package:tuple/tuple.dart';
 
 class AddModifyEntry extends HookConsumerWidget {
   static String routeName = "/addModify";
@@ -71,7 +73,6 @@ class AddModifyEntry extends HookConsumerWidget {
               S.of(context).addModifyAppBarTitle(add.value ? 'add' : 'modify')),
         ),
         floatingActionButton: FloatingActionButton(
-            // key: ValueKey(ref.watch(navigationPrefixProvider) + "add-modify-fab"),
             heroTag: UniqueKey(),
             child: const Icon(Icons.check),
             onPressed: () {
@@ -79,31 +80,21 @@ class AddModifyEntry extends HookConsumerWidget {
                   length: players.value.length,
                   withPlayers: withPlayers.value,
                   attack: playerAttack.value)) {
-                Navigator.of(context).pop(InfoEntryPlayerBean(
-                    player: playerAttack.value!,
-                    infoEntry: entry.value,
-                    withPlayers: withPlayers.value));
+                final infoEntry = InfoEntryPlayerBean(
+                  player: playerAttack.value!,
+                  infoEntry: entry.value,
+                  withPlayers: withPlayers.value,
+                );
+                Navigator.of(context).pop();
+                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+                  ref.read(tableauViewModelProvider).addEntry(infoEntry);
+                  ref.read(messageObserverProvider.notifier).state =
+                      Tuple2(add.value, infoEntry);
+                });
               } else {
-                final theme = ref.read(themeColorProvider).maybeWhen(
-                    orElse: () => ThemeColor.defaultTheme(),
-                    data: (data) => data);
-                Flushbar(
-                  title: S.of(context).addModifyMissingTitle,
-                  message: S.of(context).addModifyMissingMessage,
-                  duration: const Duration(seconds: 3),
-                  titleColor: Theme.of(context).textTheme.bodyMedium?.color,
-                  messageColor: Theme.of(context).textTheme.bodyMedium?.color,
-                  backgroundGradient: LinearGradient(colors: [
-                    if (theme.backgroundGradient1.opacity != 0)
-                      theme.backgroundGradient1
-                    else
-                      theme.averageBackgroundColor.darken(0.3),
-                    if (theme.backgroundGradient2.opacity != 0)
-                      theme.backgroundGradient2
-                    else
-                      theme.averageBackgroundColor.lighten(0.3),
-                  ]),
-                ).show(context);
+                displayFlushbar(context, ref,
+                    title: S.of(context).addModifyMissingTitle,
+                    message: S.of(context).addModifyMissingMessage);
               }
             }),
         body: SingleChildScrollView(

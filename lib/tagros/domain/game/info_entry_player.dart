@@ -34,6 +34,5 @@ class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
       campDesPoints,
       infoEntry.nbBouts,
     );
-    // return "${infoEntry.prise.displayName} de $player${withPlayers != null && (withPlayers?.length ?? 0) > 0 ? " (avec ${withPlayers![0]}${withPlayers?.length == 2 ? " et ${withPlayers![1]}" : ""}" : ""}, ${infoEntry.points} points pour $campDesPoints, ${infoEntry.nbBouts} bout(s) pour $campDesPoints.";
   }
 }

@@ -16,9 +16,11 @@ import 'package:tagros_comptes/tagros/data/source/db/platforms/database.dart';
 import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
+import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/theme/data/theme_repository_impl.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 import 'package:tagros_comptes/theme/domain/theme_repository.dart';
+import 'package:tuple/tuple.dart';
 
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase(Database.openConnection());
@@ -153,4 +155,13 @@ final bannerAdsProvider =
     completer.future.then((value) => value.dispose());
   });
   return completer.future;
+});
+
+/// This is sent whenever we add or modify an entry
+///
+/// - The first value is true if we added a new entry, false if we modified an existing one
+/// - The second value is the entry we added or modified
+final messageObserverProvider =
+    StateProvider<Tuple2<bool, InfoEntryPlayerBean>?>((ref) {
+  return null;
 });

@@ -41,6 +41,7 @@
   "priseTypeGardeSans": "Garde-sans",
   "priseTypeGardeContre": "Garde-contre",
   "successAddingGame": "Partie ajoutée avec succès",
+  "successModifyingGame": "Partie modifiée avec succès",
   "tableNoData": "Pas d'information",
   "tableNoEntry": "Aucune partie",
   "infoEntryString": "{prise} de {playerName} {withPlayers, select, onePlayer{(avec {player1})} twoPlayers{(avec {player1} et {player2})} other{tout(e) seul(e)}}, {points} points pour {campPoints}, {nbBouts, plural, zero{aucun bout} one{1 bout} other{{nbBouts} bouts}} pour {campPoints}.",

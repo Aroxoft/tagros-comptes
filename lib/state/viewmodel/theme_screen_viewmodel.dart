@@ -84,7 +84,6 @@ class ThemeScreenViewModel extends ChangeNotifier {
       _themeRepository.updateTheme(
           newTheme: _currentTheme.copyWith(backgroundColor: bg));
     }
-    // notifyListeners();
   }
 
   void changeTab(int index) {

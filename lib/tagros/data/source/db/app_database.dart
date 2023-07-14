@@ -48,7 +48,6 @@ class InfoEntries extends Table {
   IntColumn get nbBouts => integer()();
 }
 
-//@DataClassName("player_game")
 class PlayerGames extends Table {
   IntColumn get id => integer().autoIncrement()();
 

@@ -399,7 +399,6 @@ class ColorPickerDialog extends HookConsumerWidget {
             ColorPicker(
               colorHistory: history.value,
               hexInputBar: true,
-              // pickerHsvColor: HSVColor.fromColor(color.value),
               pickerAreaBorderRadius: BorderRadius.circular(5),
               labelTypes: const [
                 ColorLabelType.hsv,
@@ -426,7 +425,6 @@ class ColorPickerDialog extends HookConsumerWidget {
         TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // onSaved(initialColor);
             },
             child: Text(S.of(context).actionCancel)),
         TextButton(

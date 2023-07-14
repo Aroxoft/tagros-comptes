@@ -1,6 +1,4 @@
-// import 'package:appspector/appspector.dart';
 import 'package:drift/drift.dart' show Value;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -21,15 +19,9 @@ import 'package:tagros_comptes/tagros/presentation/tableau.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-// import '.env.dart';
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  // await _runAppSpector();
-  if (kDebugMode) {
-    // Stetho.initialize();
-  }
   await S.load(const Locale('fr'));
   await Hive.initFlutter();
 
@@ -43,21 +35,7 @@ Future<void> main() async {
   };
 }
 
-/*
-Future<void> _runAppSpector() async {
-  var config = Config()
-        ..androidApiKey = environment['appSpector']
-        ..iosApiKey = environment['appSpectorIos']
-      // ..monitors = [Monitors.sqLite, Monitors.fileSystem]
-      ;
-  AppSpectorPlugin.run(config);
-
-  await AppSpectorPlugin.shared().start();
-  AppSpectorPlugin.shared().sessionUrlListener = (url) => print(url);
-}
-// */
 class MyApp extends ConsumerWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(

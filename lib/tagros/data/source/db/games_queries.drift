@@ -18,10 +18,10 @@ select entry.id,
        poignee,
        prise,
        nb_bouts
-FROM info_entries entry
-         LEFT OUTER JOIN players p ON p.id = entry.player
-         LEFT OUTER JOIN players w1 ON w1.id = entry.with1
-         LEFT OUTER JOIN players w2 ON w2.id = entry.with2
+FROM info_entries       entry
+LEFT OUTER JOIN players p ON p.id = entry.player
+LEFT OUTER JOIN players w1 ON w1.id = entry.with1
+LEFT OUTER JOIN players w2 ON w2.id = entry.with2
 WHERE entry.game = :gameId;
 
 allGamesWithPlayer AS GameWithPlayersRow:
@@ -30,9 +30,9 @@ SELECT g.id     AS gameId,
        g.date,
        p.id     AS playerId,
        p.pseudo AS playerName
-FROM games g
-         INNER JOIN player_games pg ON pg.game = g.id
-         INNER JOIN players p ON pg.player = p.id;
+FROM games              g
+INNER JOIN player_games pg ON pg.game = g.id
+INNER JOIN players      p ON pg.player = p.id;
 
 gameWithPlayers AS GameWithPlayersRow:
 SELECT g.id     AS gameId,
@@ -40,9 +40,9 @@ SELECT g.id     AS gameId,
        g.date,
        p.id     AS playerId,
        p.pseudo AS playerName
-FROM games g
-         INNER JOIN player_games pg ON pg.game = g.id
-         INNER JOIN players p ON pg.player = p.id
+FROM games              g
+INNER JOIN player_games pg ON pg.game = g.id
+INNER JOIN players      p ON pg.player = p.id
 WHERE g.id = :gameId;
 
 updateGameDate(:gameId AS INTEGER):

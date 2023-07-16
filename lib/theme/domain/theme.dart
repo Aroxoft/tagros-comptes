@@ -341,6 +341,7 @@ preset: true,);''';
 
   ThemeData get toDataTheme {
     return ThemeData(
+        useMaterial3: true,
         appBarTheme: AppBarTheme(
           backgroundColor: appBarColor,
           titleTextStyle:

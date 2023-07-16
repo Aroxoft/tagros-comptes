@@ -22,12 +22,17 @@ class ChoosePlayer extends _$ChoosePlayer {
   }
 
   void removePlayerAt({required int index}) {
-    state = (state.$1, UnmodifiableListView([...state.$2..removeAt(index)]));
+    final shrank = state.$2.toList()..removeAt(index);
+    state = (state.$1, UnmodifiableListView(shrank));
   }
 
   Future<void> addPlayerByName(String text) async {
+    final name = text.trim();
+    if (name.isEmpty) {
+      return;
+    }
     final Player player =
-        await ref.read(playerDaoProvider).addOrGetByName(name: text);
+        await ref.read(playerDaoProvider).addOrGetByName(name: name);
     addPlayer(player);
   }
 

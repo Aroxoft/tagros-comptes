@@ -127,10 +127,9 @@ class PlayerItem extends ConsumerWidget {
                       ),
                     ),
                 duration: const Duration(milliseconds: 500));
+            final provider = ref.read(cleanPlayerProvider.notifier);
             Future.delayed(const Duration(milliseconds: 500), () {
-              ref
-                  .read(cleanPlayerProvider.notifier)
-                  .deletePlayer(idPlayer: player.id);
+              provider.deletePlayer(idPlayer: player.id);
             });
           },
         )

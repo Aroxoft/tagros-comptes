@@ -8,8 +8,6 @@ abstract class TableauRepository {
 
   Stream<Map<String, double>> get watchSums;
 
-  int get gameId;
-
   Future<void> addEntry(InfoEntryPlayerBean entry);
 
   Future<void> modifyEntry(InfoEntryPlayerBean entry);

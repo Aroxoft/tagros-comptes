@@ -1,4 +1,3 @@
-import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -12,8 +11,6 @@ import 'package:tagros_comptes/common/presentation/settings_screen.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/monetization/presentation/buy_screen.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
-import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
@@ -65,15 +62,11 @@ class MyApp extends ConsumerWidget {
   }
 }
 
-Future<void> navigateToTableau(BuildContext context,
-    {required GameWithPlayers game, required GamesDao gamesDao}) async {
-  if (!game.game.id.present) {
-    final idGame = await gamesDao.newGame(game);
-    game.game = game.game.copyWith(id: Value(idGame));
-  }
+Future<void> navigateToTableau(BuildContext context) async {
   await Navigator.of(context).push(MaterialPageRoute(
     builder: (context) => ProviderScope(
-        overrides: [gameProvider.overrideWithValue(game)],
-        child: const TableauPage()),
+      parent: ProviderScope.containerOf(context),
+      child: const TableauPage(),
+    ),
   ));
 }

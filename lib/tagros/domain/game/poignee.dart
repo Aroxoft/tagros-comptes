@@ -35,7 +35,6 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
         case 10:
           return 7;
       }
-      break;
     case PoigneeType.double:
       switch (nbPlayers) {
         case 3:
@@ -53,7 +52,6 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
         case 10:
           return 9;
       }
-      break;
     case PoigneeType.triple:
       switch (nbPlayers) {
         case 3:
@@ -71,7 +69,6 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
         case 10:
           return 11;
       }
-      break;
     case PoigneeType.none:
       return 0;
   }

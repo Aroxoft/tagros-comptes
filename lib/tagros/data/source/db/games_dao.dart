@@ -46,22 +46,29 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 
   Stream<GameWithPlayers> watchGameWithPlayers({required int gameId}) {
     final gameStream = gameWithPlayers(gameId: gameId).watch();
-    return gameStream.map((event) {
-      GameWithPlayers? game;
-      for (final row in event) {
-        final player = Player(pseudo: row.playerName, id: row.playerId);
-        if (game == null) {
-          game = GameWithPlayers(
-              players: [player],
-              game:
-                  Game(id: row.gameId, nbPlayers: row.nbPlayers, date: row.date)
-                      .toCompanion(true));
-        } else {
-          game.players.add(Player(pseudo: row.playerName, id: row.playerId));
-        }
+    return gameStream.map((event) => _mapEventToGameWithPlayers(event));
+  }
+
+  Future<GameWithPlayers> fetchGameWithPlayers({required int gameId}) {
+    final game = gameWithPlayers(gameId: gameId).get();
+    return game.then((event) => _mapEventToGameWithPlayers(event));
+  }
+
+  /// Map a list of rows to a game with players
+  GameWithPlayers _mapEventToGameWithPlayers(List<GameWithPlayersRow> rows) {
+    GameWithPlayers? game;
+    for (final row in rows) {
+      final player = Player(pseudo: row.playerName, id: row.playerId);
+      if (game == null) {
+        game = GameWithPlayers(
+            players: [player],
+            game: Game(id: row.gameId, nbPlayers: row.nbPlayers, date: row.date)
+                .toCompanion(true));
+      } else {
+        game.players.add(Player(pseudo: row.playerName, id: row.playerId));
       }
-      return game!;
-    });
+    }
+    return game!;
   }
 
   Stream<List<GameWithPlayers>> watchAllGames() {

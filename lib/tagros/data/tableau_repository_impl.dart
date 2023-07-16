@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/tagros/data/game_provider.dart';
 import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
@@ -10,8 +11,9 @@ import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/domain/repository/tableau_repository.dart';
 import 'package:tuple/tuple.dart';
 
+part 'tableau_repository_impl.g.dart';
+
 class TableauRepositoryImpl implements TableauRepository {
-  @override
   final int gameId;
   final GamesDao _gamesDao;
 
@@ -51,7 +53,12 @@ class TableauRepositoryImpl implements TableauRepository {
   }
 }
 
-final tableauRepositoryProvider =
-    Provider.family<TableauRepository, int>((ref, gameId) {
-  return TableauRepositoryImpl(ref.watch(gamesDaoProvider), gameId: gameId);
-}, dependencies: [gamesDaoProvider]);
+@Riverpod(keepAlive: true, dependencies: [CurrentGameId, gamesDao])
+TableauRepository? tableauRepository(TableauRepositoryRef ref) {
+  final gamesDao = ref.watch(gamesDaoProvider);
+  return ref.watch(currentGameIdProvider.select((value) => value.whenOrNull(
+        data: (gameId) {
+          return TableauRepositoryImpl(gamesDao, gameId: gameId);
+        },
+      )));
+}

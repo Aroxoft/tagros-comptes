@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/common/domain/types/functions.dart';
 import 'package:tagros_comptes/common/presentation/component/player_search_field.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/tagros/data/game_provider.dart';
 
 class DialogChoosePlayers extends ConsumerWidget {
-  final DoAfterChosen doAfterChosen;
 
-  const DialogChoosePlayers({super.key, required this.doAfterChosen});
+  const DialogChoosePlayers({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       title: Text(S.of(context).dialogNewGameTitle),
-      content: DialogPlayerBody(
-        doAfterChosen: doAfterChosen,
-      ),
+      content: const DialogPlayerBody(),
       actions: <Widget>[
         // error display
         ref.watch(choosePlayerProvider.select((value) {
@@ -30,8 +28,11 @@ class DialogChoosePlayers extends ConsumerWidget {
         ElevatedButton(
             onPressed: () {
               if (ref.read(choosePlayerProvider).validatePlayers()) {
-                doAfterChosen(ref.read(choosePlayerProvider).selectedPlayers);
                 Navigator.of(context).pop();
+                navigateToTableau(context);
+                ref.read(currentGameIdProvider.notifier).setGame(
+                    CurrentGameConstructorNewGame(
+                        ref.read(choosePlayerProvider).selectedPlayers));
               }
             },
             child: Text(S.of(context).ok))
@@ -41,8 +42,7 @@ class DialogChoosePlayers extends ConsumerWidget {
 }
 
 class DialogPlayerBody extends HookConsumerWidget {
-  const DialogPlayerBody({super.key, required this.doAfterChosen});
-  final DoAfterChosen doAfterChosen;
+  const DialogPlayerBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

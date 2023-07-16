@@ -19,7 +19,7 @@ class TableauBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeColorProvider).maybeWhen(
         data: (data) => data, orElse: () => ThemeColor.defaultTheme());
-    final TableauViewModel tableauVM = ref.watch(tableauViewModelProvider);
+    final TableauViewModel? tableauVM = ref.watch(tableauViewModelProvider);
     final adCalculator = ref.watch(adsCalculatorProvider);
     return Column(children: [
       Padding(
@@ -47,7 +47,7 @@ class TableauBody extends ConsumerWidget {
               bottom: BorderSide(color: theme.horizontalColor, width: 4)),
         ),
         child: StreamBuilder<Map<String, double>>(
-            stream: tableauVM.sums,
+            stream: tableauVM?.sums,
             builder: (context, AsyncSnapshot<Map<String, double>> snapshot) {
               if (snapshot.hasError) {
                 return Expanded(
@@ -85,7 +85,7 @@ class TableauBody extends ConsumerWidget {
             }),
       ),
       StreamBuilder<List<InfoEntryPlayerBean>>(
-        stream: tableauVM.entries,
+        stream: tableauVM?.entries,
         builder: (BuildContext context,
             AsyncSnapshot<List<InfoEntryPlayerBean>> snapshot) {
           if (snapshot.hasError) {
@@ -146,10 +146,10 @@ class TableauBody extends ConsumerWidget {
                                 : Colors.white70,
                             onPressed: (context) async {
                               final modified =
-                                  await tableauVM.navigateToAddModify(context,
+                                  await tableauVM?.navigateToAddModify(context,
                                       infoEntry: entries[index]);
                               if (modified != null) {
-                                tableauVM.modifyEntry(modified);
+                                tableauVM?.modifyEntry(modified);
                               }
                             },
                           ),
@@ -165,7 +165,7 @@ class TableauBody extends ConsumerWidget {
                               ? Colors.black87
                               : Colors.white70,
                           onPressed: (context) {
-                            tableauVM.deleteEntry(entries[index].infoEntry.id!);
+                            tableauVM?.deleteEntry(entries[index].infoEntry.id!);
                           },
                         ),
                       ],

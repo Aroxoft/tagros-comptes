@@ -30,14 +30,15 @@ class AddModifyEntry extends HookConsumerWidget {
     final players = useState(<PlayerBean>[]);
     final add = useState(false);
     final entry = useState(InfoEntryBean(points: 0, nbBouts: 0));
-    final playersArg = ref.watch(gameProvider.select((value) => value.players));
-    final ValueNotifier<PlayerBean?> playerAttack =
-        useState(PlayerBean.fromDb(playersArg.last));
+    final playersArg = ref.watch(currentGameProvider).value?.players;
+    final ValueNotifier<PlayerBean?> playerAttack = useState(
+        playersArg != null ? PlayerBean.fromDb(playersArg.last) : null);
     final withPlayers = useState<List<PlayerBean?>?>(null);
     final textPointsController = useTextEditingController(text: "0");
     final args = useMemoized(() =>
         ModalRoute.of(context)?.settings.arguments as AddModifyArguments?);
     useEffect(() {
+      if (playersArg == null) return null;
       final playersValue = playersArg.reversed
           .map((e) => PlayerBean.fromDb(e))
           .whereNotNull()
@@ -65,7 +66,7 @@ class AddModifyEntry extends HookConsumerWidget {
       withPlayers.value = info.withPlayers;
       textPointsController.text = info.infoEntry.points.toStringAsFixed(1);
       return null;
-    }, [0]);
+    }, [playersArg]);
     return BackgroundGradient(
       child: Scaffold(
         appBar: AppBar(
@@ -86,8 +87,9 @@ class AddModifyEntry extends HookConsumerWidget {
                   withPlayers: withPlayers.value,
                 );
                 Navigator.of(context).pop();
-                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-                  ref.read(tableauViewModelProvider).addEntry(infoEntry);
+                SchedulerBinding.instance
+                    .addPostFrameCallback((timeStamp) async {
+                  ref.read(tableauViewModelProvider)?.addEntry(infoEntry);
                   ref.read(messageObserverProvider.notifier).state =
                       Tuple2(add.value, infoEntry);
                 });

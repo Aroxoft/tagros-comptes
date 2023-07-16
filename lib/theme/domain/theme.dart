@@ -9,7 +9,7 @@ import 'package:tagros_comptes/util/list_util.dart';
 part 'theme.freezed.dart';
 
 @freezed
-abstract class ThemeColor extends Comparable<ThemeColor> with _$ThemeColor {
+abstract class ThemeColor with _$ThemeColor implements Comparable<ThemeColor> {
   factory ThemeColor({
     @Default(Color(0xff861313)) Color accentColor,
     @Default(Color(0xff393a3e)) Color appBarColor,

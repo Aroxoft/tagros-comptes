@@ -41,40 +41,29 @@ Map<String, double> calculateGains(
     switch (boutsForAttack) {
       case 0:
         wonBy = pointsForAttack - 56;
-        break;
       case 1:
         wonBy = pointsForAttack - 51;
-        break;
       case 2:
         wonBy = pointsForAttack - 41;
-        break;
       case 3:
         wonBy = pointsForAttack - 36;
-        break;
     }
   } else {
     switch (infoEntryPlayer.infoEntry.nbBouts) {
       case 0:
         wonBy = pointsForAttack - 106;
-        break;
       case 1:
         wonBy = pointsForAttack - 101;
-        break;
       case 2:
         wonBy = pointsForAttack - 96;
-        break;
       case 3:
         wonBy = pointsForAttack - 91;
-        break;
       case 4:
         wonBy = pointsForAttack - 86;
-        break;
       case 5:
         wonBy = pointsForAttack - 81;
-        break;
       case 6:
         wonBy = pointsForAttack - 75;
-        break;
     }
   }
 
@@ -85,10 +74,8 @@ Map<String, double> calculateGains(
     switch (petitAuBout) {
       case Camp.attack:
         petitPoints += won ? 10 : -10;
-        break;
       case Camp.defense:
         petitPoints += won ? -10 : 10;
-        break;
       case Camp.none:
         break;
     }

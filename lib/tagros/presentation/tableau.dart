@@ -34,7 +34,7 @@ class TableauPage extends ConsumerWidget {
         appBar: AppBar(
           title: StreamBuilder(
             initialData: 0,
-            stream: tableauVM.nbPlayers,
+            stream: tableauVM?.nbPlayers,
             builder: (ctx, snapshot) {
               return Text(S.current.nbPlayers(snapshot.data ?? 0));
             },
@@ -43,11 +43,11 @@ class TableauPage extends ConsumerWidget {
         floatingActionButton: FloatingActionButton(
             heroTag: UniqueKey(),
             onPressed: () async {
-              tableauVM.navigateToAddModify(context, infoEntry: null);
+              tableauVM?.navigateToAddModify(context, infoEntry: null);
             },
             child: const Icon(Icons.add)),
         body: StreamBuilder<List<PlayerBean>>(
-            stream: tableauVM.players,
+            stream: tableauVM?.players,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Center(child: Text(snapshot.error.toString()));

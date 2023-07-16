@@ -59,13 +59,10 @@ class PresetThemes extends ConsumerWidget {
                             initialName: theme.name,
                             onSave: (name) => themesVM.updateTheme(
                                 newTheme: theme.copyWith(name: name))));
-                    break;
                   case _OptionsTheme.copy:
                     themesVM.copyTheme(id: theme.id);
-                    break;
                   case _OptionsTheme.delete:
                     themesVM.deleteTheme(id: theme.id);
-                    break;
                 }
               },
               itemBuilder: (ctx) => [

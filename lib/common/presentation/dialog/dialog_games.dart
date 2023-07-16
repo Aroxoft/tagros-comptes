@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/tagros/data/game_provider.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -68,9 +69,10 @@ class DialogChooseGame extends ConsumerWidget {
                           subtitle: child,
                           onTap: () {
                             Navigator.of(context).pop();
-                            navigateToTableau(context,
-                                game: games[index],
-                                gamesDao: ref.read(gamesDaoProvider));
+                            navigateToTableau(context);
+                            ref.read(currentGameIdProvider.notifier).setGame(
+                                CurrentGameConstructorExistingGame(
+                                    games[index].game.id.value));
                           },
                         ),
                         child: Column(

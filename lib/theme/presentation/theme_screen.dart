@@ -4,10 +4,10 @@ import 'package:tagros_comptes/common/presentation/component/background_gradient
 import 'package:tagros_comptes/common/presentation/menu.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
-import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
+import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau.dart';
+import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
 import 'package:tagros_comptes/theme/data/theme_fake.dart';
 import 'package:tagros_comptes/theme/presentation/preset_themes.dart';
 import 'package:tagros_comptes/theme/presentation/theme_customization.dart';
@@ -55,12 +55,9 @@ class ThemeScreen extends HookConsumerWidget {
   }
 }
 
-final _fakePlayers = [
-  const Player(pseudo: "Alice"),
-  const Player(pseudo: "Bob"),
-  const Player(pseudo: "Charline")
-];
-final _fakeDaoProvider = Provider((ref) => FakeGamesDao(_fakePlayers));
+final _fakeDaoProvider = Provider((ref) => FakeGamesDao());
+
+final _fakeRepository = FakeRepository();
 
 class ThemePreview extends HookConsumerWidget {
   const ThemePreview({
@@ -69,16 +66,14 @@ class ThemePreview extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final game = GameWithPlayers(
-        players: _fakePlayers,
-        game:
-            Game(id: 1, nbPlayers: 3, date: DateTime.now()).toCompanion(true));
     return SizedBox(
       height: 200,
       child: ProviderScope(
         overrides: [
-          gameProvider.overrideWithValue(game),
+          tableauRepositoryProvider.overrideWith((ref) => _fakeRepository),
           gamesDaoProvider.overrideWithValue(ref.watch(_fakeDaoProvider)),
+          currentGameProvider
+              .overrideWith((ref) => AsyncValue.data(fakeGameWithPlayers)),
           navigationPrefixProvider.overrideWithValue("theme-preview-"),
         ],
         child: ListView(

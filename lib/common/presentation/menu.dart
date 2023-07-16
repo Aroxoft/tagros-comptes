@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/common/domain/types/functions.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/common/presentation/dialog/dialog_games.dart';
 import 'package:tagros_comptes/common/presentation/dialog/dialog_players.dart';
 import 'package:tagros_comptes/common/presentation/settings_screen.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
-import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 
 class MenuScreen extends HookConsumerWidget {
   static const routeName = "/menu";
@@ -65,13 +61,7 @@ class MenuBody extends StatelessWidget {
         Consumer(
           builder: (context, ref, child) => ElevatedButton(
             onPressed: () {
-              showDialogPlayers(context,
-                  doAfter: (players) => navigateToTableau(context,
-                      gamesDao: ref.read(gamesDaoProvider),
-                      game: GameWithPlayers(
-                          game: GamesCompanion.insert(
-                              nbPlayers: players.length, date: DateTime.now()),
-                          players: players)));
+              showDialogPlayers(context);
             },
             child: Text(S.of(context).newGame),
           ),
@@ -89,13 +79,12 @@ class MenuBody extends StatelessWidget {
     ));
   }
 
-  void showDialogPlayers(BuildContext context,
-      {required DoAfterChosen doAfter}) {
+  void showDialogPlayers(BuildContext context) {
     showDialog<void>(
         barrierDismissible: false,
         context: context,
         builder: (context) {
-          return DialogChoosePlayers(doAfterChosen: doAfter);
+          return const DialogChoosePlayers();
         });
   }
 }

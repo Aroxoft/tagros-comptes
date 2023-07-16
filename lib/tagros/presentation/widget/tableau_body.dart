@@ -165,7 +165,8 @@ class TableauBody extends ConsumerWidget {
                               ? Colors.black87
                               : Colors.white70,
                           onPressed: (context) {
-                            tableauVM?.deleteEntry(entries[index].infoEntry.id!);
+                            tableauVM
+                                ?.deleteEntry(entries[index].infoEntry.id!);
                           },
                         ),
                       ],

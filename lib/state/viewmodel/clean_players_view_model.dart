@@ -1,19 +1,21 @@
-import 'package:flutter/foundation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
-import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 
-class CleanPlayersVM extends ChangeNotifier {
-  CleanPlayersVM(PlayersDao playersDao)
-      : _playersDao = playersDao,
-        unusedPlayers = playersDao.unusedPlayers().watch();
-  final Stream<List<Player>> unusedPlayers;
-  final PlayersDao _playersDao;
+part 'clean_players_view_model.g.dart';
+
+@riverpod
+class CleanPlayer extends _$CleanPlayer {
+  @override
+  Stream<List<Player>> build() {
+    return ref.read(playerDaoProvider).unusedPlayers().watch();
+  }
 
   Future<int> deleteAllUnused() {
-    return _playersDao.deleteAllUnused();
+    return ref.read(playerDaoProvider).deleteAllUnused();
   }
 
   Future<void> deletePlayer({required int? idPlayer}) {
-    return _playersDao.deletePlayer(idPlayer);
+    return ref.read(playerDaoProvider).deletePlayer(idPlayer);
   }
 }

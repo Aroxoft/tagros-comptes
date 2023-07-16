@@ -12,7 +12,6 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/monetization/presentation/buy_screen.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
-import 'package:tagros_comptes/tagros/presentation/tableau.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -60,13 +59,4 @@ class MyApp extends ConsumerWidget {
       },
     );
   }
-}
-
-Future<void> navigateToTableau(BuildContext context) async {
-  await Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => ProviderScope(
-      parent: ProviderScope.containerOf(context),
-      child: const TableauPage(),
-    ),
-  ));
 }

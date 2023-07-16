@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tagros_comptes/common/presentation/navigation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/main.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/game_provider.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';

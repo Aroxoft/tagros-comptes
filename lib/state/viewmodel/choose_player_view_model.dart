@@ -1,61 +1,56 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
-import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 import 'package:tagros_comptes/tagros/domain/game/nb_players.dart';
 
-class ChoosePlayerVM extends ChangeNotifier {
-  ChoosePlayerVM(PlayersDao playersDao)
-      : _selectedPlayers = [],
-        _playersDao = playersDao;
+part 'choose_player_view_model.g.dart';
 
-  final PlayersDao _playersDao;
-  final List<Player> _selectedPlayers;
-  String? _error;
+@riverpod
+class ChoosePlayer extends _$ChoosePlayer {
+  ChoosePlayer();
 
-  List<Player> get selectedPlayers => UnmodifiableListView(_selectedPlayers);
-
-  int get nbPlayers => _selectedPlayers.length;
-
-  String? get error => _error;
+  /// The view model for the choose player screen
+  /// The state is a tuple of the error message and the list of players
+  @override
+  (String?, UnmodifiableListView<Player>) build() =>
+      (null, UnmodifiableListView([]));
 
   void addPlayer(Player player) {
-    _selectedPlayers.add(player);
-    notifyListeners();
+    state = (state.$1, UnmodifiableListView([...state.$2, player]));
   }
 
   void removePlayerAt({required int index}) {
-    _selectedPlayers.removeAt(index);
-    notifyListeners();
+    state = (state.$1, UnmodifiableListView([...state.$2..removeAt(index)]));
   }
 
   Future<void> addPlayerByName(String text) async {
-    final Player player = await _playersDao.addOrGetByName(name: text);
-    _selectedPlayers.add(player);
-    notifyListeners();
+    final Player player =
+        await ref.read(playerDaoProvider).addOrGetByName(name: text);
+    addPlayer(player);
   }
 
   Future<List<Player>> updateSuggestions({required String query}) async {
-    return _playersDao.searchForPlayer(query,
-        notIn: _selectedPlayers.map((e) => e.id).whereNotNull().toList());
+    return ref.read(playerDaoProvider).searchForPlayer(query,
+        notIn: state.$2.map((e) => e.id).whereNotNull().toList());
   }
 
   bool validatePlayers() {
+    final nbPlayers = state.$2.length;
     final bool correct =
         NbPlayers.values.map((e) => e.number).contains(nbPlayers);
+    String? error;
     if (!correct) {
-      _error = S.current.errorGameNbPlayers(nbPlayers);
+      error = S.current.errorGameNbPlayers(nbPlayers);
     } else {
-      _error = null;
+      error = null;
     }
-    notifyListeners();
+    state = (error, state.$2);
     return correct;
   }
 
   void clear() {
-    _selectedPlayers.clear();
-    _error = null;
-    notifyListeners();
+    state = (null, UnmodifiableListView([]));
   }
 }

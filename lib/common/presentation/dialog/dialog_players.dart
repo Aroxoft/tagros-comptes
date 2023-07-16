@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/player_search_field.dart';
+import 'package:tagros_comptes/common/presentation/navigation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/main.dart';
-import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
 import 'package:tagros_comptes/tagros/data/game_provider.dart';
 
 class DialogChoosePlayers extends ConsumerWidget {
-
   const DialogChoosePlayers({super.key});
 
   @override
@@ -18,7 +17,7 @@ class DialogChoosePlayers extends ConsumerWidget {
       actions: <Widget>[
         // error display
         ref.watch(choosePlayerProvider.select((value) {
-          final error = value.error;
+          final error = value.$1;
           if (error != null) {
             return Text(error, style: const TextStyle(color: Colors.red));
           } else {
@@ -27,12 +26,12 @@ class DialogChoosePlayers extends ConsumerWidget {
         })),
         ElevatedButton(
             onPressed: () {
-              if (ref.read(choosePlayerProvider).validatePlayers()) {
+              if (ref.read(choosePlayerProvider.notifier).validatePlayers()) {
                 Navigator.of(context).pop();
                 navigateToTableau(context);
                 ref.read(currentGameIdProvider.notifier).setGame(
                     CurrentGameConstructorNewGame(
-                        ref.read(choosePlayerProvider).selectedPlayers));
+                        ref.read(choosePlayerProvider).$2));
               }
             },
             child: Text(S.of(context).ok))
@@ -69,11 +68,11 @@ class DialogPlayerBody extends HookConsumerWidget {
             crossAxisAlignment: WrapCrossAlignment.start,
             children: List.generate(
                 ref.watch(
-                    choosePlayerProvider.select((value) => value.nbPlayers)),
+                    choosePlayerProvider.select((value) => value.$2.length)),
                 (index) => Chip(
                       label: Text(
-                        ref.watch(choosePlayerProvider.select(
-                            (value) => value.selectedPlayers[index].pseudo)),
+                        ref.watch(choosePlayerProvider
+                            .select((value) => value.$2[index].pseudo)),
                       ),
                       deleteIcon: const Icon(Icons.delete),
                       deleteButtonTooltipMessage:

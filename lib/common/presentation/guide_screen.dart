@@ -4,6 +4,7 @@ import 'package:tagros_comptes/generated/l10n.dart';
 
 class GuideScreen extends StatelessWidget {
   const GuideScreen({super.key});
+
   static const routeName = '/guide';
 
   @override

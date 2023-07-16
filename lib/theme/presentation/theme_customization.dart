@@ -307,6 +307,7 @@ class TileColorPicker extends StatelessWidget {
       required this.onSaved,
       required this.colorsUsed,
       required this.context});
+
   final String title;
   final String subtitle;
   final Color color;

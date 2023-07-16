@@ -27,7 +27,7 @@ class CurrentGameId extends _$CurrentGameId {
               nbPlayers: newGame.players.length,
               date: DateTime.now(),
             ),
-            players: constructor.players,
+            players: constructor.players.toList(),
           );
           final id = await ref.read(gamesDaoProvider).newGame(gameWithPlayers);
           return id;
@@ -39,7 +39,7 @@ class CurrentGameId extends _$CurrentGameId {
 sealed class CurrentGameConstructor {}
 
 class CurrentGameConstructorNewGame extends CurrentGameConstructor {
-  final List<Player> players;
+  final Iterable<Player> players;
 
   CurrentGameConstructorNewGame(this.players);
 }

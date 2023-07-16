@@ -4,6 +4,7 @@ import 'package:tagros_comptes/state/providers.dart';
 
 class BackgroundGradient extends ConsumerWidget {
   const BackgroundGradient({super.key, required this.child});
+
   final Widget child;
 
   @override

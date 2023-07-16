@@ -18,6 +18,7 @@ class AdsConfiguration {
 
   /// ios test native id
   final String _iosTestNativeId = "ca-app-pub-3940256099942544/3986624511";
+
   // endregion
 
 // getter for test ads

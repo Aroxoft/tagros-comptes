@@ -8,8 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/config/env_configuration.dart';
 import 'package:tagros_comptes/config/platform_configuration.dart';
-import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
-import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
 import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
@@ -43,15 +41,6 @@ GamesDao gamesDao(GamesDaoRef ref) {
   return ref.watch(databaseProvider.select((value) => value.gamesDao));
 }
 
-final cleanPlayerProvider = ChangeNotifierProvider<CleanPlayersVM>((ref) {
-  return CleanPlayersVM(ref.watch(playerDaoProvider));
-});
-
-final choosePlayerProvider =
-    ChangeNotifierProvider.autoDispose<ChoosePlayerVM>((ref) {
-  return ChoosePlayerVM(ref.watch(playerDaoProvider));
-});
-
 @Riverpod(keepAlive: true, dependencies: [database])
 ThemeRepository themeRepository(ThemeRepositoryRef ref) =>
     ThemeRepositoryImpl(ref.watch(databaseProvider).themeDao);
@@ -68,7 +57,8 @@ Stream<ThemeColor> themeColor(ThemeColorRef ref) =>
 final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
     (ref) => ThemeScreenViewModel(ref.watch(themeRepositoryProvider)));
 
-final navigationPrefixProvider = Provider<String>((ref) => "");
+@riverpod
+String navigationPrefix(NavigationPrefixRef ref) => "";
 
 final _platformConfigProvider = Provider<PlatformConfiguration>((ref) {
   return PlatformConfiguration();

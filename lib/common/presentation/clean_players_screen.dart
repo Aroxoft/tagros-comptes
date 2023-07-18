@@ -23,52 +23,53 @@ class CleanPlayersScreen extends ConsumerWidget {
         .accentColor));
     return BackgroundGradient(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(S.of(context).cleanupUnusedPlayersTitle),
-          actions: [
-            IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text(S.of(context).deleteAllDialogTitle),
-                        content: Text(S.of(context).deleteAllDialogContent),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(S.of(context).actionCancel)),
-                          TextButton(
-                              onPressed: () {
-                                // delete
-                                ref
-                                    .read(cleanPlayerProvider.notifier)
-                                    .deleteAllUnused();
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(S.of(context).actionDelete))
-                        ],
-                      );
-                    },
-                  );
-                },
-                tooltip: S.of(context).actionDeleteAllUnused,
-                icon: const Icon(Icons.delete_forever))
-          ],
-        ),
-        body: ref.watch(cleanPlayerProvider).when(
-            error: (error, stack) {
-              return Center(
-                child: Text(
-                  S.of(context).errorUnusedPlayers(error.toString()),
-                ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            data: (players) {
-              if (players.isEmpty) {
+          appBar: AppBar(
+            title: Text(S.of(context).cleanupUnusedPlayersTitle),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(S.of(context).deleteAllDialogTitle),
+                          content: Text(S.of(context).deleteAllDialogContent),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(S.of(context).actionCancel)),
+                            TextButton(
+                                onPressed: () {
+                                  // delete
+                                  ref
+                                      .read(cleanPlayerProvider.notifier)
+                                      .deleteAllUnused();
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(S.of(context).actionDelete))
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  tooltip: S.of(context).actionDeleteAllUnused,
+                  icon: const Icon(Icons.delete_forever))
+            ],
+          ),
+          body: StreamBuilder<List<Player>>(
+            stream: ref.watch(cleanPlayerProvider),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    S.of(context).errorUnusedPlayers(snapshot.error.toString()),
+                  ),
+                );
+              }
+              final players = snapshot.data;
+              if (players == null || players.isEmpty) {
                 return Center(child: Text(S.of(context).playersUnusedEmpty));
               }
               return AnimatedList(
@@ -82,8 +83,8 @@ class CleanPlayersScreen extends ConsumerWidget {
                       slidableColor: slidableColor);
                 },
               );
-            }),
-      ),
+            },
+          )),
     );
   }
 }

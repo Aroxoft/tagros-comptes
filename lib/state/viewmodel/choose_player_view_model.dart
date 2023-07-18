@@ -5,25 +5,21 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 import 'package:tagros_comptes/tagros/domain/game/nb_players.dart';
 
-part 'choose_player_view_model.g.dart';
-
-@riverpod
-class ChoosePlayer extends _$ChoosePlayer {
+class ChoosePlayer extends AutoDisposeNotifier<(String?, List<Player>)> {
   ChoosePlayer();
 
   /// The view model for the choose player screen
   /// The state is a tuple of the error message and the list of players
   @override
-  (String?, UnmodifiableListView<Player>) build() =>
-      (null, UnmodifiableListView([]));
+  (String?, List<Player>) build() => (null, <Player>[]);
 
   void addPlayer(Player player) {
-    state = (state.$1, UnmodifiableListView([...state.$2, player]));
+    state = (state.$1, [...state.$2, player]);
   }
 
   void removePlayerAt({required int index}) {
     final shrank = state.$2.toList()..removeAt(index);
-    state = (state.$1, UnmodifiableListView(shrank));
+    state = (state.$1, shrank);
   }
 
   Future<void> addPlayerByName(String text) async {
@@ -56,6 +52,11 @@ class ChoosePlayer extends _$ChoosePlayer {
   }
 
   void clear() {
-    state = (null, UnmodifiableListView([]));
+    state = (null, []);
   }
 }
+
+final choosePlayerProvider =
+    NotifierProvider.autoDispose<ChoosePlayer, (String?, List<Player>)>(() {
+  return ChoosePlayer();
+});

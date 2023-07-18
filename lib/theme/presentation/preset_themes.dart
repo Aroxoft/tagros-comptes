@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/theme/presentation/theme_customization.dart';
+import 'package:tagros_comptes/theme/presentation/theme_screen_viewmodel.dart';
 
 class PresetThemes extends ConsumerWidget {
   const PresetThemes({super.key});

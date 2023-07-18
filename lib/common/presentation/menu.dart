@@ -3,10 +3,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/common/presentation/dialog/dialog_games.dart';
-import 'package:tagros_comptes/common/presentation/dialog/dialog_players.dart';
 import 'package:tagros_comptes/common/presentation/settings_screen.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/tagros/presentation/dialog/dialog_players.dart';
 
 class MenuScreen extends HookConsumerWidget {
   static const routeName = "/menu";

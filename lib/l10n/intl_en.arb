@@ -12,6 +12,7 @@
     }
   },
   "appTitle": "Tagros counter",
+  "cancel": "Cancel",
   "theAttack": "the attack",
   "theDefense": "the defense",
   "points": "points",

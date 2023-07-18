@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 
 class Boxed extends ConsumerWidget {
   final double borderWidth;

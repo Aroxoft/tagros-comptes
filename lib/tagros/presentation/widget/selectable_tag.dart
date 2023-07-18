@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/domain/types/functions.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 
 class SelectableTag extends ConsumerWidget {
   final String text;

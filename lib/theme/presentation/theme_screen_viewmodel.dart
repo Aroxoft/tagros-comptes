@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 import 'package:tagros_comptes/theme/domain/theme_repository.dart';
 
 class ThemeScreenViewModel extends ChangeNotifier {
@@ -107,3 +109,6 @@ class ThemeScreenViewModel extends ChangeNotifier {
     _themeRepository.deleteTheme(id: id);
   }
 }
+
+final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
+    (ref) => ThemeScreenViewModel(ref.watch(themeRepositoryProvider)));

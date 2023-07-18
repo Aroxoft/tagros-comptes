@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/game_provider.dart';
+import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
 import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';

@@ -1,8 +1,8 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 
 void displayFlushbar(
   BuildContext context,

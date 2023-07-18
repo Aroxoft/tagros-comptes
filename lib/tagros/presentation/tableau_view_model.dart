@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/game_provider.dart';
+import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';

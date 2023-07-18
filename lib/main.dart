@@ -10,8 +10,8 @@ import 'package:tagros_comptes/common/presentation/menu.dart';
 import 'package:tagros_comptes/common/presentation/settings_screen.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/monetization/presentation/buy_screen.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -23,7 +23,7 @@ Future<void> main() async {
 
   timeago.setLocaleMessages('fr', timeago.FrMessages());
   timeago.setLocaleMessages('en', timeago.EnMessages());
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
   FlutterError.demangleStackTrace = (StackTrace stackTrace) {
     if (stackTrace is stack_trace.Trace) return stackTrace.vmTrace;
     if (stackTrace is stack_trace.Chain) return stackTrace.toTrace().vmTrace;
@@ -32,6 +32,8 @@ Future<void> main() async {
 }
 
 class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(

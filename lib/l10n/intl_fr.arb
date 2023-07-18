@@ -4,6 +4,7 @@
   "errorPseudoEmpty": "Veuillez entrer un nom",
   "errorGameNbPlayers": "Une partie avec {count, plural, zero{aucun joueur} one{un joueur} other{{count} joueurs}} n'existe pas",
   "appTitle": "Compteur Tagros",
+  "cancel": "Annuler",
   "theAttack": "l'attaque",
   "theDefense": "la défense",
   "points": "points",

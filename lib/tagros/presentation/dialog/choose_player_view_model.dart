@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/nb_players.dart';
 
 class ChoosePlayer extends AutoDisposeNotifier<(String?, List<Player>)> {

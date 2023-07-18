@@ -1,63 +1,19 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/config/env_configuration.dart';
 import 'package:tagros_comptes/config/platform_configuration.dart';
-import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
-import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
-import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
-import 'package:tagros_comptes/tagros/data/source/db/platforms/database.dart';
-import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
-import 'package:tagros_comptes/theme/data/theme_repository_impl.dart';
-import 'package:tagros_comptes/theme/domain/theme.dart';
-import 'package:tagros_comptes/theme/domain/theme_repository.dart';
 import 'package:tuple/tuple.dart';
 
 part 'providers.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [])
-AppDatabase database(DatabaseRef ref) {
-  final db = AppDatabase(Database.openConnection());
-  ref.onDispose(() {
-    db.close();
-  });
-  return db;
-}
-
-@Riverpod(keepAlive: true, dependencies: [database])
-PlayersDao playerDao(PlayerDaoRef ref) {
-  return ref.watch(databaseProvider.select((value) => value.playersDao));
-}
-
-@Riverpod(keepAlive: true, dependencies: [database])
-GamesDao gamesDao(GamesDaoRef ref) {
-  return ref.watch(databaseProvider.select((value) => value.gamesDao));
-}
-
-@Riverpod(keepAlive: true, dependencies: [database])
-ThemeRepository themeRepository(ThemeRepositoryRef ref) =>
-    ThemeRepositoryImpl(ref.watch(databaseProvider).themeDao);
-
-@Riverpod(dependencies: [themeRepository])
-Stream<ThemeData> themeData(ThemeDataRef ref) {
-  return ref.watch(themeRepositoryProvider.select((value) => value.themeData));
-}
-
-@Riverpod(dependencies: [themeRepository])
-Stream<ThemeColor> themeColor(ThemeColorRef ref) =>
-    ref.watch(themeRepositoryProvider.select((value) => value.selectedTheme()));
-
-final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
-    (ref) => ThemeScreenViewModel(ref.watch(themeRepositoryProvider)));
-
-@riverpod
+@Riverpod(dependencies: [])
 String navigationPrefix(NavigationPrefixRef ref) => "";
 
 final _platformConfigProvider = Provider<PlatformConfiguration>((ref) {

@@ -3,9 +3,9 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/state/providers.dart';
-import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
+import 'package:tagros_comptes/theme/presentation/theme_screen_viewmodel.dart';
 
 const _minFontSizeAppbar = 17;
 const _maxFontSizeAppbar = 22;

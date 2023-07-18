@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
+import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 
 part 'game_provider.g.dart';

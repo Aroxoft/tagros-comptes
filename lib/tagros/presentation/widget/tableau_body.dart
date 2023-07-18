@@ -9,6 +9,7 @@ import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 
 class TableauBody extends ConsumerWidget {
   final List<PlayerBean> players;

@@ -4,11 +4,13 @@ import 'package:tagros_comptes/common/presentation/component/background_gradient
 import 'package:tagros_comptes/common/presentation/menu.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau.dart';
 import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
 import 'package:tagros_comptes/theme/data/theme_fake.dart';
+import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 import 'package:tagros_comptes/theme/presentation/preset_themes.dart';
 import 'package:tagros_comptes/theme/presentation/theme_customization.dart';
 

@@ -1,8 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
+import 'package:tagros_comptes/tagros/data/source/db/platforms/database.dart';
 import 'package:tagros_comptes/tagros/data/source/db/players_dao.dart';
 import 'package:tagros_comptes/theme/data/source/theme_dao.dart';
+import 'package:tagros_comptes/theme/domain/theme.dart';
 
 part 'app_database.g.dart';
 
@@ -140,14 +142,12 @@ class Themes extends Table {
   daos: [PlayersDao, GamesDao, ThemeDao],
 )
 class AppDatabase extends _$AppDatabase {
-  static const int databaseVersion = 1;
-
   // We tell the database where to store the data with this constructor
   AppDatabase(super.conn);
 
   // Bump this number whenever we change or add a table definition
   @override
-  int get schemaVersion => databaseVersion;
+  int get schemaVersion => 1;
 
   @override
   MigrationStrategy get migration {
@@ -158,6 +158,26 @@ class AppDatabase extends _$AppDatabase {
         },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
+          if (details.wasCreated) {
+            // create themes and select default when opening the db for the 1st time
+            await batch((batch) {
+              batch.insertAll(
+                  themes, ThemeColor.allThemes.map((e) => e.toDbTheme).toList(),
+                  mode: InsertMode.insertOrReplace);
+              batch.insert(
+                configs,
+                ConfigsCompanion(
+                    key: const Value(ThemeDao.selectedKey),
+                    value: Value(ThemeColor.defaultTheme().id.toString())),
+              );
+            });
+          }
+          // This follows the recommendation to validate that the database schema
+          // matches what drift expects (https://drift.simonbinder.eu/docs/advanced-features/migrations/#verifying-a-database-schema-at-runtime).
+          // It allows catching bugs in the migration logic early.
+          await Database.validateDatabaseScheme(this);
+
+          // if we are debugging the database, we delete all tables and recreate them
           if (kDebugMode && kDebuggingDatabase) {
             final m = Migrator(this);
             for (final table in allTables) {

@@ -461,6 +461,17 @@ preset: true,);''';
       return -1;
     }
   }
+
+  static List<ThemeColor> get allThemes => [
+        ThemeColor.defaultTheme(),
+        ThemeColor.purple(),
+        ThemeColor.corporate(),
+        ThemeColor.hacker(),
+        ThemeColor.pastels(),
+        ThemeColor.dark(),
+        ThemeColor.chocolate(),
+        ThemeColor.blackWhite(),
+      ];
 }
 
 class ColorAdapter {

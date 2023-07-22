@@ -13,16 +13,8 @@ class ThemeRepositoryImpl extends ThemeRepository {
   Future<void> _initThemes() async {
     final count = await _themeDao.countThemes();
     if (count == 0) {
-      _themeDao.insertBatch([
-        ThemeColor.defaultTheme(),
-        ThemeColor.purple(),
-        ThemeColor.corporate(),
-        ThemeColor.hacker(),
-        ThemeColor.pastels(),
-        ThemeColor.dark(),
-        ThemeColor.chocolate(),
-        ThemeColor.blackWhite(),
-      ].map((e) => e.toDbTheme).toList());
+      _themeDao
+          .insertBatch(ThemeColor.allThemes.map((e) => e.toDbTheme).toList());
     }
   }
 

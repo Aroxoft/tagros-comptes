@@ -3,9 +3,9 @@ import 'package:drift/drift.dart';
 class Database {
   Database._();
 
-  static QueryExecutor openConnection() =>
+  static DatabaseConnection connect() =>
       throw UnsupportedError('Platform not found');
 
-  static void continueConfiguration() =>
+  static Future<void> validateDatabaseScheme(GeneratedDatabase database) =>
       throw UnsupportedError('Platform not found');
 }

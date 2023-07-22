@@ -8,7 +8,7 @@ part 'db_providers.g.dart';
 
 @Riverpod(keepAlive: true, dependencies: [])
 AppDatabase database(DatabaseRef ref) {
-  final db = AppDatabase(Database.openConnection());
+  final db = AppDatabase(Database.connect());
   ref.onDispose(() {
     db.close();
   });

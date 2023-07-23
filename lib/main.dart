@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 import 'package:tagros_comptes/common/presentation/clean_players_screen.dart';
@@ -19,7 +18,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
   await S.load(const Locale('fr'));
-  await Hive.initFlutter();
 
   timeago.setLocaleMessages('fr', timeago.FrMessages());
   timeago.setLocaleMessages('en', timeago.EnMessages());

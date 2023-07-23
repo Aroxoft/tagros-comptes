@@ -12,6 +12,7 @@
     }
   },
   "appTitle": "Tagros counter",
+  "cancel": "Cancel",
   "theAttack": "the attack",
   "theDefense": "the defense",
   "points": "points",
@@ -43,7 +44,7 @@
   "campTypeDefense": "Defense",
   "campTypeNone": "None",
   "addModifyTitleAttack": "Attack",
-  "addModifyAppBarTitle": "{add, select, add{Add a game} other{Edit a game}}",
+  "addModifyAppBarTitle": "{add, select, add{Add a round} other{Edit a round}}",
   "@addModifyAppBarTitle": {
     "description": "Add or modify screen title",
     "placeholders": {
@@ -88,6 +89,7 @@
   "priseTypeGardeSans": "Garde-sans",
   "priseTypeGardeContre": "Garde-contre",
   "successAddingGame": "Success adding game",
+  "successModifyingGame": "Success modifying game",
   "tableNoData": "No Data",
   "tableNoEntry": "No entries",
   "infoEntryString": "{playerName} took a {prise} {withPlayers, select, onePlayer{(with {player1})} twoPlayers{(with {player1} and {player2})} other{alone}}, {points} points for {campPoints}, {nbBouts, plural, zero{no oudlers} one{1 oudler} other{{nbBouts} oudlers}} for {campPoints}.",

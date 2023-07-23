@@ -1,94 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/.env.dart';
-import 'package:tagros_comptes/model/game/game_with_players.dart';
-import 'package:tagros_comptes/model/theme/theme.dart';
-import 'package:tagros_comptes/services/config/env_configuration.dart';
-import 'package:tagros_comptes/services/config/platform_configuration.dart';
-import 'package:tagros_comptes/services/db/app_database.dart';
-import 'package:tagros_comptes/services/db/games_dao.dart';
-import 'package:tagros_comptes/services/db/platforms/database.dart';
-import 'package:tagros_comptes/services/db/players_dao.dart';
-import 'package:tagros_comptes/services/theme/theme_service.dart';
-import 'package:tagros_comptes/state/bloc/entry_db_bloc.dart';
-import 'package:tagros_comptes/state/bloc/game_notifier.dart';
-import 'package:tagros_comptes/state/viewmodel/choose_player_view_model.dart';
-import 'package:tagros_comptes/state/viewmodel/clean_players_view_model.dart';
-import 'package:tagros_comptes/state/viewmodel/theme_screen_viewmodel.dart';
-import 'package:tagros_comptes/ui/table_screen/ads_calculator.dart';
+import 'package:tagros_comptes/config/env_configuration.dart';
+import 'package:tagros_comptes/config/platform_configuration.dart';
+import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
+import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
+import 'package:tuple/tuple.dart';
 
-final databaseProvider = Provider<AppDatabase>((ref) {
-  final db = AppDatabase(Database.openConnection());
-  ref.onDispose(() {
-    db.close();
-  });
-  return db;
-});
+part 'providers.g.dart';
 
-final playerDaoProvider = Provider<PlayersDao>((ref) {
-  return ref.watch(databaseProvider.select((value) => value.playersDao));
-});
-final gamesDaoProvider = Provider<GamesDao>((ref) {
-  return ref.watch(databaseProvider.select((value) => value.gamesDao));
-});
-
-final cleanPlayerProvider = ChangeNotifierProvider<CleanPlayersVM>((ref) {
-  return CleanPlayersVM(ref.watch(playerDaoProvider));
-});
-
-final choosePlayerProvider =
-    ChangeNotifierProvider.autoDispose<ChoosePlayerVM>((ref) {
-  return ChoosePlayerVM(ref.watch(playerDaoProvider));
-});
-
-final gameChangeProvider = Provider<GameNotifier>((ref) {
-  final gameChange = GameNotifier(gamesDao: ref.watch(gamesDaoProvider));
-  ref.onDispose(() {
-    gameChange.dispose();
-  });
-  return gameChange;
-});
-
-final gameProvider = Provider<GameWithPlayers>((ref) {
-  throw StateError("no game selected");
-});
-
-// final optionsProvider = StateProvider<ThemeColor>((ref) {
-//   return ThemeColor();
-// });
-
-final themeProvider = Provider<ThemeService>((ref) {
-  final themeService = ThemeService();
-  ref.onDispose(() {
-    themeService.dispose();
-  });
-  return themeService;
-});
-final themeDataProvider = StreamProvider<ThemeData>(
-    (ref) => ref.watch(themeProvider.select((value) => value.themeData)),
-    dependencies: [themeProvider]);
-
-final themeColorProvider = StreamProvider<ThemeColor>(
-    (ref) => ref.watch(themeProvider.select((value) => value.themeStream)),
-    dependencies: [themeProvider]);
-
-final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
-    (ref) => ThemeScreenViewModel(ref.watch(themeProvider)));
-
-final entriesProvider = Provider<EntriesDbBloc>((ref) {
-  final entries = EntriesDbBloc(ref.watch(gameProvider),
-      gamesDao: ref.watch(gamesDaoProvider));
-  ref.onDispose(() {
-    entries.dispose();
-  });
-  return entries;
-}, dependencies: [gameProvider, gamesDaoProvider]);
-
-final navigationPrefixProvider = Provider<String>((ref) => "");
+@Riverpod(dependencies: [])
+String navigationPrefix(NavigationPrefixRef ref) => "";
 
 final _platformConfigProvider = Provider<PlatformConfiguration>((ref) {
   return PlatformConfiguration();
@@ -170,4 +96,13 @@ final bannerAdsProvider =
     completer.future.then((value) => value.dispose());
   });
   return completer.future;
+});
+
+/// This is sent whenever we add or modify an entry
+///
+/// - The first value is true if we added a new entry, false if we modified an existing one
+/// - The second value is the entry we added or modified
+final messageObserverProvider =
+    StateProvider<Tuple2<bool, InfoEntryPlayerBean>?>((ref) {
+  return null;
 });

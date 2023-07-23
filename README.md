@@ -64,3 +64,67 @@ cd ../
 ```shell
 flutter build ios
 ```
+
+## Diagram of providers
+```mermaid
+flowchart TB
+  subgraph Arrows
+    direction LR
+    start1[ ] -..->|read| stop1[ ]
+    style start1 height:0px;
+    style stop1 height:0px;
+    start2[ ] --->|listen| stop2[ ]
+    style start2 height:0px;
+    style stop2 height:0px;
+    start3[ ] ===>|watch| stop3[ ]
+    style start3 height:0px;
+    style stop3 height:0px;
+  end
+
+  subgraph Type
+    direction TB
+    ConsumerWidget((widget));
+    Provider[[provider]];
+  end
+  CleanPlayersScreen((CleanPlayersScreen));
+  cleanPlayerProvider ==> CleanPlayersScreen;
+  cleanPlayerProvider -.-> CleanPlayersScreen;
+  DialogChooseGame((DialogChooseGame));
+  databaseProvider ==> DialogChooseGame;
+  gamesDaoProvider -.-> DialogChooseGame;
+  currentGameIdProvider -.-> DialogChooseGame;
+  DialogChoosePlayers((DialogChoosePlayers));
+  choosePlayerProvider ==> DialogChoosePlayers;
+  choosePlayerProvider -.-> DialogChoosePlayers;
+  DialogPlayerBody((DialogPlayerBody));
+  choosePlayerProvider ==> DialogPlayerBody;
+  AddModifyEntry((AddModifyEntry));
+  currentGameProvider ==> AddModifyEntry;
+  tableauViewModelProvider ==> TableauBody;
+  tableauViewModelProvider -.-> AddModifyEntry;
+  messageObserverProvider -.-> AddModifyEntry;
+  TableauPage((TableauPage));
+  messageObserverProvider[[messageObserverProvider]];
+  tableauViewModelProvider ==> TableauPage;
+  messageObserverProvider --> TableauPage;
+  messageObserverProvider -.-> TableauPage;
+  TableauBody((TableauBody));
+  cleanPlayerProvider[[cleanPlayerProvider]];
+  playerDaoProvider ==> cleanPlayerProvider;
+  databaseProvider[[databaseProvider]];
+  gamesDaoProvider[[gamesDaoProvider]];
+  databaseProvider ==> gamesDaoProvider;
+  currentGameIdProvider[[currentGameIdProvider]];
+  choosePlayerProvider[[choosePlayerProvider]];
+  playerDaoProvider ==> choosePlayerProvider;
+  playerDaoProvider[[playerDaoProvider]];
+  databaseProvider ==> playerDaoProvider;
+  tableauRepositoryProvider[[tableauRepositoryProvider]];
+  currentGameIdProvider ==> tableauRepositoryProvider;
+  gamesDaoProvider ==> tableauRepositoryProvider;
+  currentGameProvider[[currentGameProvider]];
+  currentGameIdProvider ==> currentGameProvider;
+  gamesDaoProvider ==> currentGameProvider;
+  tableauViewModelProvider[[tableauViewModelProvider]];
+  tableauRepositoryProvider ==> tableauViewModelProvider;
+```

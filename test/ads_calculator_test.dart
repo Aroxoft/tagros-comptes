@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tagros_comptes/ui/table_screen/ads_calculator.dart';
+import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
 
 void main() {
   /// test that the function isAd returns the right value for the given input

@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 class PlatformConfiguration {
@@ -53,3 +54,7 @@ class PlatformConfiguration {
 
   bool get isDesktop => _isDesktop;
 }
+
+final platformConfigProvider = Provider<PlatformConfiguration>((ref) {
+  return PlatformConfiguration();
+});

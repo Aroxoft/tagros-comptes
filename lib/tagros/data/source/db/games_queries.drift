@@ -3,11 +3,11 @@ import 'app_database.dart';
 -- @formatter:on
 
 -- get all entries in a game
-entriesInGame:
-select entry.id,
+entriesInGame as EntryInGameResult:
+SELECT entry.id,
        game,
-       player    as playerId,
-       p.pseudo  as playerName,
+       player    AS playerId,
+       p.pseudo  AS playerName,
        with1     AS with1Id,
        w1.pseudo AS with1Name,
        with2     AS with2Id,
@@ -23,6 +23,28 @@ LEFT OUTER JOIN players p ON p.id = entry.player
 LEFT OUTER JOIN players w1 ON w1.id = entry.with1
 LEFT OUTER JOIN players w2 ON w2.id = entry.with2
 WHERE entry.game = :gameId;
+
+-- get one entry
+entryById as EntryInGameResult:
+SELECT entry.id,
+       game,
+       player    AS playerId,
+       p.pseudo  AS playerName,
+       with1     AS with1Id,
+       w1.pseudo AS with1Name,
+       with2     AS with2Id,
+       w2.pseudo AS with2Name,
+       points,
+       points_for_attack,
+       petit_au_bout,
+       poignee,
+       prise,
+       nb_bouts
+FROM info_entries       entry
+LEFT OUTER JOIN players p ON p.id = entry.player
+LEFT OUTER JOIN players w1 ON w1.id = entry.with1
+LEFT OUTER JOIN players w2 ON w2.id = entry.with2
+WHERE entry.id = :entryId;
 
 allGamesWithPlayer AS GameWithPlayersRow:
 SELECT g.id     AS gameId,
@@ -46,6 +68,6 @@ INNER JOIN players      p ON pg.player = p.id
 WHERE g.id = :gameId;
 
 updateGameDate(:gameId AS INTEGER):
-update games
-set date = unixepoch()
-where id = :gameId;
+UPDATE games
+SET date = UNIXEPOCH()
+WHERE id = :gameId;

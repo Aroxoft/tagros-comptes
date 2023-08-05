@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 
-class BuyScreen extends StatelessWidget {
-  const BuyScreen({super.key});
+class SubscriptionScreen extends StatelessWidget {
+  const SubscriptionScreen({super.key});
 
   static const routeName = '/buy';
 

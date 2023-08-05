@@ -5,12 +5,14 @@ import 'package:tagros_comptes/common/presentation/component/background_gradient
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
-import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
+import 'package:tagros_comptes/tagros/presentation/game_view_model.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/snack_utils.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/tableau_body.dart';
 
-class TableauPage extends ConsumerWidget {
-  const TableauPage({super.key});
+class GameScreen extends ConsumerWidget {
+  const GameScreen({super.key});
+
+  static const routeName = "/game";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,7 +45,7 @@ class TableauPage extends ConsumerWidget {
         floatingActionButton: FloatingActionButton(
             heroTag: UniqueKey(),
             onPressed: () async {
-              tableauVM?.navigateToAddModify(context, infoEntry: null);
+              tableauVM?.navigateToAddModify(context, roundId: null);
             },
             child: const Icon(Icons.add)),
         body: StreamBuilder<List<PlayerBean>>(

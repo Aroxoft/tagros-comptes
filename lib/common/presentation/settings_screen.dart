@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tagros_comptes/common/presentation/clean_players_screen.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
-import 'package:tagros_comptes/common/presentation/guide_screen.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
-import 'package:tagros_comptes/monetization/presentation/buy_screen.dart';
-import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
+import 'package:tagros_comptes/navigation/routes.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -22,27 +19,19 @@ class SettingsScreen extends StatelessWidget {
           children: [
             ListTile(
               title: Text(S.of(context).settingsCleanUnusedPlayers),
-              onTap: () {
-                Navigator.of(context).pushNamed(CleanPlayersScreen.routeName);
-              },
+              onTap: () => const CleanupRoute().go(context),
             ),
             ListTile(
               title: Text(S.of(context).settingsGuide),
-              onTap: () {
-                Navigator.of(context).pushNamed(GuideScreen.routeName);
-              },
+              onTap: () => const GuideRoute().go(context),
             ),
             ListTile(
               title: Text(S.of(context).settingsTheme),
-              onTap: () {
-                Navigator.of(context).pushNamed(ThemeScreen.routeName);
-              },
+              onTap: () => const ThemeRoute().go(context),
             ),
             ListTile(
               title: Text(S.of(context).settingsBuyPremium),
-              onTap: () {
-                Navigator.of(context).pushNamed(BuyScreen.routeName);
-              },
+              onTap: () => const SubscriptionRoute().go(context),
             ),
           ],
         ),

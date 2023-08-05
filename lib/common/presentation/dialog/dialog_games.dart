@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/navigation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
@@ -76,7 +77,7 @@ class ChooseGameBody extends ConsumerWidget {
                             .nbPlayers(games[index].players.length)),
                         subtitle: child,
                         onTap: () {
-                          Navigator.of(context).pop();
+                          context.pop();
                           navigateToTableau(context);
                           ref.read(currentGameIdProvider.notifier).setGame(
                               CurrentGameConstructorExistingGame(

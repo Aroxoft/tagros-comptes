@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/player_search_field.dart';
 import 'package:tagros_comptes/common/presentation/navigation.dart';
@@ -25,14 +26,13 @@ class DialogChoosePlayers extends ConsumerWidget {
           }
         })),
         OutlinedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(S.of(context).cancel)),
+          onPressed: () => context.pop(),
+          child: Text(S.of(context).cancel),
+        ),
         ElevatedButton(
             onPressed: () {
               if (ref.read(choosePlayerProvider.notifier).validatePlayers()) {
-                Navigator.of(context).pop();
+                context.pop();
                 navigateToTableau(context);
                 ref.read(currentGameIdProvider.notifier).setGame(
                     CurrentGameConstructorNewGame(

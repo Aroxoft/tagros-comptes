@@ -3,27 +3,30 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/state/providers.dart';
+import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
 import 'package:tagros_comptes/tagros/domain/game/prise.dart';
-import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
+import 'package:tagros_comptes/tagros/presentation/game_view_model.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/boxed.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/selectable_tag.dart';
 import 'package:tagros_comptes/tagros/presentation/widget/snack_utils.dart';
 import 'package:tagros_comptes/util/half_decimal_input_formatter.dart';
 import 'package:tuple/tuple.dart';
 
-class AddModifyEntry extends HookConsumerWidget {
+class EntryScreen extends HookConsumerWidget {
   static String routeName = "/addModify";
+  final int? roundId;
 
-  const AddModifyEntry({super.key});
+  const EntryScreen({super.key, required this.roundId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,8 +38,6 @@ class AddModifyEntry extends HookConsumerWidget {
         playersArg != null ? PlayerBean.fromDb(playersArg.last) : null);
     final withPlayers = useState<List<PlayerBean?>?>(null);
     final textPointsController = useTextEditingController(text: "0");
-    final args = useMemoized(() =>
-        ModalRoute.of(context)?.settings.arguments as AddModifyArguments?);
     useEffect(() {
       if (playersArg == null) return null;
       final playersValue = playersArg.reversed
@@ -44,12 +45,8 @@ class AddModifyEntry extends HookConsumerWidget {
           .whereNotNull()
           .toList();
       players.value = playersValue;
-      InfoEntryPlayerBean? info = args?.infoEntry;
-      if (kDebugMode) {
-        print(
-            "So we ${info == null ? "add" : "modify"} an entry, we have the players: $players");
-      }
-      if (info == null) {
+      InfoEntryPlayerBean? info;
+      if (roundId == null) {
         add.value = true;
         final pLength = playersValue.length;
         info = InfoEntryPlayerBean(
@@ -60,11 +57,18 @@ class AddModifyEntry extends HookConsumerWidget {
         } else if (pLength > 5) {
           info = info.copyWith(withPlayers: [playersValue[0], playersValue[0]]);
         }
+      } else {
+        ref.read(gamesDaoProvider).fetchEntry(roundId!).then((info) {
+          playerAttack.value = info.player;
+          entry.value = info.infoEntry;
+          withPlayers.value = info.withPlayers;
+          textPointsController.text = info.infoEntry.points.toStringAsFixed(1);
+        });
       }
-      playerAttack.value = info.player;
-      entry.value = info.infoEntry;
-      withPlayers.value = info.withPlayers;
-      textPointsController.text = info.infoEntry.points.toStringAsFixed(1);
+      if (kDebugMode) {
+        print(
+            "So we ${roundId == null ? "add" : "modify"} an entry, we have the players: $players");
+      }
       return null;
     }, [playersArg]);
     return BackgroundGradient(
@@ -86,10 +90,14 @@ class AddModifyEntry extends HookConsumerWidget {
                   infoEntry: entry.value,
                   withPlayers: withPlayers.value,
                 );
-                Navigator.of(context).pop();
+                context.pop();
                 SchedulerBinding.instance
                     .addPostFrameCallback((timeStamp) async {
-                  ref.read(tableauViewModelProvider)?.addEntry(infoEntry);
+                  if (add.value) {
+                    ref.read(tableauViewModelProvider)?.addEntry(infoEntry);
+                  } else {
+                    ref.read(tableauViewModelProvider)?.modifyEntry(infoEntry);
+                  }
                   ref.read(messageObserverProvider.notifier).state =
                       Tuple2(add.value, infoEntry);
                 });
@@ -476,12 +484,6 @@ class AddModifyEntry extends HookConsumerWidget {
     if (withPlayers.length != 2) return false;
     return true;
   }
-}
-
-class AddModifyArguments {
-  InfoEntryPlayerBean? infoEntry;
-
-  AddModifyArguments({required this.infoEntry});
 }
 
 enum Tagros { tagros, tarot }

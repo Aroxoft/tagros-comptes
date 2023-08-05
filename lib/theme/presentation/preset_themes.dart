@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/theme/presentation/theme_customization.dart';
@@ -125,7 +126,7 @@ class RenameDialog extends HookWidget {
         TextButton(
             onPressed: () {
               onSave(textController.text);
-              Navigator.of(context).pop();
+              context.pop();
             },
             child: Text(S.of(context).themeRenameDialogActionSave))
       ],

@@ -22,6 +22,12 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
         .map((event) => event.map((row) => row.toInfoEntryPlayerBean).toList());
   }
 
+  Future<InfoEntryPlayerBean> fetchEntry(int roundId) async {
+    return entryById(entryId: roundId)
+        .getSingle()
+        .then((value) => value.toInfoEntryPlayerBean);
+  }
+
   Stream<List<GameWithPlayers>> watchAllGamesDrift() {
     final gameStream = allGamesWithPlayer().watch();
     return gameStream.map((event) {
@@ -238,7 +244,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 // endregion
 }
 
-extension InfoExt on EntriesInGameResult {
+extension InfoExt on EntryInGameResult {
   InfoEntryPlayerBean get toInfoEntryPlayerBean {
     return InfoEntryPlayerBean(
         infoEntry: InfoEntryBean(

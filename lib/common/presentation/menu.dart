@@ -3,16 +3,16 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/common/presentation/dialog/dialog_games.dart';
-import 'package:tagros_comptes/common/presentation/settings_screen.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/navigation/routes.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/presentation/dialog/dialog_players.dart';
 
-class MenuScreen extends HookConsumerWidget {
+class HomeScreen extends HookConsumerWidget {
   static const routeName = "/menu";
   final bool _showAds;
 
-  const MenuScreen({super.key, bool showAds = true}) : _showAds = showAds;
+  const HomeScreen({super.key, bool showAds = true}) : _showAds = showAds;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,9 +23,7 @@ class MenuScreen extends HookConsumerWidget {
           actions: <Widget>[
             IconButton(
                 icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(SettingsScreen.routeName);
-                })
+                onPressed: () => const SettingsRoute().push(context))
           ],
         ),
         body: Column(

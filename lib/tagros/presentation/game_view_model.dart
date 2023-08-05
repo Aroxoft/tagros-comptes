@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tagros_comptes/navigation/routes.dart';
 import 'package:tagros_comptes/tagros/data/game_provider.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
@@ -8,9 +9,8 @@ import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/domain/repository/tableau_repository.dart';
-import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
 
-part 'tableau_view_model.g.dart';
+part 'game_view_model.g.dart';
 
 class TableauViewModel {
   TableauViewModel(this._tableauRepository, this.ref);
@@ -44,15 +44,8 @@ class TableauViewModel {
   }
 
   Future<InfoEntryPlayerBean?> navigateToAddModify(BuildContext context,
-      {required InfoEntryPlayerBean? infoEntry}) async {
-    final modified = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => ProviderScope(
-        parent: ProviderScope.containerOf(context),
-        child: const AddModifyEntry(),
-      ),
-      settings:
-          RouteSettings(arguments: AddModifyArguments(infoEntry: infoEntry)),
-    ));
+      {required int? roundId}) async {
+    final modified = await EntryRoute(roundId).push(context);
     return modified as InfoEntryPlayerBean?;
   }
 }

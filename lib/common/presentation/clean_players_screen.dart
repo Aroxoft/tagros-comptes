@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/clean_players_view_model.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
@@ -36,17 +37,16 @@ class CleanPlayersScreen extends ConsumerWidget {
                           content: Text(S.of(context).deleteAllDialogContent),
                           actions: [
                             TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text(S.of(context).actionCancel)),
+                              onPressed: () => context.pop(),
+                              child: Text(S.of(context).actionCancel),
+                            ),
                             TextButton(
                                 onPressed: () {
                                   // delete
                                   ref
                                       .read(cleanPlayerProvider.notifier)
                                       .deleteAllUnused();
-                                  Navigator.of(context).pop();
+                                  context.pop();
                                 },
                                 child: Text(S.of(context).actionDelete))
                           ],

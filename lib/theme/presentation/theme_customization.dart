@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
@@ -424,13 +425,12 @@ class ColorPickerDialog extends HookConsumerWidget {
       ),
       actions: [
         TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(S.of(context).actionCancel)),
+          onPressed: () => context.pop(),
+          child: Text(S.of(context).actionCancel),
+        ),
         TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
               onSaved(color.value);
             },
             child: Text(S.of(context).actionSubmit))

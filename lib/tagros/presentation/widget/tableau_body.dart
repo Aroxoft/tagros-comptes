@@ -7,7 +7,7 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
-import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
+import 'package:tagros_comptes/tagros/presentation/game_view_model.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 
@@ -148,7 +148,7 @@ class TableauBody extends ConsumerWidget {
                             onPressed: (context) async {
                               final modified =
                                   await tableauVM?.navigateToAddModify(context,
-                                      infoEntry: entries[index]);
+                                      roundId: entries[index].infoEntry.id);
                               if (modified != null) {
                                 tableauVM?.modifyEntry(modified);
                               }

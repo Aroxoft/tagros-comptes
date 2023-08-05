@@ -7,8 +7,8 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
-import 'package:tagros_comptes/tagros/presentation/tableau.dart';
-import 'package:tagros_comptes/tagros/presentation/tableau_view_model.dart';
+import 'package:tagros_comptes/tagros/presentation/game.dart';
+import 'package:tagros_comptes/tagros/presentation/game_view_model.dart';
 import 'package:tagros_comptes/theme/data/theme_fake.dart';
 import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 import 'package:tagros_comptes/theme/presentation/preset_themes.dart';
@@ -81,9 +81,9 @@ class ThemePreview extends HookConsumerWidget {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: const [
-            PreviewScreen(child: MenuScreen(showAds: false)),
-            PreviewScreen(child: TableauPage()),
-            PreviewScreen(child: AddModifyEntry()),
+            PreviewScreen(child: HomeScreen(showAds: false)),
+            PreviewScreen(child: GameScreen()),
+            PreviewScreen(child: EntryScreen(roundId: null)),
           ],
         ),
       ),

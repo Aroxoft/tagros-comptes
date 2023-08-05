@@ -16,16 +16,13 @@ part 'providers.g.dart';
 @Riverpod(dependencies: [])
 String navigationPrefix(NavigationPrefixRef ref) => "";
 
-final _platformConfigProvider = Provider<PlatformConfiguration>((ref) {
-  return PlatformConfiguration();
-});
 
 final adsCalculatorProvider = Provider<AdsCalculator>((ref) {
   return AdsCalculator();
 });
 
 final adsConfigurationProvider = Provider<AdsConfiguration>((ref) {
-  return AdsConfiguration(environment, ref.watch(_platformConfigProvider));
+  return AdsConfiguration(environment, ref.watch(platformConfigProvider));
 });
 
 final nativeAdIdProvider = Provider<String>((ref) {

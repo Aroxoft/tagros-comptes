@@ -145,13 +145,11 @@ class TableauBody extends ConsumerWidget {
                             foregroundColor: theme.accentColor.isLight
                                 ? Colors.black87
                                 : Colors.white70,
-                            onPressed: (context) async {
-                              final modified =
-                                  await tableauVM?.navigateToAddModify(context,
-                                      roundId: entries[index].infoEntry.id);
-                              if (modified != null) {
-                                tableauVM?.modifyEntry(modified);
-                              }
+                            onPressed: (context) {
+                              tableauVM?.navigateToAddModify(
+                                context,
+                                roundId: entries[index].infoEntry.id,
+                              );
                             },
                           ),
                         ]),

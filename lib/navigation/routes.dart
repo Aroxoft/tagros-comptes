@@ -5,7 +5,7 @@ import 'package:tagros_comptes/common/presentation/error_page.dart';
 import 'package:tagros_comptes/common/presentation/guide_screen.dart';
 import 'package:tagros_comptes/common/presentation/menu.dart';
 import 'package:tagros_comptes/common/presentation/settings_screen.dart';
-import 'package:tagros_comptes/monetization/presentation/buy_screen.dart';
+import 'package:tagros_comptes/monetization/presentation/subscription_screen.dart';
 import 'package:tagros_comptes/tagros/presentation/add_modify.dart';
 import 'package:tagros_comptes/tagros/presentation/game.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';

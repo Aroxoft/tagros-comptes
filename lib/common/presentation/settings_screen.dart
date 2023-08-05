@@ -19,19 +19,19 @@ class SettingsScreen extends StatelessWidget {
           children: [
             ListTile(
               title: Text(S.of(context).settingsCleanUnusedPlayers),
-              onTap: () => const CleanupRoute().go(context),
+              onTap: () => const CleanupRoute().push(context),
             ),
             ListTile(
               title: Text(S.of(context).settingsGuide),
-              onTap: () => const GuideRoute().go(context),
+              onTap: () => const GuideRoute().push(context),
             ),
             ListTile(
               title: Text(S.of(context).settingsTheme),
-              onTap: () => const ThemeRoute().go(context),
+              onTap: () => const ThemeRoute().push(context),
             ),
             ListTile(
               title: Text(S.of(context).settingsBuyPremium),
-              onTap: () => const SubscriptionRoute().go(context),
+              onTap: () => const SubscriptionRoute().push(context),
             ),
           ],
         ),

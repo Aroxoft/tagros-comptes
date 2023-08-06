@@ -12,6 +12,7 @@ class SubscriptionState with _$SubscriptionState {
     required List<Package> packages,
     required ErrorPurchase? error,
     required ErrorPurchase? temporaryError,
+    required Package? selectedPackage,
   }) = _SubscriptionState;
 
   SubscriptionState._();

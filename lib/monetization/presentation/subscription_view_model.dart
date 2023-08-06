@@ -23,6 +23,7 @@ class SubscriptionViewModel extends _$SubscriptionViewModel {
       isPro: false,
       isLoading: true,
       packages: _packages,
+      selectedPackage: null,
       error: null,
       temporaryError: null,
     );
@@ -40,7 +41,10 @@ class SubscriptionViewModel extends _$SubscriptionViewModel {
         state = state.copyWith(error: packages.error, isLoading: false);
       case SuccessPurchase<List<Package>>():
         _packages = packages.data;
-        state = state.copyWith(packages: _packages, isLoading: false);
+        state = state.copyWith(
+            packages: _packages,
+            isLoading: false,
+            selectedPackage: _packages.firstOrNull);
     }
   }
 
@@ -74,14 +78,6 @@ class SubscriptionViewModel extends _$SubscriptionViewModel {
       error: null,
       temporaryError: null,
       isLoading: true,
-    );
-  }
-
-  void clearAll() {
-    state = state.copyWith(
-      error: null,
-      temporaryError: null,
-      isLoading: false,
     );
   }
 }

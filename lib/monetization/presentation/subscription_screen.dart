@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:purchases_flutter/models/package_wrapper.dart';
+import 'package:purchases_flutter/models/period_unit.dart';
+import 'package:purchases_flutter/models/period_wrapper.dart';
+import 'package:purchases_flutter/models/price_wrapper.dart';
+import 'package:purchases_flutter/models/pricing_phase_wrapper.dart';
+import 'package:purchases_flutter/models/store_product_wrapper.dart';
+import 'package:purchases_flutter/models/subscription_option_wrapper.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/monetization/presentation/error_mapper.dart';
+import 'package:tagros_comptes/monetization/presentation/package_card.dart';
 import 'package:tagros_comptes/monetization/presentation/subscription_view_model.dart';
 
 class SubscriptionScreen extends HookConsumerWidget {
@@ -48,6 +56,24 @@ class SubscriptionScreen extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "images/logo_small.png",
+                  width: 30,
+                  height: 30,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "Premium",
+                  style: Theme.of(context).textTheme.titleLarge,
+                )
+              ],
+            ),
+          ),
           TextButton(
               onPressed: () {
                 subscriptionVM.restorePurchase();
@@ -97,24 +123,24 @@ class SubscriptionScreen extends HookConsumerWidget {
             child: ListView.builder(
                 itemCount: subscriptionState.packages.length,
                 itemBuilder: (context, index) {
-                  return TextButton(
-                      onPressed: () {
-                        subscriptionVM.buy(subscriptionState.packages[index]);
-                      },
-                      child: const Text("Acheter"));
+                  final package = subscriptionState.packages[index];
+                  return PackageCard(
+                    isSelected: subscriptionState.selectedPackage == package,
+                    package: package,
+                    onTap: () {
+                      subscriptionVM.buy(package);
+                    },
+                  );
                 }),
           ),
-          ElevatedButton(
-              onPressed: () {
-                // todo : buy by year
-                subscriptionVM.clearAll();
-              },
-              child: const Text("clear errors")),
-          ElevatedButton(
-              onPressed: () {
-                // todo : buy by month
-              },
-              child: const Text("Acheter par mois")),
+          // PackageCard(package: _fakePackage, isSelected: true),
+          if (subscriptionState.selectedPackage != null)
+            ElevatedButton.icon(
+                onPressed: () {
+                  subscriptionVM.buy(subscriptionState.selectedPackage!);
+                },
+                icon: const Icon(Icons.flash_on),
+                label: const Text("Obtenez premium")),
           const Text('Facturation récurrente, annulable à tout moment. '
               'Les abonnements sont gérés par Google Play.'),
         ],
@@ -126,3 +152,45 @@ class SubscriptionScreen extends HookConsumerWidget {
 final _messageProvider = StateProvider<String?>((ref) {
   return null;
 });
+
+final _fakePackage = Package(
+    "abcdef",
+    PackageType.monthly,
+    StoreProduct(
+      "storeId",
+      "Premium upgrade to be able to have no more ads",
+      "Premium",
+      2.5,
+      "2.5€",
+      "€",
+      subscriptionPeriod: "1 month",
+      defaultOption: SubscriptionOption(
+          "idSub",
+          "storeId",
+          "prodId",
+          [],
+          [],
+          true,
+          Period(PeriodUnit.month, 1, "1 month"),
+          false,
+          PricingPhase(
+              Period(PeriodUnit.month, 1, "1 month"),
+              RecurrenceMode.infiniteRecurring,
+              2,
+              Price("2€", 2000, "EUR"),
+              OfferPaymentMode.freeTrial),
+          PricingPhase(
+              Period(PeriodUnit.month, 1, "1 month"),
+              RecurrenceMode.infiniteRecurring,
+              2,
+              Price("2€", 2000, "EUR"),
+              OfferPaymentMode.freeTrial),
+          PricingPhase(
+              Period(PeriodUnit.month, 1, "1 month"),
+              RecurrenceMode.infiniteRecurring,
+              2,
+              Price("2€", 2000, "EUR"),
+              OfferPaymentMode.freeTrial),
+          "offeringIdentifier"),
+    ),
+    "offeringIdentifier");

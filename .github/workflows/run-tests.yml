@@ -37,6 +37,7 @@ jobs:
           key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             ${{ runner.os }}-pub-cache-
+      - run: flutter config --no-analytics
       - name: Install dependencies
         run: flutter pub get
       - name: Format code
@@ -63,6 +64,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-cache-
       - run: flutter --version
+      - run: flutter config --no-analytics
       - run: flutter pub get
       - name: build the environment
         env:

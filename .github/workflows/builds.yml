@@ -82,6 +82,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: 'stable'
+      - run: flutter config --no-analytics
       - run: flutter pub get
       - name: build the environment
         env:
@@ -139,6 +140,7 @@ jobs:
           key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             ${{ runner.os }}-pub-cache-
+      - run: flutter config --no-analytics
       - run: flutter --version
       - run: flutter pub get
       - name: build the environment

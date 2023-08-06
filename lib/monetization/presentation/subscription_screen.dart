@@ -15,12 +15,38 @@ class SubscriptionScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final subscriptionVM = ref.watch(subscriptionViewModelProvider.notifier);
     final subscriptionState = ref.watch(subscriptionViewModelProvider);
+    useEffect(() {
+      Future.microtask(() {
+        ref.read(_messageProvider.notifier).state =
+            subscriptionState.temporaryError?.message;
+      });
+      return null;
+    }, [
+      ref.watch(
+          subscriptionViewModelProvider.select((value) => value.temporaryError))
+    ]);
+    ref.listen(_messageProvider, (previous, next) {
+      if (next != null && next != previous) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(next),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ));
+        ref.read(_messageProvider.notifier).state = null;
+      }
+    });
     return BackgroundGradient(
         child: Scaffold(
       appBar: AppBar(
         title: Text(S.of(context).buyScreenTitle),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           TextButton(
               onPressed: () {
@@ -28,60 +54,62 @@ class SubscriptionScreen extends HookConsumerWidget {
               },
               child: const Text("Restaurer les achats")),
           Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            columnWidths: const {
+              0: FixedColumnWidth(60),
+              1: FlexColumnWidth(3),
+            },
             children: const [
               TableRow(children: [
-                Icon(Icons.app_blocking, size: 40),
-                Text("Pas de pub"),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.app_blocking, size: 40),
+                ),
+                Text("Pas de pub", style: TextStyle(fontSize: 16)),
               ]),
               TableRow(children: [
                 Icon(Icons.draw, size: 40),
-                Text("Plus de thèmes"),
+                Text("Plus de thèmes", style: TextStyle(fontSize: 16)),
               ]),
               TableRow(children: [
                 Icon(Icons.auto_graph, size: 40),
-                Text("Graphes de statistiques"),
+                Text("Graphes de statistiques", style: TextStyle(fontSize: 16)),
               ]),
               TableRow(children: [
                 Icon(Icons.auto_awesome, size: 40),
-                Text("Soutien au développeur"),
+                Text("Soutien au développeur", style: TextStyle(fontSize: 16)),
               ]),
             ],
           ),
-          subscriptionState.when(
-            pro: () => Container(
+          if (subscriptionState.isPro)
+            Container(
               decoration: BoxDecoration(
                 color: Colors.green,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text("Vous êtes abonné"),
             ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            offers: (packages, tempError) {
-              useEffect(() {
-                if (tempError != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(tempError.message),
-                  ));
-                }
-                return null;
-              }, [tempError]);
-              return ListView.builder(
-                  itemCount: packages.length,
-                  itemBuilder: (context, index) {
-                    return TextButton(
-                        onPressed: () {
-                          subscriptionVM.buy(packages[index]);
-                        },
-                        child: const Text("Acheter"));
-                  });
-            },
-            error: (error) => Text(error.message),
+          if (subscriptionState.isLoading)
+            const Center(child: CircularProgressIndicator()),
+          if (subscriptionState.hasError)
+            Text(subscriptionState.error!.message),
+          Flexible(
+            child: ListView.builder(
+                itemCount: subscriptionState.packages.length,
+                itemBuilder: (context, index) {
+                  return TextButton(
+                      onPressed: () {
+                        subscriptionVM.buy(subscriptionState.packages[index]);
+                      },
+                      child: const Text("Acheter"));
+                }),
           ),
           ElevatedButton(
               onPressed: () {
                 // todo : buy by year
+                subscriptionVM.clearAll();
               },
-              child: const Text("Acheter par an")),
+              child: const Text("clear errors")),
           ElevatedButton(
               onPressed: () {
                 // todo : buy by month
@@ -94,3 +122,7 @@ class SubscriptionScreen extends HookConsumerWidget {
     ));
   }
 }
+
+final _messageProvider = StateProvider<String?>((ref) {
+  return null;
+});

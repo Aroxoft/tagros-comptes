@@ -1,4 +1,4 @@
-import 'package:tagros_comptes/monetization/domain/subscribe.dart';
+import 'package:tagros_comptes/monetization/domain/subscribe_model.dart';
 
 extension ErrorMapper on ErrorPurchase {
   String get message {
@@ -10,7 +10,8 @@ extension ErrorMapper on ErrorPurchase {
       ConfigurationError() => 'Configuration error: please contact support',
       NetworkError() => 'Network error',
       PaymentPendingError() => 'Payment pending',
-      NoPackagesAvailableError() => 'No packages available'
+      NoPackagesAvailableError() => 'No packages available',
+      RestoreFailedError() => 'Restore failed',
     };
   }
 }

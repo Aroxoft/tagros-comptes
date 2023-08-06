@@ -1,5 +1,5 @@
 import 'package:purchases_flutter/errors.dart';
-import 'package:tagros_comptes/monetization/domain/subscribe.dart';
+import 'package:tagros_comptes/monetization/domain/subscribe_model.dart';
 
 extension ErrorPurchaseMapper on PurchasesErrorCode {
   ErrorPurchase get error {

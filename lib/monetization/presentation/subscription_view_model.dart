@@ -62,6 +62,10 @@ class SubscriptionViewModel extends _$SubscriptionViewModel {
     }
   }
 
+  Future<void> selectPackage(Package package) async {
+    state = state.copyWith(selectedPackage: package);
+  }
+
   Future<void> restorePurchase() async {
     _clearErrorsAndLoading();
     final restore = await _subscriptionService.restore();

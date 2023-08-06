@@ -47,13 +47,7 @@ class PackageCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(package.storeProduct.priceString,
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      Text(package.identifier),
-                      Text(package.packageType.displayName),
-                      Text(package.storeProduct.subscriptionPeriod.toString()),
-                      Text(package.storeProduct.title),
-                      Text(package.storeProduct.description,
-                          style: Theme.of(context).textTheme.bodySmall),
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ]),
               ),
               Padding(

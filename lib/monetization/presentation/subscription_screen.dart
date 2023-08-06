@@ -128,7 +128,7 @@ class SubscriptionScreen extends HookConsumerWidget {
                     isSelected: subscriptionState.selectedPackage == package,
                     package: package,
                     onTap: () {
-                      subscriptionVM.buy(package);
+                      subscriptionVM.selectPackage(package);
                     },
                   );
                 }),

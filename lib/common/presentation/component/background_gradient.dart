@@ -9,14 +9,16 @@ class BackgroundGradient extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bgGradient1 = ref.watch(themeColorProvider).maybeWhen(
-          data: (data) => data.backgroundGradient1,
-          orElse: () => Colors.transparent,
-        );
-    final bgGradient2 = ref.watch(themeColorProvider).maybeWhen(
-          data: (data) => data.backgroundGradient2,
-          orElse: () => Colors.transparent,
-        );
+    final bgGradient1 =
+        ref.watch(themeColorProvider.select((value) => value.maybeWhen(
+              data: (data) => data.backgroundGradient1,
+              orElse: () => Colors.transparent,
+            )));
+    final bgGradient2 =
+        ref.watch(themeColorProvider.select((value) => value.maybeWhen(
+              data: (data) => data.backgroundGradient2,
+              orElse: () => Colors.transparent,
+            )));
     if (bgGradient1.opacity == 0 && bgGradient2.opacity == 0) {
       return child;
     }

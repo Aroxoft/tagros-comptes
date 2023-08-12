@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/config/env_configuration.dart';
 import 'package:tagros_comptes/config/platform_configuration.dart';
+import 'package:tagros_comptes/monetization/domain/premium_plan.dart';
 import 'package:tagros_comptes/tagros/domain/ads_calculator.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tuple/tuple.dart';
@@ -16,9 +17,11 @@ part 'providers.g.dart';
 @Riverpod(dependencies: [])
 String navigationPrefix(NavigationPrefixRef ref) => "";
 
-
 final adsCalculatorProvider = Provider<AdsCalculator>((ref) {
-  return AdsCalculator();
+  return AdsCalculator(
+    ignoreAds:
+        ref.watch(showAdsProvider.select((value) => value == ShowAds.hide)),
+  );
 });
 
 final adsConfigurationProvider = Provider<AdsConfiguration>((ref) {

@@ -3,15 +3,17 @@ import 'package:tagros_comptes/monetization/domain/subscribe_model.dart';
 extension ErrorMapper on ErrorPurchase {
   String get message {
     return switch (this) {
-      CancelledPurchase() => 'Purchase cancelled',
-      UnknownError() => 'Unknown error',
-      AlreadyOwnedError() => 'Already owned',
-      InvalidCredentialsError() => 'Invalid credentials',
-      ConfigurationError() => 'Configuration error: please contact support',
-      NetworkError() => 'Network error',
-      PaymentPendingError() => 'Payment pending',
-      NoPackagesAvailableError() => 'No packages available',
-      RestoreFailedError() => 'Restore failed',
+      ErrorPurchase.cancelled => 'Purchase cancelled',
+      ErrorPurchase.unknown => 'Unknown error',
+      ErrorPurchase.alreadyOwned => 'Already owned',
+      ErrorPurchase.invalidCredentials => 'Invalid credentials',
+      ErrorPurchase.configuration =>
+        'Configuration error: please contact support',
+      ErrorPurchase.network => 'Network error',
+      ErrorPurchase.paymentPending => 'Payment pending',
+      ErrorPurchase.noPackagesAvailable => 'No packages available',
+      ErrorPurchase.restoreFailed => 'Restore failed',
+      ErrorPurchase.storeProblem => 'Store problem',
     };
   }
 }

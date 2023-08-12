@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -12,11 +14,11 @@ class StateLogger extends ProviderObserver {
     ProviderContainer container,
   ) {
     if (kDebugMode) {
-      print('''
+      log('''
 {
   provider: ${provider.name ?? provider.runtimeType},
-  oldValue: $previousValue,
-  newValue: $newValue
+<-- oldValue: $previousValue,
+--> newValue: $newValue
 }
 ''');
     }

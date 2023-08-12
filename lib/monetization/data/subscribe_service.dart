@@ -2,26 +2,26 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/config/platform_configuration.dart';
 import 'package:tagros_comptes/monetization/domain/error_purchase_mapper.dart';
 import 'package:tagros_comptes/monetization/domain/subscribe_model.dart';
+import 'package:tagros_comptes/util/logger.dart';
 
-part 'subscribe.g.dart';
-
-const String entitlementId = "tagros_premium";
-
-@Riverpod(keepAlive: true)
-class SubscriptionService extends _$SubscriptionService {
-  late final PlatformConfiguration _platform;
+class SubscriptionService {
+  final PlatformConfiguration _platform;
   LogInResult? _loginResult;
   final Completer<void> _completer = Completer<void>();
+  final Logger _logger;
 
   late final Future<void> _initialized;
 
-  SubscriptionService() {
+  SubscriptionService(PlatformConfiguration platform, Logger logger)
+      : _platform = platform,
+        _logger = logger {
     _initialized = _completer.future;
+    _init();
   }
 
   bool platformIsSupported() {
@@ -29,9 +29,7 @@ class SubscriptionService extends _$SubscriptionService {
     return _platform.isAndroid;
   }
 
-  @override
-  Future<void> build() async {
-    _platform = ref.read(platformConfigProvider);
+  Future<void> _init() async {
     if (!platformIsSupported()) {
       return;
     }
@@ -47,6 +45,7 @@ class SubscriptionService extends _$SubscriptionService {
     // }
     if (configuration == null) {
       // Platform not supported
+      _logger.logError('Platform not supported');
       if (kDebugMode) {
         throw Exception('Platform not supported');
       }
@@ -68,43 +67,12 @@ class SubscriptionService extends _$SubscriptionService {
     }
   }
 
-  bool isPro(CustomerInfo customerInfo) {
-    return customerInfo.entitlements.all[entitlementId]?.isActive == true;
-  }
-
-  Future<bool> hasPro() {
-    return _safeCall(() async {
-      final purchaseResult = await _getEntitlements();
-      switch (purchaseResult) {
-        case FailurePurchase():
-          return false;
-        case SuccessPurchase<Map<String, EntitlementInfo>>():
-          return purchaseResult.data[entitlementId]?.isActive == true;
-      }
-    }, onError: (error, stack) {
-      if (kDebugMode) {
-        print('isPro error: $error');
-      }
-      return false;
-    });
-  }
-
-  Future<PurchaseResult<CustomerInfo>> purchase(Package package) async {
+  Future<PurchaseResult<CustomerInfo>> buy(Package package) async {
     return _safeCall<PurchaseResult<CustomerInfo>>(
       () async {
-        final purchase = await Purchases.purchasePackage(package);
-        if (purchase.entitlements.all[entitlementId]?.isActive == true) {
-          if (kDebugMode) {
-            print('purchase: $purchase');
-          }
-          // todo unlock premium features
-        } else {
-          if (kDebugMode) {
-            print(
-                "We didn't unlock premium purchase, we instead have purchased: ${purchase.entitlements.active.keys}");
-          }
-        }
-        return PurchaseResult.value(purchase);
+        final info = await Purchases.purchasePackage(package);
+        _logger.log('purchase: $info');
+        return PurchaseResult.value(info);
       },
       onError: (e, stack) {
         final errorCode = PurchasesErrorHelper.getErrorCode(e);
@@ -113,18 +81,15 @@ class SubscriptionService extends _$SubscriptionService {
     );
   }
 
-  Future<bool> restore() async {
+  Future<PurchaseResult<CustomerInfo>> restore() async {
     return _safeCall(() async {
       final purchaserInfo = await Purchases.restorePurchases();
-      if (kDebugMode) {
-        print('restore: $purchaserInfo');
-      }
-      return purchaserInfo.entitlements.all[entitlementId]?.isActive == true;
+      _logger.log('restore: $purchaserInfo');
+      return PurchaseResult.value(purchaserInfo);
     }, onError: (error, stack) {
-      if (kDebugMode) {
-        print('restore error: $error');
-      }
-      return false;
+      final errorCode = PurchasesErrorHelper.getErrorCode(error);
+      _logger.log('restore error: $error, errorCode: $errorCode');
+      return PurchaseResult.error(ErrorPurchase.restoreFailed, stack);
     });
   }
 
@@ -134,29 +99,12 @@ class SubscriptionService extends _$SubscriptionService {
       if (offerings.current != null &&
           offerings.current!.availablePackages.isNotEmpty) {
         // todo show packages for sale
-        if (kDebugMode) {
-          print('offerings: $offerings');
-        }
+        _logger.log('offerings: $offerings');
         return PurchaseResult.value(offerings.current!.availablePackages);
       }
-      return PurchaseResult.error(NoPackagesAvailableError(), null);
+      return PurchaseResult.error(ErrorPurchase.noPackagesAvailable, null);
     }, onError: (e, stack) {
       final errorCode = PurchasesErrorHelper.getErrorCode(e);
-      return PurchaseResult.error(errorCode.error, stack);
-    });
-  }
-
-  /// Get my entitlements
-  Future<PurchaseResult<Map<String, EntitlementInfo>>>
-      _getEntitlements() async {
-    return _safeCall(() async {
-      final customerInfo = await Purchases.getCustomerInfo();
-      return PurchaseResult.value(customerInfo.entitlements.active);
-    }, onError: (e, stack) {
-      final errorCode = PurchasesErrorHelper.getErrorCode(e);
-      if (kDebugMode) {
-        print('entitlements error: $e $stack');
-      }
       return PurchaseResult.error(errorCode.error, stack);
     });
   }
@@ -164,17 +112,32 @@ class SubscriptionService extends _$SubscriptionService {
   Future<PurchaseResult<void>> login(String userId) async {
     return _safeCall(() async {
       _loginResult = await Purchases.logIn(userId);
-      if (kDebugMode) {
-        print('identify: $_loginResult');
-      }
+      _logger.log('identify: $_loginResult');
       void t;
       return PurchaseResult.value(t);
     }, onError: (e, stack) {
       final errorCode = PurchasesErrorHelper.getErrorCode(e);
-      if (kDebugMode) {
-        print('login error: $e');
-      }
+      _logger.log('login error: $e');
+      return PurchaseResult.error(errorCode.error, stack);
+    });
+  }
+
+  Future<PurchaseResult<CustomerInfo>> getCustomerInfo() {
+    return _safeCall(() async {
+      final customerInfo = await Purchases.getCustomerInfo();
+      _logger.log('myPurchases: $customerInfo');
+      return PurchaseResult.value(customerInfo);
+    }, onError: (e, stack) {
+      final errorCode = PurchasesErrorHelper.getErrorCode(e);
+      _logger.log('myPurchases error: $e, errorCode: $errorCode');
       return PurchaseResult.error(errorCode.error, stack);
     });
   }
 }
+
+final subscriptionServiceProvider = Provider<SubscriptionService>((ref) {
+  return SubscriptionService(
+    ref.watch(platformConfigProvider),
+    ref.watch(loggerProvider),
+  );
+});

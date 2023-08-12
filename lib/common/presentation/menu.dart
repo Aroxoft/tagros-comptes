@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
+import 'package:tagros_comptes/common/presentation/component/support_widget.dart';
 import 'package:tagros_comptes/common/presentation/dialog/dialog_games.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/monetization/domain/premium_plan.dart';
 import 'package:tagros_comptes/navigation/routes.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/presentation/dialog/dialog_players.dart';
@@ -29,7 +31,9 @@ class HomeScreen extends HookConsumerWidget {
         body: Column(
           children: [
             const Expanded(child: MenuBody()),
-            if (_showAds)
+            if (_showAds &&
+                ref.watch(
+                    showAdsProvider.select((value) => value == ShowAds.show)))
               ref
                   .watch(bannerAdsProvider(
                       MediaQuery.of(context).size.width.truncate()))
@@ -37,9 +41,13 @@ class HomeScreen extends HookConsumerWidget {
                       data: (ad) => SizedBox(
                           width: ad.size.width.toDouble(),
                           height: ad.size.height.toDouble(),
-                          child: AdWidget(ad: ad)),
-                      error: (error, stackTrace) => Text(error.toString()),
-                      loading: () => const CircularProgressIndicator()),
+                          child: AdWidget(key: UniqueKey(), ad: ad)),
+                      error: (error, stackTrace) => const SupportWidget(),
+                      loading: () => const CircularProgressIndicator())
+            else if (_showAds &&
+                ref.watch(
+                    showAdsProvider.select((value) => value == ShowAds.error)))
+              const SupportWidget(),
           ],
         ),
       ),

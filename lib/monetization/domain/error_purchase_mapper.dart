@@ -5,21 +5,23 @@ extension ErrorPurchaseMapper on PurchasesErrorCode {
   ErrorPurchase get error {
     switch (this) {
       case PurchasesErrorCode.purchaseCancelledError:
-        return CancelledPurchase();
+        return ErrorPurchase.cancelled;
       case PurchasesErrorCode.unknownError:
-        return UnknownError();
+        return ErrorPurchase.unknown;
       case PurchasesErrorCode.productAlreadyPurchasedError:
-        return AlreadyOwnedError();
+        return ErrorPurchase.alreadyOwned;
       case PurchasesErrorCode.invalidCredentialsError:
-        return InvalidCredentialsError();
+        return ErrorPurchase.invalidCredentials;
       case PurchasesErrorCode.configurationError:
-        return ConfigurationError();
+        return ErrorPurchase.configuration;
       case PurchasesErrorCode.networkError:
-        return NetworkError();
+        return ErrorPurchase.network;
       case PurchasesErrorCode.paymentPendingError:
-        return PaymentPendingError();
+        return ErrorPurchase.paymentPending;
+      case PurchasesErrorCode.storeProblemError:
+        return ErrorPurchase.storeProblem;
       default:
-        return UnknownError();
+        return ErrorPurchase.unknown;
     }
   }
 }

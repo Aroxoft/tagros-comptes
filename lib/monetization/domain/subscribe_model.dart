@@ -18,22 +18,19 @@ class FailurePurchase implements PurchaseResult<Never> {
   FailurePurchase(this.error, [this.stack]);
 }
 
-sealed class ErrorPurchase {}
+enum ErrorPurchase {
+  restoreFailed(1),
+  cancelled(2),
+  unknown(3),
+  alreadyOwned(4),
+  invalidCredentials(5),
+  configuration(6),
+  network(7),
+  paymentPending(8),
+  noPackagesAvailable(9),
+  storeProblem(10);
 
-class RestoreFailedError extends ErrorPurchase {}
+  const ErrorPurchase(this.code);
 
-class CancelledPurchase extends ErrorPurchase {}
-
-class UnknownError extends ErrorPurchase {}
-
-class AlreadyOwnedError extends ErrorPurchase {}
-
-class InvalidCredentialsError extends ErrorPurchase {}
-
-class ConfigurationError extends ErrorPurchase {}
-
-class NetworkError extends ErrorPurchase {}
-
-class PaymentPendingError extends ErrorPurchase {}
-
-class NoPackagesAvailableError extends ErrorPurchase {}
+  final int code;
+}

@@ -8,7 +8,7 @@ part 'subscription_data.freezed.dart';
 @freezed
 class SubscriptionData with _$SubscriptionData {
   factory SubscriptionData(
-    List<Package> packages,
+    List<Package>? packages,
     CustomerInfo customerInfo,
   ) = _SubscriptionData;
 

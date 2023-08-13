@@ -62,7 +62,7 @@ class MyApp extends HookConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
-      theme: ref.watch(themeDataProvider).value,
+      theme: ref.watch(themeDataProvider).valueOrNull,
     );
   }
 }

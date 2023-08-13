@@ -35,13 +35,13 @@ class SubscriptionRepository extends _$SubscriptionRepository {
         return Future.error(f.error, f.stack);
     }
     final packagesResult = await _subscriptionService.getPackages();
-    List<Package> packages;
+    List<Package>? packages;
     switch (packagesResult) {
       case final SuccessPurchase<List<Package>> success:
         packages = success.data;
       case final FailurePurchase f:
         _logger.logError(f.error, f.stack);
-        return Future.error(f.error, f.stack);
+        packages = null;
     }
     return SubscriptionData(packages, customerInfo);
   }

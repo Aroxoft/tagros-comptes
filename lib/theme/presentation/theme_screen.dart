@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/common/presentation/menu.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/monetization/domain/premium_plan.dart';
 import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
@@ -29,13 +30,29 @@ class ThemeScreen extends HookConsumerWidget {
             title: Text(S.of(context).themeScreenTitle),
             bottom: TabBar(
                 indicatorColor: ref.watch(themeColorProvider
-                    .select((value) => value.value?.sliderColor)),
+                    .select((value) => value.valueOrNull?.sliderColor)),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 4,
                 tabs: [
-                  S.of(context).themeTabPresetThemes,
-                  S.of(context).themeTabCustomize
-                ].map((e) => Tab(text: e)).toList()),
+                  Tab(text: S.of(context).themeTabPresetThemes),
+                  SizedBox(
+                    height: 46,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(S.of(context).themeTabCustomize),
+                        if (ref.watch(isPremiumProvider
+                            .select((value) => value.valueOrNull != true)))
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Icon(Icons.diamond_outlined,
+                                color: Theme.of(context).colorScheme.error),
+                          ),
+                      ],
+                    ),
+                  ),
+                ]),
           ),
           body: const Column(
             children: [

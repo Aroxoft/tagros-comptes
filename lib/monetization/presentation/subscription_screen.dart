@@ -69,13 +69,20 @@ class SubscriptionScreen extends HookConsumerWidget {
                   HeaderWidget(
                       title: "Débloquez tout",
                       subtitle:
-                          "Pas de pub, customisation avancé de l'application, "
-                          "pas de limite de nombre de jeux, et plus encore !"),
+                          "Pas de pub, customisation avancée de l'application, "
+                          "pas de limites de nombre, et plus encore !"),
                   const SizedBox(height: 32),
                   ref.watch(buyViewModelProvider).when(
                         data: (buy) {
+                          final packages = buy.packages;
+                          if (packages == null) {
+                            return ErrorInline(
+                              error: ErrorPurchase.network,
+                              retryAction: buyVM.refreshPackages,
+                            );
+                          }
                           return DisplayPackages(
-                              packages: buy.packages,
+                              packages: packages,
                               onSelect: buyVM.select,
                               selected: buy.selectedPackage);
                         },
@@ -377,13 +384,13 @@ class DisplayAdvantages extends StatelessWidget {
                 Icon(Icons.draw, size: 40),
                 Text("Plus de thèmes", style: TextStyle(fontSize: 16)),
               ]),
-              TableRow(children: [
-                Icon(Icons.auto_graph, size: 40),
-                Text("Graphes de statistiques", style: TextStyle(fontSize: 16)),
-              ]),
+              // TableRow(children: [
+              //   Icon(Icons.auto_graph, size: 40),
+              //   Text("Graphes de statistiques", style: TextStyle(fontSize: 16)),
+              // ]),
               TableRow(children: [
                 Icon(Icons.forest, size: 40),
-                Text("Pas de limites au nombre de jeux",
+                Text("Pas de limites de nombre",
                     style: TextStyle(fontSize: 16)),
               ]),
               TableRow(children: [

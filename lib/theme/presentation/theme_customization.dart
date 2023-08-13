@@ -4,6 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/monetization/domain/premium_plan.dart';
+import 'package:tagros_comptes/monetization/presentation/paywall_overlay.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen_viewmodel.dart';
@@ -18,9 +20,14 @@ class ThemeCustomization extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tiles = _tiles(context,
         themeVM: ref.watch(themeViewModelProvider),
-        themeOpt: ref.watch(themeColorProvider).value);
-    return ListView.builder(
-        itemBuilder: (context, index) => tiles[index], itemCount: tiles.length);
+        themeOpt: ref.watch(themeColorProvider).valueOrNull);
+    return PaywallOverlay(
+      isPremium:
+          ref.watch(isPremiumProvider.select((value) => value.valueOrNull == true)),
+      child: ListView.builder(
+          itemBuilder: (context, index) => tiles[index],
+          itemCount: tiles.length),
+    );
   }
 
   Widget _title(String title) {

@@ -27,14 +27,14 @@ class BuyViewModel extends _$BuyViewModel {
                   errorAction: null,
                   isPremium: data.isPremium,
                   packages: data.packages,
-                  selectedPackage: data.packages.firstOrNull,
+                  selectedPackage: data.packages?.firstOrNull,
                 );
               },
             )));
   }
 
   Future<void> restorePurchase() async {
-    final buyState = state.value;
+    final buyState = state.valueOrNull;
     if (buyState == null) return;
     state = AsyncData(buyState.copyWith(
       loadingAction: true,
@@ -60,7 +60,7 @@ class BuyViewModel extends _$BuyViewModel {
   }
 
   Future<void> buy(Package package) async {
-    final buyState = state.value;
+    final buyState = state.valueOrNull;
     if (buyState == null) return;
     final purchaseResult =
         await ref.read(subscriptionRepositoryProvider.notifier).buy(package);
@@ -81,7 +81,7 @@ class BuyViewModel extends _$BuyViewModel {
   }
 
   void select(Package package) {
-    final buyState = state.value;
+    final buyState = state.valueOrNull;
     if (buyState == null) return;
     state = AsyncData(buyState.copyWith(selectedPackage: package));
   }
@@ -97,7 +97,7 @@ class InfoBuyScreenState with _$InfoBuyScreenState {
     required bool loadingAction,
     required String? errorAction,
     required bool isPremium,
-    required List<Package> packages,
+    required List<Package>? packages,
     required Package? selectedPackage,
   }) = _InfoBuyScreenState;
 }

@@ -33,7 +33,7 @@ class EntryScreen extends HookConsumerWidget {
     final players = useState(<PlayerBean>[]);
     final add = useState(false);
     final entry = useState(InfoEntryBean(points: 0, nbBouts: 0));
-    final playersArg = ref.watch(currentGameProvider).value?.players;
+    final playersArg = ref.watch(currentGameProvider).valueOrNull?.players;
     final ValueNotifier<PlayerBean?> playerAttack = useState(
         playersArg != null ? PlayerBean.fromDb(playersArg.last) : null);
     final withPlayers = useState<List<PlayerBean?>?>(null);

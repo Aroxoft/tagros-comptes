@@ -52,16 +52,14 @@ class PackageCard extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          package.packageType.displayName,
+                          package.packageType.displayName(context),
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                         ),
                       ),
                     ),
@@ -78,7 +76,7 @@ class PackageCard extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                               textAlign: TextAlign.center,
                             ),
-                            Text(package.packageType.paidString,
+                            Text(package.packageType.paidString(context),
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.labelSmall),
                           ],

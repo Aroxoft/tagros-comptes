@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/navigation/routes.dart';
 
 class SupportWidget extends StatelessWidget {
@@ -44,10 +45,10 @@ class SupportWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("support me",
+                    Text(S.of(context).supportWidget_title,
                         style: Theme.of(context).textTheme.titleMedium),
                     Text(
-                      "If you like this app, please support me by buying a package.",
+                      S.of(context).supportWidget_message,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color:
                               Theme.of(context).colorScheme.onPrimaryContainer),

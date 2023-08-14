@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/navigation/routes.dart';
 
 class PaywallOverlay extends StatelessWidget {
@@ -38,15 +39,18 @@ class PaywallOverlay extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                                "This is a premium feature. Go premium to unlock this feature"),
+                            Text(S
+                                .of(context)
+                                .subscription_paywall_premiumFeature_message),
                             const SizedBox(height: 20),
                             ElevatedButton.icon(
                               onPressed: () {
                                 const SubscriptionRoute().push(context);
                               },
-                              icon: Icon(Icons.diamond_outlined),
-                              label: Text("Go pro"),
+                              icon: const Icon(Icons.diamond_outlined),
+                              label: Text(S
+                                  .of(context)
+                                  .subscription_paywall_premiumFeature_button),
                             ),
                           ],
                         ),

@@ -32,7 +32,7 @@ class ChooseGameBody extends ConsumerWidget {
             .select((value) => value.gamesDao.watchAllGamesDrift())),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text("Error: ${snapshot.error}");
+            return Text(S.of(context).common_error);
           }
           if (!snapshot.hasData) {
             return Text(S.of(context).dialogGamesNoData);

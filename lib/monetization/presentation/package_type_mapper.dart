@@ -1,45 +1,47 @@
+import 'package:flutter/material.dart';
 import 'package:purchases_flutter/models/package_wrapper.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 
 extension PackageTypeMapper on PackageType {
-  String get displayName {
+  String displayName(BuildContext context) {
     switch (this) {
       case PackageType.lifetime:
-        return "À vie";
+        return S.of(context).subscription_packageType_lifetime_display;
       case PackageType.annual:
-        return "1 An";
+        return S.of(context).subscription_packageType_annual_display;
       case PackageType.sixMonth:
-        return "6 Mois";
+        return S.of(context).subscription_packageType_sixMonth_display;
       case PackageType.threeMonth:
-        return "3 Mois";
+        return S.of(context).subscription_packageType_threeMonth_display;
       case PackageType.twoMonth:
-        return "2 Mois";
+        return S.of(context).subscription_packageType_twoMonth_display;
       case PackageType.monthly:
-        return "1 Mois";
+        return S.of(context).subscription_packageType_monthly_display;
       case PackageType.weekly:
-        return "1 Semaine";
+        return S.of(context).subscription_packageType_weekly_display;
       default:
-        return "Inconnu";
+        return S.of(context).subscription_packageType_unknown_display;
     }
   }
 
-  String get paidString {
+  String paidString(BuildContext context) {
     switch (this) {
       case PackageType.lifetime:
-        return "Facturé une fois";
+        return S.of(context).subscription_packageType_lifetime_paid;
       case PackageType.annual:
-        return "Facturé annuellement";
+        return S.of(context).subscription_packageType_annual_paid;
       case PackageType.sixMonth:
-        return "Facturé tous les 6 mois";
+        return S.of(context).subscription_packageType_sixMonth_paid;
       case PackageType.threeMonth:
-        return "Facturé tous les 3 mois";
+        return S.of(context).subscription_packageType_threeMonth_paid;
       case PackageType.twoMonth:
-        return "Facturé tous les 2 mois";
+        return S.of(context).subscription_packageType_twoMonth_paid;
       case PackageType.monthly:
-        return "Facturé tous les mois";
+        return S.of(context).subscription_packageType_monthly_paid;
       case PackageType.weekly:
-        return "Facturé toutes les semaines";
+        return S.of(context).subscription_packageType_weekly_paid;
       default:
-        return "Inconnu";
+        return S.of(context).subscription_packageType_unknown_paid;
     }
   }
 }

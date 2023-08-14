@@ -22,8 +22,8 @@ class ThemeCustomization extends ConsumerWidget {
         themeVM: ref.watch(themeViewModelProvider),
         themeOpt: ref.watch(themeColorProvider).valueOrNull);
     return PaywallOverlay(
-      isPremium:
-          ref.watch(isPremiumProvider.select((value) => value.valueOrNull == true)),
+      isPremium: ref.watch(
+          isPremiumProvider.select((value) => value.valueOrNull == true)),
       child: ListView.builder(
           itemBuilder: (context, index) => tiles[index],
           itemCount: tiles.length),
@@ -52,7 +52,7 @@ class ThemeCustomization extends ConsumerWidget {
     final theme = themeOpt ?? ThemeColor.defaultTheme();
     final colors = theme.toColors;
     return [
-      _title("App"),
+      _title(S.of(context).themeSectionAppScreen),
       TileColorPicker(
           title: S.of(context).themeTitleAppBarColor,
           subtitle: S.of(context).themeSubtitleAppBarColor,

@@ -54,7 +54,7 @@ class MyApp extends HookConsumerWidget {
       debugShowCheckedModeBanner: false,
       showSemanticsDebugger: false,
       debugShowMaterialGrid: false,
-      title: 'Flutter Demo',
+      onGenerateTitle: (context) => S.of(context).appTitle,
       localizationsDelegates: const [
         S.delegate,
         GlobalMaterialLocalizations.delegate,

@@ -191,10 +191,11 @@ class AlreadyPremium extends ConsumerWidget {
                     S.of(context).subscription_manageSubscription_ios_url);
               }
               if (uri != null) {
+                final linkError =
+                    S.of(context).subscription_manageSubscription_linkError;
                 if (!await launchUrl(uri,
                     mode: LaunchMode.externalApplication)) {
-                  ref.read(_messageProvider.notifier).state =
-                      S.of(context).subscription_manageSubscription_linkError;
+                  ref.read(_messageProvider.notifier).state = linkError;
                 }
               }
             },

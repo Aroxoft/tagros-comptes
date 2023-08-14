@@ -32,8 +32,11 @@ Future<void> main() async {
   };
 }
 
+@immutable
 class MyApp extends HookConsumerWidget {
-  const MyApp({super.key});
+  final Locale? locale;
+
+  const MyApp({super.key, this.locale});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,6 +65,7 @@ class MyApp extends HookConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: S.delegate.supportedLocales,
+      locale: locale,
       theme: ref.watch(themeDataProvider).valueOrNull,
     );
   }

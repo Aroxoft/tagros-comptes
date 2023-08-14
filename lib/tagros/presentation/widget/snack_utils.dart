@@ -18,7 +18,7 @@ void displayFlushbar(
     flushbarStyle: FlushbarStyle.GROUNDED,
     flushbarPosition: FlushbarPosition.TOP,
     title: title,
-    duration: const Duration(seconds: 2),
+    duration: const Duration(milliseconds: 900),
     titleColor: theme.textColor,
     messageColor: theme.textColor,
     message: message,

@@ -65,26 +65,30 @@ class DialogPlayerBody extends HookConsumerWidget {
             searchForPlayer: (query) =>
                 choosePlayerVM.updateSuggestions(query: query),
           ),
-          Wrap(
-            direction: Axis.horizontal,
-            spacing: 8,
-            runSpacing: -6,
-            alignment: WrapAlignment.start,
-            crossAxisAlignment: WrapCrossAlignment.start,
-            children: List.generate(
-                ref.watch(
-                    choosePlayerProvider.select((value) => value.$2.length)),
-                (index) => Chip(
-                      label: Text(
-                        ref.watch(choosePlayerProvider
-                            .select((value) => value.$2[index].pseudo)),
-                      ),
-                      deleteIcon: const Icon(Icons.delete),
-                      deleteButtonTooltipMessage:
-                          S.of(context).dialogPlayersDelete,
-                      onDeleted: () =>
-                          choosePlayerVM.removePlayerAt(index: index),
-                    )),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Wrap(
+                direction: Axis.horizontal,
+                spacing: 8,
+                runSpacing: -6,
+                alignment: WrapAlignment.start,
+                crossAxisAlignment: WrapCrossAlignment.start,
+                children: List.generate(
+                    ref.watch(choosePlayerProvider
+                        .select((value) => value.$2.length)),
+                    (index) => Chip(
+                          label: Text(
+                            ref.watch(choosePlayerProvider
+                                .select((value) => value.$2[index].pseudo)),
+                          ),
+                          deleteIcon: const Icon(Icons.delete),
+                          deleteButtonTooltipMessage:
+                              S.of(context).dialogPlayersDelete,
+                          onDeleted: () =>
+                              choosePlayerVM.removePlayerAt(index: index),
+                        )),
+              ),
+            ),
           ),
         ]);
   }

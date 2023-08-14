@@ -461,7 +461,7 @@ class TopBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton.filledTonal(
+              IconButton(
                   onPressed: () => context.pop(),
                   icon: const Icon(Icons.arrow_back)),
               TextButton(
@@ -473,41 +473,22 @@ class TopBar extends StatelessWidget {
   }
 }
 
-class LegalTerms extends StatelessWidget {
+class LegalTerms extends ConsumerWidget {
   const LegalTerms({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Flexible(
-            child: TextButton(
-                onPressed: () {},
-                child: Text("Conditions générales d'utilisation",
-                    style: Theme.of(context).textTheme.labelSmall,
-                    textAlign: TextAlign.center)),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Container(
-              width: 1,
-              color: Theme.of(context).colorScheme.onBackground,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
-            ),
-          ),
-          Flexible(
-            child: TextButton(
-                onPressed: () {},
-                child: Text("Politique de confidentialité",
-                    style: Theme.of(context).textTheme.labelSmall,
-                    textAlign: TextAlign.center)),
-          ),
-        ],
-      ),
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    return TextButton(
+        onPressed: () async {
+          final uri = Uri.parse("https://aroxoft.github.io/privacy/");
+          if (!await launchUrl(uri)) {
+            ref.read(_messageProvider.notifier).state =
+                "Impossible d'ouvrir le lien. Les conditions sont disponibles à l'adresse suivante : $uri";
+          }
+        },
+        child: Text("Politique de confidentialité",
+            style: Theme.of(context).textTheme.labelSmall,
+            textAlign: TextAlign.center));
   }
 }
 

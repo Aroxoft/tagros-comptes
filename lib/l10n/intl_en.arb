@@ -11,6 +11,7 @@
       }
     }
   },
+  "appVersion": "{appName} version {versionName} - {versionCode}",
   "appTitle": "Tagros counter",
   "cancel": "Cancel",
   "theAttack": "the attack",

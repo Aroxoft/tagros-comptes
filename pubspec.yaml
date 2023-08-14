@@ -44,6 +44,7 @@ dependencies:
   intl: ^0.18.0
   lint: ^2.1.2
   mockito: ^5.4.2
+  package_info_plus: ^4.1.0
   path: ^1.8.2
   path_provider: ^2.0.15
   #  flutter_stetho: ^0.5.2

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/navigation/routes.dart';
@@ -32,6 +33,25 @@ class SettingsScreen extends StatelessWidget {
             ListTile(
               title: Text(S.of(context).settingsBuyPremium),
               onTap: () => const SubscriptionRoute().push(context),
+            ),
+            ListTile(
+              title: Center(
+                child: FutureBuilder(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (ctx, snap) {
+                    if (snap.hasError) return const SizedBox.shrink();
+                    if (!snap.hasData) {
+                      return const CircularProgressIndicator();
+                    }
+                    final PackageInfo info = snap.data!;
+                    return Text(
+                      S.of(context).appVersion(
+                          info.appName, info.version, info.buildNumber),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    );
+                  },
+                ),
+              ),
             ),
           ],
         ),

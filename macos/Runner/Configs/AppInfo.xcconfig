@@ -8,7 +8,7 @@
 PRODUCT_NAME = tagros_comptes
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.aroxoft.tagros.tagrosPoints
+PRODUCT_BUNDLE_IDENTIFIER = com.aroxoft.tagros.points
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2023 com.aroxoft.tagros. All rights reserved.

@@ -70,9 +70,17 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.4.1
   go_router_builder: ^2.3.0
+  patrol: ^2.2.2
   riverpod_generator: ^2.2.3
   riverpod_lint: ^1.3.2
   test: ^1.24.1
+
+patrol:
+  app_name: tagros_comptes
+  android:
+    package_name: com.aroxoft.tagros.points
+  ios:
+    bundle_id: com.aroxoft.tagros.points
 
 scripts:
   build: dart run build_runner build --delete-conflicting-outputs

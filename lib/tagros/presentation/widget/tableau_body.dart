@@ -53,8 +53,7 @@ class TableauBody extends ConsumerWidget {
               if (snapshot.hasError) {
                 return Expanded(
                   child: SingleChildScrollView(
-                      child: Text(
-                          "Error: ${snapshot.error}\n${snapshot.stackTrace}")),
+                      child: Text(S.of(context).common_error)),
                 );
               }
               final sums = snapshot.data;
@@ -93,7 +92,7 @@ class TableauBody extends ConsumerWidget {
             return Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text("ERROR: ${snapshot.error}\n${snapshot.stackTrace}"),
+                child: Text(S.of(context).common_error),
               ),
             );
           }
@@ -145,13 +144,11 @@ class TableauBody extends ConsumerWidget {
                             foregroundColor: theme.accentColor.isLight
                                 ? Colors.black87
                                 : Colors.white70,
-                            onPressed: (context) async {
-                              final modified =
-                                  await tableauVM?.navigateToAddModify(context,
-                                      roundId: entries[index].infoEntry.id);
-                              if (modified != null) {
-                                tableauVM?.modifyEntry(modified);
-                              }
+                            onPressed: (context) {
+                              tableauVM?.navigateToAddModify(
+                                context,
+                                roundId: entries[index].infoEntry.id,
+                              );
                             },
                           ),
                         ]),

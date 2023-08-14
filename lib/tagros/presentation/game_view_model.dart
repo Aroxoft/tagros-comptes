@@ -43,10 +43,8 @@ class TableauViewModel {
     _tableauRepository.deleteEntry(id);
   }
 
-  Future<InfoEntryPlayerBean?> navigateToAddModify(BuildContext context,
-      {required int? roundId}) async {
-    final modified = await EntryRoute(roundId).push(context);
-    return modified as InfoEntryPlayerBean?;
+  void navigateToAddModify(BuildContext context, {required int? roundId}) {
+    EntryRoute(roundId).push(context);
   }
 }
 

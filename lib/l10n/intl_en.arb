@@ -1,219 +1,279 @@
 {
-  "@@locale": "en",
-  "errorSameName": "All the names should be different",
-  "errorPseudoEmpty": "Please enter a name",
-  "errorGameNbPlayers": "A game with {count, plural, zero{no players} one{one player} other{{count} players}} does not exist",
-  "@errorGameNbPlayers": {
-    "description": "When selecting the wrong number of players",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "appTitle": "Tagros counter",
-  "cancel": "Cancel",
-  "theAttack": "the attack",
-  "theDefense": "the defense",
-  "points": "points",
-  "addModifyOudler": "{count, plural, zero{ oudlers} one{ oudler} other{ oudlers}}",
-  "@addModifyOudler": {
-    "description": "nb oudlers in the add/modify screen",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "addModifyBonus": "Bonus",
-  "addModifyPoignee": "Handful",
-  "addModifyPetitAuBout": "One at the End",
-  "addModifySecondPartner": "Partenaire numéro 2",
-  "addModifyFirstPartner": "{tagros, select, tagros{Partner number 1} tarot{Partner} other{None}}",
-  "@addModifyFirstPartner": {
-    "description": "First partner or only partner",
-    "placeholders": {
-      "tagros": {}
-    }
-  },
-  "poigneTypeSimple": "simple",
-  "poigneTypeDouble": "double",
-  "poigneTypeTriple": "triple",
-  "poigneTypeNone": "none",
-  "campTypeAttack": "Attack",
-  "campTypeDefense": "Defense",
-  "campTypeNone": "None",
-  "addModifyTitleAttack": "Attack",
-  "addModifyAppBarTitle": "{add, select, add{Add a round} other{Edit a round}}",
-  "@addModifyAppBarTitle": {
-    "description": "Add or modify screen title",
-    "placeholders": {
-      "add": {}
-    }
-  },
-  "addModifyMissingTitle": "Information is missing",
-  "addModifyMissingMessage": "In order to validate, please fill the missing information",
-  "preneur": "Taker",
-  "addModifyTitleContract": "Contract",
-  "addModifyFor": "For",
-  "addModifyContractType": "Type",
-  "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ trumps)}}",
-  "@addModifyPoigneeNbTrumps": {
-    "description": "A poignee corresponds to how many trumps",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      },
-      "poigneeName": {
-        "type": "String"
-      }
-    }
-  },
-  "dialogGamesNoData": "No data",
-  "dialogGamesNoGames": "No saved games",
-  "nbPlayers": "{nbPlayers} players",
-  "@nbPlayers": {
-    "description": "how many players",
-    "placeholders": {
-      "nbPlayers": {
-        "type": "int"
-      }
-    }
-  },
-  "dialogPlayersDelete": "Delete",
-  "ok": "OK",
-  "newGame": "New game",
-  "toContinue": "Continue",
-  "priseTypePrise": "Prise",
-  "priseTypeGarde": "Garde",
-  "priseTypeGardeSans": "Garde-sans",
-  "priseTypeGardeContre": "Garde-contre",
-  "successAddingGame": "Success adding game",
-  "successModifyingGame": "Success modifying game",
-  "tableNoData": "No Data",
-  "tableNoEntry": "No entries",
-  "infoEntryString": "{playerName} took a {prise} {withPlayers, select, onePlayer{(with {player1})} twoPlayers{(with {player1} and {player2})} other{alone}}, {points} points for {campPoints}, {nbBouts, plural, zero{no oudlers} one{1 oudler} other{{nbBouts} oudlers}} for {campPoints}.",
-  "@infoEntryString": {
-    "description": "A human readable entry",
-    "placeholders": {
-      "withPlayers": {
-        "type": "String"
-      },
-      "playerName": {
-        "type": "String"
-      },
-      "prise": {
-        "type": "String"
-      },
-      "player1": {
-        "type": "String"
-      },
-      "player2": {
-        "type": "String"
-      },
-      "points": {
-        "type": "double"
-      },
-      "campPoints": {
-        "type": "String"
-      },
-      "nbBouts": {
-        "type": "int"
-      }
-    }
-  },
-  "settingsTitle": "Settings",
-  "settingsCleanUnusedPlayers": "Clean unused players",
-  "settingsTheme": "Theme",
-  "settingsBuyPremium": "Buy premium subscription",
-  "settingsGuide": "Guide",
-  "cleanupUnusedPlayersTitle": "Cleanup unused players",
-  "actionDelete": "Delete",
-  "actionCancel": "Cancel",
-  "deleteAllDialogContent": "This action cannot be undone",
-  "deleteAllDialogTitle": "Do you want to delete all unused players?",
-  "actionDeleteAllUnused": "Delete all unused players",
-  "errorUnusedPlayers": "Error fetching unused players: {error}",
-  "@errorUnusedPlayers": {
-    "description": "When there is an error fetching unused players in DB",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "playersUnusedEmpty": "No players are unused",
-  "chooseDialogNoItemsFound": "No players found with this name. To create it, click on the '+' button on the right",
-  "hintSearchPlayer": "Search player",
-  "themeScreenTitle": "Customize your theme",
-  "actionResetTheme": "Reset theme to default values",
-  "actionSubmit": "Submit",
-  "actionCopy": "Copy",
-  "themeTitleAppBarFontSize": "App bar font size",
-  "themeTitleAppBarColor": "App bar color",
-  "themeSubtitleAppBarColor": "Choose the color of the app bar background",
-  "themeTitleAppBarTextColor": "App bar text color",
-  "themeSubtitleAppBarTextColor": "Choose the text color of the app bar",
-  "themeTitleBackgroundColor": "Background color",
-  "themeSubtitleBackgroundColor": "Choose background color of the app",
-  "themeTitleButtonColor": "Button color",
-  "themeSubtitleButtonsColor": "Choose buttons color",
-  "themeTitleTextButtonColor": "Text button color",
-  "themeSubtitleTextButtonColor": "Choose the color of the text on buttons",
-  "themeTitleSliderColor": "Slider color",
-  "themeSubtitleSliderColor": "Choose the slider color",
-  "themeTitleAccentColor": "Accent color",
-  "themeSubtitleAccentColor": "Choose the accent color of the app (e.g. for scrolling color)",
-  "themeTitleActionButtonColor": "Action button color",
-  "themeSubtitleActionButtonColor": "Choose color for the action button",
-  "themeTitleTextOnActionButtonColor": "Text on action button color",
-  "themeSubtitleTextOnActionButtonColor": "Choose the color for the text on the action button",
-  "themeSectionTableScreen": "Table screen",
-  "themeSubsectionEntry": "Entry",
-  "themeTitlePositiveNumberColor": "Positive number color",
-  "themeSubtitlePositiveNumberColor": "Choose color for positive numbers in an entry",
-  "themeTitleNegativeNumberColor": "Negative number color",
-  "themeSubtitleNegativeNumberColor": "Choose color for negative numbers in an entry",
-  "themeSubsectionTotalsLine": "Totals line",
-  "themeTitlePositiveNumberTitleColor": "Positive number color",
-  "themeSubtitlePositiveNumberTitleColor": "Choose color for positive numbers in the totals line",
-  "themeTitleNegativeNumberTitleColor": "Negative number color",
-  "themeSubtitleNegativeNumberTitleColor": "Choose color for negative numbers in the totals line",
-  "themeTitleHorizontalLineColor": "Horizontal line color",
-  "themeSubtitleHorizontalLineColor": "Choose color for the horizontal lines above and below the totals line",
-  "themeTitlePlayerNamesColor": "Player names color",
-  "themeSubtitlePlayerNamesColor": "Choose color for player names",
-  "themeSectionAddModifyEntryScreen": "Add/modify entry screen",
-  "themeTitleTitlesFrameColor": "Titles frame color",
-  "themeSubtitleTitlesFrameColor": "Choose color for the frames around the blocks",
-  "themeTitleChipColor": "Chip color",
-  "themeSubtitleChipColor": "Choose color for the chips for player selection",
-  "themeTitleApplicationBackground": "Application background",
-  "themeSubtitleApplicationBackground": "Choose your app background",
-  "themeBackgroundChoiceSolid": "Solid",
-  "themeBackgroundChoiceGradient": "Gradient",
-  "themeTitleGradientFirstColor": "Gradient first color",
-  "themeSubtitleGradientFirstColor": "Select the top left color of the gradient",
-  "themeTitleGradientSecondColor": "Gradient second color",
-  "themeSubtitleGradientSecondColor": "Select the bottom right color of the gradient",
-  "themeTitleTextColor": "Text color",
-  "themeSubtitleTextColor": "Text color in the app",
-  "themeOptionRename": "Rename",
-  "themeRenameDialogTitle": "Theme name",
-  "themeRenameDialogActionSave": "Save",
-  "themeNameClassic": "Classic",
-  "themeNamePurple": "Purple",
-  "themeNameCorporate": "Corporate",
-  "themeNameHacker": "Hacker",
-  "themeNamePastels": "Pastels",
-  "themeNameDark": "Dark",
-  "themeNameBlackWhite": "Black'n'white",
-  "themeNameChocolate": "Chocolate",
-  "guidePlaceHolderText": "Coming soon...",
-  "guideTitle": "Guide",
-  "buyScreenTitle": "Premium advantages",
-  "buyScreenPlaceholderText": "Coming soon...",
-  "themeTabPresetThemes": "Preset themes",
-  "themeTabCustomize": "Customize",
-  "dialogNewGameTitle": "New game, choose the players"
+    "@@locale": "en",
+    "actionCancel": "Cancel",
+    "actionCopy": "Copy",
+    "actionDelete": "Delete",
+    "actionDeleteAllUnused": "Delete all unused players",
+    "actionResetTheme": "Reset theme to default values",
+    "actionSubmit": "Submit",
+    "addModifyAppBarTitle": "{add, select, add{Add a round} other{Edit a round}}",
+    "@addModifyAppBarTitle": {
+        "description": "Add or modify screen title",
+        "placeholders": {
+            "add": {}
+        }
+    },
+    "addModifyBonus": "Bonus",
+    "addModifyContractType": "Type",
+    "addModifyFirstPartner": "{tagros, select, tagros{Partner number 1} tarot{Partner} other{None}}",
+    "@addModifyFirstPartner": {
+        "description": "First partner or only partner",
+        "placeholders": {
+            "tagros": {}
+        }
+    },
+    "addModifyFor": "For",
+    "addModifyMissingMessage": "In order to validate, please fill the missing information",
+    "addModifyMissingTitle": "Information is missing",
+    "addModifyOudler": "{count, plural, zero{ oudlers} one{ oudler} other{ oudlers}}",
+    "@addModifyOudler": {
+        "description": "nb oudlers in the add/modify screen",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "addModifyPetitAuBout": "One at the End",
+    "addModifyPoignee": "Handful",
+    "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ trumps)}}",
+    "@addModifyPoigneeNbTrumps": {
+        "description": "A poignee corresponds to how many trumps",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            },
+            "poigneeName": {
+                "type": "String"
+            }
+        }
+    },
+    "addModifySecondPartner": "Partenaire numéro 2",
+    "addModifyTitleAttack": "Attack",
+    "addModifyTitleContract": "Contract",
+    "appTitle": "Tagros counter",
+    "appVersion": "{appName} version {versionName} - {versionCode}",
+    "buyScreenPlaceholderText": "Coming soon...",
+    "buyScreenTitle": "Premium advantages",
+    "campTypeAttack": "Attack",
+    "campTypeDefense": "Defense",
+    "campTypeNone": "None",
+    "cancel": "Cancel",
+    "chooseDialogNoItemsFound": "No players found with this name. To create it, click on the '+' button on the right",
+    "cleanupUnusedPlayersTitle": "Cleanup unused players",
+    "common_error": "An error has occurred. You can try again later or contact support (CommonError1)",
+    "common_retryAction": "Try again",
+    "deleteAllDialogContent": "This action cannot be undone",
+    "deleteAllDialogTitle": "Do you want to delete all unused players?",
+    "dialogGamesNoData": "No data",
+    "dialogGamesNoGames": "No saved games",
+    "dialogNewGameTitle": "New game, choose the players",
+    "dialogPlayersDelete": "Delete",
+    "errorGameNbPlayers": "A game with {count, plural, zero{no players} one{one player} other{{count} players}} does not exist",
+    "@errorGameNbPlayers": {
+        "description": "When selecting the wrong number of players",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "errorPseudoEmpty": "Please enter a name",
+    "errorSameName": "All the names should be different",
+    "errorUnusedPlayers": "Error fetching unused players: {error}",
+    "@errorUnusedPlayers": {
+        "description": "When there is an error fetching unused players in DB",
+        "placeholders": {
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "guidePlaceHolderText": "Coming soon...",
+    "guideTitle": "Guide",
+    "hintSearchPlayer": "Search player",
+    "infoEntryString": "{playerName} took a {prise} {withPlayers, select, onePlayer{(with {player1})} twoPlayers{(with {player1} and {player2})} other{alone}}, {points} points for {campPoints}, {nbBouts, plural, zero{no oudlers} one{1 oudler} other{{nbBouts} oudlers}} for {campPoints}.",
+    "@infoEntryString": {
+        "description": "A human readable entry",
+        "placeholders": {
+            "withPlayers": {
+                "type": "String"
+            },
+            "playerName": {
+                "type": "String"
+            },
+            "prise": {
+                "type": "String"
+            },
+            "player1": {
+                "type": "String"
+            },
+            "player2": {
+                "type": "String"
+            },
+            "points": {
+                "type": "double"
+            },
+            "campPoints": {
+                "type": "String"
+            },
+            "nbBouts": {
+                "type": "int"
+            }
+        }
+    },
+    "nbPlayers": "{nbPlayers} players",
+    "@nbPlayers": {
+        "description": "how many players",
+        "placeholders": {
+            "nbPlayers": {
+                "type": "int"
+            }
+        }
+    },
+    "newGame": "New game",
+    "ok": "OK",
+    "playersUnusedEmpty": "No players are unused",
+    "poigneTypeDouble": "double",
+    "poigneTypeNone": "none",
+    "poigneTypeSimple": "simple",
+    "poigneTypeTriple": "triple",
+    "points": "points",
+    "preneur": "Taker",
+    "priseTypeGarde": "Garde",
+    "priseTypeGardeContre": "Garde-contre",
+    "priseTypeGardeSans": "Garde-sans",
+    "priseTypePrise": "Prise",
+    "settingsBuyPremium": "Buy premium subscription",
+    "settingsCleanUnusedPlayers": "Clean unused players",
+    "settingsGuide": "Guide",
+    "settingsTheme": "Theme",
+    "settingsTitle": "Settings",
+    "subscription_advantages_moreThemes": "More themes and advanced customization",
+    "subscription_advantages_noAds": "No ads",
+    "subscription_advantages_noLimits": "No limits of numbers",
+    "subscription_advantages_supportDev": "Support the developper",
+    "subscription_alreadyPremium_subtitle": "Thanks for your support!",
+    "subscription_alreadyPremium_title": "You unlocked Tagros premium",
+    "subscription_buy_button": "Get premium",
+    "subscription_disclaimer_reccurringPurchase_text": "Renewable subscription, cancellable at any time. Subscriptions are managed by Google Play.",
+    "subscription_error_openPrivacy": "Cannot open link. Privacy policy is available at following address: {uri}",
+    "subscription_errorPurchase_alreadyOwned_snackMessage": "Already purchased",
+    "subscription_errorPurchase_cancelled_message": "You cancelled your purchase.",
+    "subscription_errorPurchase_cancelled_snackMessage": "Purchasing cancelled",
+    "subscription_errorPurchase_cancelled_title": "Purchase cancelled",
+    "subscription_errorPurchase_configuration_snackMessage": "Configuration error: please contact support",
+    "subscription_errorPurchase_default_message": "An error happened. Please try again later or contact support, giving them the following code: {code}",
+    "subscription_errorPurchase_default_title": "Purchasing is unavailable for now",
+    "subscription_errorPurchase_invalidCredentials_snackMessage": "Invalid credentials",
+    "subscription_errorPurchase_network_message": "You are not connected to the internet. Please check your connection and try again.",
+    "subscription_errorPurchase_network_snackMessage": "Network error",
+    "subscription_errorPurchase_network_title": "No internet connection",
+    "subscription_errorPurchase_noPackagesAvailable_snackMessage": "No packages available",
+    "subscription_errorPurchase_paymentPending_snackMessage": "Payment pending",
+    "subscription_errorPurchase_restoreFailed_snackMessage": "Restore failed",
+    "subscription_errorPurchase_storeProblem_snackMessage": "Store problem",
+    "subscription_errorPurchase_storeProblem_title": "Store problem",
+    "subscription_errorPurchase_unknown_snackMessage": "Unknown error",
+    "subscription_heading_subtitle": "No ads, advanced customization options, no limits of numbers, and even more!",
+    "subscription_heading_title": "Unlock everything",
+    "subscription_legalTerms_privacyPolicy_button": "Privacy policy",
+    "subscription_legalTerms_privacyPolicy_linkError_message": "Cannot open link. The privacy policy is available at the following address: {uri}",
+    "subscription_legalTerms_privacyPolicy_url": "https://aroxoft.github.io/privacy/",
+    "subscription_manageSubscription_android_url": "https://play.google.com/store/account/subscriptions",
+    "subscription_manageSubscription_button": "Manage your subscriptions",
+    "subscription_manageSubscription_ios_url": "https://apps.apple.com/account/subscriptions",
+    "subscription_manageSubscription_linkError": "Cannot open link, please go directly to your store to manage your subscriptions",
+    "subscription_packageType_annual_display": "1 Year",
+    "subscription_packageType_annual_paid": "Paid annually",
+    "subscription_packageType_lifetime_display": "Lifetime",
+    "subscription_packageType_lifetime_paid": "Paid once",
+    "subscription_packageType_monthly_display": "1 Month",
+    "subscription_packageType_monthly_paid": "Paid every month",
+    "subscription_packageType_sixMonth_display": "6 Months",
+    "subscription_packageType_sixMonth_paid": "Paid every 6 months",
+    "subscription_packageType_threeMonth_display": "3 Months",
+    "subscription_packageType_threeMonth_paid": "Paid every 3 months",
+    "subscription_packageType_twoMonth_display": "2 Months",
+    "subscription_packageType_twoMonth_paid": "Paid every 2 months",
+    "subscription_packageType_unknown_display": "Unknown",
+    "subscription_packageType_unknown_paid": "Unknown",
+    "subscription_packageType_weekly_display": "1 Week",
+    "subscription_packageType_weekly_paid": "Paid every week",
+    "subscription_paywall_premiumFeature_button": "Upgrade",
+    "subscription_paywall_premiumFeature_message": "This is a premium feature. Upgrade to unlock this feature.",
+    "subscription_restorePurchase_button": "Already purchased?",
+    "successAddingGame": "Success adding game",
+    "successModifyingGame": "Success modifying game",
+    "supportWidget_message": "If you like this app, support me by subscribing",
+    "supportWidget_title": "Support me",
+    "tableNoData": "No Data",
+    "tableNoEntry": "No entries",
+    "theAttack": "the attack",
+    "theDefense": "the defense",
+    "themeBackgroundChoiceGradient": "Gradient",
+    "themeBackgroundChoiceSolid": "Solid",
+    "themeNameBlackWhite": "Black'n'white",
+    "themeNameChocolate": "Chocolate",
+    "themeNameClassic": "Classic",
+    "themeNameCorporate": "Corporate",
+    "themeNameDark": "Dark",
+    "themeNameHacker": "Hacker",
+    "themeNamePastels": "Pastels",
+    "themeNamePurple": "Purple",
+    "themeOptionRename": "Rename",
+    "themeRenameDialogActionSave": "Save",
+    "themeRenameDialogTitle": "Theme name",
+    "themeScreenTitle": "Customize your theme",
+    "themeSectionAddModifyEntryScreen": "Add/modify entry screen",
+    "themeSectionAppScreen": "App",
+    "themeSectionTableScreen": "Table screen",
+    "themeSubsectionEntry": "Entry",
+    "themeSubsectionTotalsLine": "Totals line",
+    "themeSubtitleAccentColor": "Choose the accent color of the app (e.g. for scrolling color)",
+    "themeSubtitleActionButtonColor": "Choose color for the action button",
+    "themeSubtitleAppBarColor": "Choose the color of the app bar background",
+    "themeSubtitleAppBarTextColor": "Choose the text color of the app bar",
+    "themeSubtitleApplicationBackground": "Choose your app background",
+    "themeSubtitleBackgroundColor": "Choose background color of the app",
+    "themeSubtitleButtonsColor": "Choose buttons color",
+    "themeSubtitleChipColor": "Choose color for the chips for player selection",
+    "themeSubtitleGradientFirstColor": "Select the top left color of the gradient",
+    "themeSubtitleGradientSecondColor": "Select the bottom right color of the gradient",
+    "themeSubtitleHorizontalLineColor": "Choose color for the horizontal lines above and below the totals line",
+    "themeSubtitleNegativeNumberColor": "Choose color for negative numbers in an entry",
+    "themeSubtitleNegativeNumberTitleColor": "Choose color for negative numbers in the totals line",
+    "themeSubtitlePlayerNamesColor": "Choose color for player names",
+    "themeSubtitlePositiveNumberColor": "Choose color for positive numbers in an entry",
+    "themeSubtitlePositiveNumberTitleColor": "Choose color for positive numbers in the totals line",
+    "themeSubtitleSliderColor": "Choose the slider color",
+    "themeSubtitleTextButtonColor": "Choose the color of the text on buttons",
+    "themeSubtitleTextColor": "Text color in the app",
+    "themeSubtitleTextOnActionButtonColor": "Choose the color for the text on the action button",
+    "themeSubtitleTitlesFrameColor": "Choose color for the frames around the blocks",
+    "themeTabCustomize": "Customize",
+    "themeTabPresetThemes": "Preset themes",
+    "themeTitleAccentColor": "Accent color",
+    "themeTitleActionButtonColor": "Action button color",
+    "themeTitleAppBarColor": "App bar color",
+    "themeTitleAppBarFontSize": "App bar font size",
+    "themeTitleAppBarTextColor": "App bar text color",
+    "themeTitleApplicationBackground": "Application background",
+    "themeTitleBackgroundColor": "Background color",
+    "themeTitleButtonColor": "Button color",
+    "themeTitleChipColor": "Chip color",
+    "themeTitleGradientFirstColor": "Gradient first color",
+    "themeTitleGradientSecondColor": "Gradient second color",
+    "themeTitleHorizontalLineColor": "Horizontal line color",
+    "themeTitleNegativeNumberColor": "Negative number color",
+    "themeTitleNegativeNumberTitleColor": "Negative number color",
+    "themeTitlePlayerNamesColor": "Player names color",
+    "themeTitlePositiveNumberColor": "Positive number color",
+    "themeTitlePositiveNumberTitleColor": "Positive number color",
+    "themeTitleSliderColor": "Slider color",
+    "themeTitleTextButtonColor": "Text button color",
+    "themeTitleTextColor": "Text color",
+    "themeTitleTextOnActionButtonColor": "Text on action button color",
+    "themeTitleTitlesFrameColor": "Titles frame color",
+    "toContinue": "Continue"
 }

@@ -47,3 +47,4 @@ app.*.symbols
 
 # Generated
 untranslated-strings.json
+poeditor.properties

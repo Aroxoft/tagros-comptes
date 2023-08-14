@@ -24,7 +24,7 @@ class HomeScreen extends HookConsumerWidget {
           title: Text(S.of(context).appTitle),
           actions: <Widget>[
             IconButton(
-                icon: const Icon(Icons.settings),
+                icon: const Icon(Icons.settings, semanticLabel: 'settings'),
                 onPressed: () => const SettingsRoute().push(context))
           ],
         ),

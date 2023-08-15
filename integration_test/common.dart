@@ -41,15 +41,33 @@ Future<void> createApp(WidgetTester widgetTester,
 /// Take a screenshot of the current screen.
 /// Cannot take more than one screenshot per test.
 Future<void> takeScreenshot(
-    IntegrationTestWidgetsFlutterBinding binding, WidgetTester tester,
-    {required String screenshotName, bool settle = true}) async {
+  IntegrationTestWidgetsFlutterBinding binding,
+  WidgetTester tester, {
+  required int screenshotNumber,
+  bool settle = true,
+  required String locale,
+  DeviceType deviceType = DeviceType.phone,
+}) async {
   if (UniversalPlatform.isAndroid) {
     await binding.convertFlutterSurfaceToImage();
     if (settle) {
       await tester.pumpAndSettle();
     }
   }
-  await binding.takeScreenshot(screenshotName);
+  await binding
+      .takeScreenshot('${screenshotNumber}_${locale}_${deviceType.folderName}');
+}
+
+enum DeviceType {
+  phone("phoneScreenshots"),
+  sevenInchTablet("sevenInchScreenshots"),
+  tenInchTablet("tenInchScreenshots"),
+  tv("tvScreenshots"),
+  wearable("wearScreenshots");
+
+  final String folderName;
+
+  const DeviceType(this.folderName);
 }
 
 class _FakeThemeRepository extends Fake implements ThemeRepository {

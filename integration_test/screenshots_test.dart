@@ -21,7 +21,7 @@ void main() {
         await _addRandomRound(t, namesEn);
       }
 
-      await takeScreenshot(binding, t, screenshotName: '1_en-US');
+      await takeScreenshot(binding, t, screenshotNumber: 1, locale: 'en');
     });
     testWidgets('Player dialog with 5 players fr', (t) async {
       await createApp(t, lang: 'fr');
@@ -31,7 +31,7 @@ void main() {
         await _addRandomRound(t, namesFr);
       }
 
-      await takeScreenshot(binding, t, screenshotName: '1_fr-FR');
+      await takeScreenshot(binding, t, screenshotNumber: 1, locale: 'fr');
     });
 
     testWidgets('Edit game en', (t) async {
@@ -42,7 +42,7 @@ void main() {
 
       await _editGame(t, names);
       await takeScreenshot(binding, t,
-          screenshotName: '2_en-US', settle: false);
+          screenshotNumber: 2, settle: false, locale: 'en');
     });
 
     testWidgets('Edit game fr', (t) async {
@@ -53,7 +53,7 @@ void main() {
       await _editGame(t, names);
 
       await takeScreenshot(binding, t,
-          screenshotName: '2_fr-FR', settle: false);
+          screenshotNumber: 2, settle: false, locale: 'fr');
     });
   });
 }

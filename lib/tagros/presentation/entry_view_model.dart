@@ -15,6 +15,7 @@ import 'package:tagros_comptes/tagros/domain/game/prise.dart';
 import 'package:tagros_comptes/tagros/presentation/game_view_model.dart';
 
 part 'entry_view_model.freezed.dart';
+
 part 'entry_view_model.g.dart';
 
 @Riverpod(dependencies: [currentGame, gamesDao, tableauViewModel])
@@ -56,14 +57,9 @@ class EntryViewModel extends _$EntryViewModel {
       );
     }
 
-    final player1 = allPlayers.firstOrNull;
-    final playerBean = player1 != null ? PlayerBean.fromDb(player1) : null;
     return EntryUIState(
       allPlayers:
           allPlayers.map((e) => PlayerBean.fromDb(e)).whereNotNull().toList(),
-      taker: playerBean,
-      partner1: allPlayers.length >= 5 ? playerBean : null,
-      partner2: allPlayers.length >= 7 ? playerBean : null,
     );
   }
 
@@ -89,6 +85,14 @@ class EntryViewModel extends _$EntryViewModel {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
     double points = value.isEmpty ? 0 : double.tryParse(value) ?? 0;
+    points = (points * 2).round() / 2;
+    state = AsyncData(uiState.copyWith(points: points));
+  }
+
+  void setPointsDouble(double value) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    double points = value;
     points = (points * 2).round() / 2;
     state = AsyncData(uiState.copyWith(points: points));
   }
@@ -229,7 +233,7 @@ class EntryViewModel extends _$EntryViewModel {
       infoEntry: InfoEntryBean(
         points: uiState.points,
         nbBouts: uiState.nbBouts,
-        prise: uiState.prise,
+        prise: uiState.prise!,
         pointsForAttack: uiState.pointsForAttack,
         petitsAuBout: uiState.petitsAuBout,
         poignees: uiState.poignees,
@@ -250,6 +254,50 @@ class EntryViewModel extends _$EntryViewModel {
       return (entry, true);
     }
   }
+
+  void setPage(int page) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    if (page != uiState.page) {
+      state = AsyncData(uiState.copyWith(page: page));
+    }
+  }
+
+  void setPetit(bool on) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    state = AsyncData(uiState.copyWith(petit: on));
+  }
+
+  void setVingtEtUn(bool on) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    state = AsyncData(uiState.copyWith(vingtEtUn: on));
+  }
+
+  void setExcuse(bool on) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    state = AsyncData(uiState.copyWith(excuse: on));
+  }
+
+  void setPetit2(bool on) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    state = AsyncData(uiState.copyWith(petit2: on));
+  }
+
+  void setVingtEtUn2(bool on) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    state = AsyncData(uiState.copyWith(vingtEtUn2: on));
+  }
+
+  void setExcuse2(bool on) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    state = AsyncData(uiState.copyWith(excuse2: on));
+  }
 }
 
 @freezed
@@ -260,8 +308,14 @@ class EntryUIState with _$EntryUIState {
     PlayerBean? partner1,
     PlayerBean? partner2,
     @Default(0) double points,
+    @Default(false) bool petit,
+    @Default(false) bool vingtEtUn,
+    @Default(false) bool excuse,
+    @Default(false) bool petit2,
+    @Default(false) bool vingtEtUn2,
+    @Default(false) bool excuse2,
     @Default(0) int nbBouts,
-    @Default(Prise.petite) Prise prise,
+    Prise? prise,
     @Default(true) bool pointsForAttack,
     @Default(<Camp>[]) List<Camp> petitsAuBout,
     @Default(<PoigneeType>[]) List<PoigneeType> poignees,
@@ -274,4 +328,21 @@ class EntryUIState with _$EntryUIState {
   bool get showPartnerPage => allPlayers.length >= 5;
 
   bool get showPartner2Page => allPlayers.length >= 7;
+
+  bool get nextPageEnabled {
+    switch (page) {
+      case 0:
+        return prise != null;
+      case 1:
+        return taker != null;
+      case 2:
+        return partner1 != null ||
+            !showPartnerPage; // todo to complete with other cases
+      case 3:
+        return partner2 != null ||
+            !showPartner2Page; // todo to complete with other cases
+      default:
+        return false;
+    }
+  }
 }

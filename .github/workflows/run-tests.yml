@@ -38,10 +38,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-cache-
       - run: flutter config --no-analytics
-      - name: Install dependencies
-        run: flutter pub get
       - name: Format code
         run: dart format . --set-exit-if-changed
+      - name: Install dependencies
+        run: flutter pub get
   test:
     runs-on: ubuntu-latest
     steps:
@@ -78,9 +78,12 @@ jobs:
         run: dart tool/env.dart
       - name: Generate files (freezed, json_serializable)
         run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Activate flutter packages
+        run: |
+          flutter pub global activate intl_utils
       - name: Generate translations
         run: |
-          flutter pub global activate intl_utils && flutter pub global run intl_utils:generate
+          flutter pub global run intl_utils:generate
       - name: Analyze code
         run: flutter analyze --no-fatal-infos --fatal-warnings
       - run: flutter test

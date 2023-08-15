@@ -57,6 +57,8 @@ class EntryScreen extends HookConsumerWidget {
         } else if (pLength > 5) {
           info = info.copyWith(withPlayers: [playersValue[0], playersValue[0]]);
         }
+        withPlayers.value = info.withPlayers;
+        playerAttack.value = info.player;
       } else {
         ref.read(gamesDaoProvider).fetchEntry(roundId!).then((info) {
           playerAttack.value = info.player;
@@ -133,6 +135,7 @@ class EntryScreen extends HookConsumerWidget {
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 2),
                                 child: ListView.builder(
+                                  key: const ValueKey('player1'),
                                   reverse: true,
                                   scrollDirection: Axis.horizontal,
                                   itemCount: players.value.length,
@@ -143,13 +146,8 @@ class EntryScreen extends HookConsumerWidget {
                                               players.value[index].id,
                                           text: players.value[index].name,
                                           onPressed: () {
-                                            if (playerAttack.value?.id ==
-                                                players.value[index].id) {
-                                              playerAttack.value = null;
-                                            } else {
-                                              playerAttack.value =
-                                                  players.value[index];
-                                            }
+                                            playerAttack.value =
+                                                players.value[index];
                                           }),
                                 ),
                               ),
@@ -176,6 +174,7 @@ class EntryScreen extends HookConsumerWidget {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 2),
                                   child: ListView.builder(
+                                      key: const ValueKey('player2'),
                                       reverse: true,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: players.value.length,
@@ -188,13 +187,8 @@ class EntryScreen extends HookConsumerWidget {
                                               onPressed: () {
                                                 final wPlayers =
                                                     withPlayers.value!.toList();
-                                                if (withPlayers.value?[0] ==
-                                                    players.value[index]) {
-                                                  wPlayers[0] = null;
-                                                } else {
-                                                  wPlayers[0] =
-                                                      players.value[index];
-                                                }
+                                                wPlayers[0] =
+                                                    players.value[index];
                                                 withPlayers.value = wPlayers;
                                               })),
                                 ),
@@ -218,6 +212,7 @@ class EntryScreen extends HookConsumerWidget {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 2),
                                   child: ListView.builder(
+                                      key: const ValueKey('player3'),
                                       reverse: true,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: players.value.length,
@@ -230,13 +225,9 @@ class EntryScreen extends HookConsumerWidget {
                                               onPressed: () {
                                                 final wPlayers =
                                                     withPlayers.value!.toList();
-                                                if (withPlayers.value?[1] ==
-                                                    players.value[index]) {
-                                                  wPlayers[1] = null;
-                                                } else {
-                                                  wPlayers[1] =
-                                                      players.value[index];
-                                                }
+                                                wPlayers[1] =
+                                                    players.value[index];
+
                                                 withPlayers.value = wPlayers;
                                               })),
                                 ),
@@ -249,6 +240,7 @@ class EntryScreen extends HookConsumerWidget {
                           children: <Widget>[
                             Text(S.of(context).addModifyContractType),
                             DropdownButton(
+                                key: const ValueKey('dropdown-contract'),
                                 value: entry.value.prise,
                                 items: Prise.values
                                     .map((e) => DropdownMenuItem<Prise>(
@@ -333,6 +325,7 @@ class EntryScreen extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             DropdownButton(
+                                key: const ValueKey('dropdown-oudlers'),
                                 value: entry.value.nbBouts,
                                 items: List.generate(
                                         players.value.length > 5 ? 7 : 4,
@@ -393,6 +386,7 @@ class EntryScreen extends HookConsumerWidget {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 16),
                                 child: DropdownButton<PoigneeType>(
+                                    key: const ValueKey('dropdown-handful'),
                                     value: entry.value.poignees[0],
                                     isExpanded: true,
                                     items: PoigneeType.values
@@ -444,6 +438,7 @@ class EntryScreen extends HookConsumerWidget {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 20),
                                 child: DropdownButton<Camp>(
+                                    key: const ValueKey('dropdown-petit'),
                                     value: entry.value.petitsAuBout[0],
                                     items: Camp.values
                                         .map((e) => DropdownMenuItem(

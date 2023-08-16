@@ -49,7 +49,12 @@ class EntryViewModel extends _$EntryViewModel {
             ? entry.withPlayers?.lastOrNull
             : null,
         points: entry.infoEntry.points,
-        nbBouts: entry.infoEntry.nbBouts,
+        petit: entry.infoEntry.nbBouts >= 1,
+        vingtEtUn: entry.infoEntry.nbBouts >= 2,
+        excuse: entry.infoEntry.nbBouts >= 3,
+        petit2: entry.infoEntry.nbBouts >= 4,
+        vingtEtUn2: entry.infoEntry.nbBouts >= 5,
+        excuse2: entry.infoEntry.nbBouts >= 6,
         prise: entry.infoEntry.prise,
         pointsForAttack: entry.infoEntry.pointsForAttack,
         petitsAuBout: entry.infoEntry.petitsAuBout,
@@ -206,20 +211,7 @@ class EntryViewModel extends _$EntryViewModel {
   bool _validate() {
     final uiState = state.valueOrNull;
     if (uiState == null) return false;
-    if (uiState.taker == null) return false;
-
-    // todo check if nb points are not too high
-    if (uiState.points < 0) return false;
-    if (uiState.nbBouts < 0) return false;
-
-    if (uiState.allPlayers.length < 5) return true;
-    if (uiState.partner1 == null && uiState.allPlayers.length >= 5) {
-      return false;
-    }
-    if (uiState.partner2 == null && uiState.allPlayers.length >= 7) {
-      return false;
-    }
-    return true;
+    return uiState.isValid;
   }
 
   /// returns:
@@ -232,7 +224,7 @@ class EntryViewModel extends _$EntryViewModel {
     final entry = InfoEntryPlayerBean(
       infoEntry: InfoEntryBean(
         points: uiState.points,
-        nbBouts: uiState.nbBouts,
+        nbBouts: uiState.nbBoutsCalc,
         prise: uiState.prise!,
         pointsForAttack: uiState.pointsForAttack,
         petitsAuBout: uiState.petitsAuBout,
@@ -298,6 +290,38 @@ class EntryViewModel extends _$EntryViewModel {
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(excuse2: on));
   }
+
+  void addPetitAuBout(Camp camp) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    final p = uiState.petitsAuBout.toList();
+    p.add(camp);
+    state = AsyncData(uiState.copyWith(petitsAuBout: p));
+  }
+
+  void removePetitAuBout(Camp camp) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    final p = uiState.petitsAuBout.toList();
+    p.remove(camp);
+    state = AsyncData(uiState.copyWith(petitsAuBout: p));
+  }
+
+  void addPoignee(PoigneeType poignee) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    final p = uiState.poignees.toList();
+    p.add(poignee);
+    state = AsyncData(uiState.copyWith(poignees: p));
+  }
+
+  void removePoignee(PoigneeType poignee) {
+    final uiState = state.valueOrNull;
+    if (uiState == null) return;
+    final p = uiState.poignees.toList();
+    p.remove(poignee);
+    state = AsyncData(uiState.copyWith(poignees: p));
+  }
 }
 
 @freezed
@@ -314,7 +338,7 @@ class EntryUIState with _$EntryUIState {
     @Default(false) bool petit2,
     @Default(false) bool vingtEtUn2,
     @Default(false) bool excuse2,
-    @Default(0) int nbBouts,
+    @Deprecated("do not use anymore") @Default(0) int nbBouts,
     Prise? prise,
     @Default(true) bool pointsForAttack,
     @Default(<Camp>[]) List<Camp> petitsAuBout,
@@ -324,6 +348,14 @@ class EntryUIState with _$EntryUIState {
   }) = _EntryUIState;
 
   EntryUIState._();
+
+  int get nbBoutsCalc =>
+      (petit ? 1 : 0) +
+      (vingtEtUn ? 1 : 0) +
+      (excuse ? 1 : 0) +
+      (petit2 ? 1 : 0) +
+      (vingtEtUn2 ? 1 : 0) +
+      (excuse2 ? 1 : 0);
 
   bool get showPartnerPage => allPlayers.length >= 5;
 
@@ -344,5 +376,26 @@ class EntryUIState with _$EntryUIState {
       default:
         return false;
     }
+  }
+
+  bool get isValid {
+    if (taker == null) return false;
+
+    if (points < 0) return false;
+    if (nbBoutsCalc < 0) return false;
+
+    if (allPlayers.length <= 5) {
+      // tarot
+      if (points > 91) return false;
+      if (nbBoutsCalc > 3) return false;
+      if (allPlayers.length == 5 && partner1 == null) return false;
+    } else {
+      // tagros
+      if (points > 182) return false;
+      if (nbBoutsCalc > 6) return false;
+      if (partner1 == null) return false;
+      if (partner2 == null) return false;
+    }
+    return true;
   }
 }

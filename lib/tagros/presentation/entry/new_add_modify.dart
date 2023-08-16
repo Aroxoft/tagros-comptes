@@ -1,14 +1,19 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
+import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
-import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
-import 'package:tagros_comptes/tagros/domain/game/prise.dart';
+import 'package:tagros_comptes/tagros/presentation/entry/step_points.dart';
+import 'package:tagros_comptes/tagros/presentation/entry/step_what.dart';
+import 'package:tagros_comptes/tagros/presentation/entry/step_who.dart';
 import 'package:tagros_comptes/tagros/presentation/entry_view_model.dart';
+import 'package:tagros_comptes/tagros/presentation/widget/snack_utils.dart';
+import 'package:tuple/tuple.dart';
 
 const nbPages4Players = 3;
 const nbPages5Players = 4;
@@ -86,7 +91,7 @@ class NewAddModify extends HookConsumerWidget {
                                         .setPartner1(selected);
                                     _nextPage(pageController);
                                   },
-                                  title: 'Partner 1',
+                                  title: 'Roi ?',
                                   players: data.allPlayers,
                                 ),
                               if (data.showPartner2Page)
@@ -115,33 +120,22 @@ class NewAddModify extends HookConsumerWidget {
                                 forAttack: data.pointsForAttack,
                                 poignees: data.poignees,
                                 petitAuBout: data.petitsAuBout,
-                                onPlus1PointClicked: () {
+                                onPointsUpdated: (double points) {
+                                  double correctPoints = points;
+                                  if (points < 0) {
+                                    correctPoints = 0;
+                                  } else if (data.allPlayers.length <= 5 &&
+                                      points > 91) {
+                                    correctPoints = 91;
+                                  } else if (points > 182) {
+                                    correctPoints = 182;
+                                  }
+
                                   ref
                                       .read(entryViewModelProvider(
                                               roundId: roundId)
                                           .notifier)
-                                      .setPointsDouble(data.points + 1);
-                                },
-                                onMinus1PointClicked: () {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .setPointsDouble(data.points - 1);
-                                },
-                                onPlus10PointsClicked: () {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .setPointsDouble(data.points + 10);
-                                },
-                                onMinus10PointsClicked: () {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .setPointsDouble(data.points - 10);
+                                      .setPointsDouble(correctPoints);
                                 },
                                 onPetitClicked: (bool on) {
                                   ref
@@ -192,6 +186,34 @@ class NewAddModify extends HookConsumerWidget {
                                           .notifier)
                                       .setPointsForAttack(forAttack);
                                 },
+                                onPetitAuBoutAdded: (Camp camp) {
+                                  ref
+                                      .read(entryViewModelProvider(
+                                              roundId: roundId)
+                                          .notifier)
+                                      .addPetitAuBout(camp);
+                                },
+                                onPoigneeAdded: (PoigneeType poignee) {
+                                  ref
+                                      .read(entryViewModelProvider(
+                                              roundId: roundId)
+                                          .notifier)
+                                      .addPoignee(poignee);
+                                },
+                                onPetitAuBoutRemoved: (Camp camp) {
+                                  ref
+                                      .read(entryViewModelProvider(
+                                              roundId: roundId)
+                                          .notifier)
+                                      .removePetitAuBout(camp);
+                                },
+                                onPoigneeRemoved: (PoigneeType poignee) {
+                                  ref
+                                      .read(entryViewModelProvider(
+                                              roundId: roundId)
+                                          .notifier)
+                                      .removePoignee(poignee);
+                                },
                               ),
                             ],
                           ),
@@ -202,6 +224,28 @@ class NewAddModify extends HookConsumerWidget {
                           canPrevious: data.page > 0,
                           canNext:
                               data.page < nbPages - 1 && data.nextPageEnabled,
+                          isLast: data.page == nbPages - 1,
+                          canValidate: data.isValid,
+                          onValidate: () {
+                            final (saved, added) = ref
+                                .read(entryViewModelProvider(roundId: roundId)
+                                    .notifier)
+                                .saveEntry();
+                            if (saved != null) {
+                              context.pop();
+                              SchedulerBinding.instance
+                                  .addPostFrameCallback((timeStamp) {
+                                ref
+                                    .read(messageObserverProvider.notifier)
+                                    .state = Tuple2(added, saved);
+                              });
+                            } else {
+                              displayFlushbar(context, ref,
+                                  title: S.of(context).addModifyMissingTitle,
+                                  message:
+                                      S.of(context).addModifyMissingMessage);
+                            }
+                          },
                         )
                       ],
                     ),
@@ -226,233 +270,23 @@ void _previousPage(PageController pageController) {
       duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
 }
 
-class _Headline extends StatelessWidget {
-  final String text;
-
-  const _Headline({required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
-      child: Text(text, style: Theme.of(context).textTheme.displayMedium),
-    );
-  }
-}
-
-class WhatStep extends StatelessWidget {
-  final Prise? prise;
-  final void Function(Prise selected) onPriseSelected;
-
-  const WhatStep({
-    super.key,
-    required this.prise,
-    required this.onPriseSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _Headline(text: 'What?'),
-        Expanded(
-          flex: 1,
-          child: _BoundedSeparatedListView(
-            children: List.generate(Prise.values.length, (index) {
-              final e = Prise.values[index];
-              return ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: e == prise
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.surface),
-                  onPressed: () {
-                    onPriseSelected(e);
-                  },
-                  child: Text(
-                    e.displayName,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: e == prise
-                            ? Theme.of(context).colorScheme.onSecondary
-                            : Theme.of(context).colorScheme.onSurface),
-                  ));
-            }),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class WhoStep extends StatelessWidget {
-  final String title;
-  final PlayerBean? taker;
-  final void Function(PlayerBean player) onTakerSelected;
-  final List<PlayerBean> players;
-
-  const WhoStep({
-    super.key,
-    required this.taker,
-    required this.onTakerSelected,
-    required this.title,
-    required this.players,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _Headline(text: title),
-        Expanded(
-          child: _BoundedSeparatedListView(
-            children: List.generate(players.length, (index) {
-              final player = players[index];
-              return ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: player == taker
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.surface),
-                  onPressed: () {
-                    onTakerSelected(player);
-                  },
-                  child: Text(
-                    player.name,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: player == taker
-                            ? Theme.of(context).colorScheme.onSecondary
-                            : Theme.of(context).colorScheme.onSurface),
-                  ));
-            }),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class PointsStep extends StatelessWidget {
-  final double points;
-  final bool petit;
-  final bool vingtEtUn;
-  final bool excuse;
-  final bool petit2;
-  final bool vingtEtUn2;
-  final bool excuse2;
-  final bool forAttack;
-  final List<PoigneeType> poignees;
-  final List<Camp> petitAuBout;
-  final int nbPlayers;
-
-  final void Function() onPlus1PointClicked;
-  final void Function() onMinus1PointClicked;
-  final void Function() onPlus10PointsClicked;
-  final void Function() onMinus10PointsClicked;
-  final void Function(bool on) onPetitClicked;
-  final void Function(bool on) onVingtEtUnClicked;
-  final void Function(bool on) onExcuseClicked;
-  final void Function(bool on) onPetit2Clicked;
-  final void Function(bool on) onVingtEtUn2Clicked;
-  final void Function(bool on) onExcuse2Clicked;
-  final void Function(bool forAttack) onForAttackChanged;
-
-  const PointsStep({
-    super.key,
-    required this.points,
-    required this.petit,
-    required this.vingtEtUn,
-    required this.excuse,
-    required this.forAttack,
-    required this.poignees,
-    required this.petitAuBout,
-    required this.onPlus1PointClicked,
-    required this.onMinus1PointClicked,
-    required this.onPlus10PointsClicked,
-    required this.onMinus10PointsClicked,
-    required this.onPetitClicked,
-    required this.onVingtEtUnClicked,
-    required this.onExcuseClicked,
-    required this.onForAttackChanged,
-    required this.onPetit2Clicked,
-    required this.onVingtEtUn2Clicked,
-    required this.onExcuse2Clicked,
-    required this.petit2,
-    required this.vingtEtUn2,
-    required this.excuse2,
-    required this.nbPlayers,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _Headline(text: 'Combien ?'),
-        SegmentedButton(
-          segments: const [
-            ButtonSegment(value: true, label: Text('Attaque')),
-            ButtonSegment(value: false, label: Text('Défense'))
-          ],
-          selected: {forAttack},
-          onSelectionChanged: (changed) {
-            onForAttackChanged(changed.first);
-          },
-        ),
-        _Headline(text: 'Points'),
-        SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: SegmentedButton<int>(
-                emptySelectionAllowed: true,
-                multiSelectionEnabled: true,
-                segments: [
-                  ButtonSegment(value: 1, label: Text("1")),
-                  ButtonSegment(value: 21, label: Text("21")),
-                  ButtonSegment(value: 0, label: Text("Excuse"))
-                ],
-                selected: {if (petit) 1, if (vingtEtUn) 21, if (excuse) 0},
-                onSelectionChanged: (changed) {
-                  onPetitClicked(changed.contains(1));
-                  onVingtEtUnClicked(changed.contains(21));
-                  onExcuseClicked(changed.contains(0));
-                }),
-          ),
-        ),
-        if (nbPlayers >= 7)
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: SegmentedButton<int>(
-                  emptySelectionAllowed: true,
-                  multiSelectionEnabled: true,
-                  segments: [
-                    ButtonSegment(value: 1, label: Text("1")),
-                    ButtonSegment(value: 21, label: Text("21")),
-                    ButtonSegment(value: 0, label: Text("Excuse"))
-                  ],
-                  selected: {if (petit2) 1, if (vingtEtUn2) 21, if (excuse2) 0},
-                  onSelectionChanged: (changed) {
-                    onPetit2Clicked(changed.contains(1));
-                    onVingtEtUn2Clicked(changed.contains(21));
-                    onExcuse2Clicked(changed.contains(0));
-                  }),
-            ),
-          )
-      ],
-    );
-  }
-}
-
 class _ArrowBar extends StatelessWidget {
   final void Function() onPrevious;
   final void Function() onNext;
+  final void Function() onValidate;
   final bool canPrevious;
   final bool canNext;
+  final bool isLast;
+  final bool canValidate;
 
   const _ArrowBar({
     required this.onPrevious,
     required this.onNext,
     required this.canPrevious,
     required this.canNext,
+    required this.isLast,
+    required this.onValidate,
+    required this.canValidate,
   });
 
   @override
@@ -472,61 +306,17 @@ class _ArrowBar extends StatelessWidget {
               )),
           const SizedBox(width: 50),
           IconButton.filled(
-              onPressed: canNext ? onNext : null,
-              icon: const Icon(
-                Icons.arrow_forward,
+              onPressed: canNext
+                  ? onNext
+                  : isLast && canValidate
+                      ? onValidate
+                      : null,
+              icon: Icon(
+                isLast ? Icons.check : Icons.arrow_forward,
                 size: 30,
               )),
         ],
       ),
     );
-  }
-}
-
-class _BoundedSeparatedListView extends StatelessWidget {
-  final List<Widget> children;
-  final double maxHeightItem;
-  final double minHeightItem;
-  final double separatorHeight;
-  final double paddingTop;
-  final double paddingBottom;
-
-  const _BoundedSeparatedListView({
-    required this.children,
-    this.maxHeightItem = 120,
-    this.separatorHeight = 10,
-    this.minHeightItem = 60,
-    this.paddingTop = 36,
-    this.paddingBottom = 36,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-      final maxHeight = constraints.maxHeight;
-      final height = max(
-          minHeightItem,
-          min(
-              maxHeightItem,
-              (maxHeight -
-                      separatorHeight * (children.length - 1) -
-                      paddingTop -
-                      paddingBottom) /
-                  children.length));
-      print('maxHeight: $maxHeight, height: $height');
-      return ListView.separated(
-          padding: EdgeInsets.only(
-              top: paddingTop, bottom: paddingBottom, left: 20, right: 20),
-          itemBuilder: (BuildContext context, int index) {
-            return SizedBox(
-              height: height,
-              child: children[index],
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(height: separatorHeight),
-          itemCount: children.length);
-    });
   }
 }

@@ -6,8 +6,8 @@ import 'package:tagros_comptes/common/presentation/guide_screen.dart';
 import 'package:tagros_comptes/common/presentation/menu.dart';
 import 'package:tagros_comptes/common/presentation/settings_screen.dart';
 import 'package:tagros_comptes/monetization/presentation/subscription_screen.dart';
+import 'package:tagros_comptes/tagros/presentation/entry/new_add_modify.dart';
 import 'package:tagros_comptes/tagros/presentation/game.dart';
-import 'package:tagros_comptes/tagros/presentation/new_add_modify.dart';
 import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
 
 part 'routes.g.dart';

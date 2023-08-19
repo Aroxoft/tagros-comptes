@@ -9,18 +9,21 @@ Map<String, double> calculateGains(
   final players = playersList.map((e) => e.name).toList();
   // Assert that players in entry exist in the list of players
   assert(players.contains(infoEntryPlayer.player.name));
-  if (infoEntryPlayer.withPlayers != null) {
-    for (final withPlayer in infoEntryPlayer.withPlayers!) {
-      assert(players.contains(withPlayer!.name));
-    }
+  if (infoEntryPlayer.partner1 != null) {
+    assert(players.contains(infoEntryPlayer.partner1!.name));
+  }
+  if (infoEntryPlayer.partner2 != null) {
+    assert(players.contains(infoEntryPlayer.partner2!.name));
   }
 
   final nbPlayers = players.length;
 
   if (nbPlayers > 5) {
-    assert(infoEntryPlayer.withPlayers?.length == 2);
+    assert(
+        infoEntryPlayer.partner1 != null && infoEntryPlayer.partner2 != null);
   } else if (nbPlayers == 5) {
-    assert(infoEntryPlayer.withPlayers?.length == 1);
+    assert(
+        infoEntryPlayer.partner1 != null && infoEntryPlayer.partner2 == null);
   }
 
   final gros = nbPlayers > 5;
@@ -99,8 +102,7 @@ Map<String, double> calculateGains(
   }
 
   if (!gros) {
-    if (nbPlayers < 5 ||
-        infoEntryPlayer.player == infoEntryPlayer.withPlayers![0]) {
+    if (nbPlayers < 5 || infoEntryPlayer.player == infoEntryPlayer.partner1) {
       // one player against the others
       for (final player in players) {
         gains[player] = infoEntryPlayer.player.name == player
@@ -112,7 +114,7 @@ Map<String, double> calculateGains(
       for (final player in players) {
         if (player == infoEntryPlayer.player.name) {
           gains[player] = mise * 2;
-        } else if (player == infoEntryPlayer.withPlayers![0]!.name) {
+        } else if (player == infoEntryPlayer.partner1!.name) {
           gains[player] = mise;
         } else {
           gains[player] = -mise;
@@ -126,9 +128,8 @@ Map<String, double> calculateGains(
       if (player == infoEntryPlayer.player.name) {
         // taker
         gains[player] = mise * 2;
-      } else if (infoEntryPlayer.withPlayers!
-          .map((e) => e!.name)
-          .contains(player)) {
+      } else if (infoEntryPlayer.partner1!.name == player ||
+          infoEntryPlayer.partner2!.name == player) {
         // Attackers with taker
         gains[player] = mise;
       } else {

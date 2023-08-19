@@ -149,7 +149,7 @@ void main() {
     test('Petite de A, appel de B, faite de 0', () {
       entry = InfoEntryPlayerBean(
           player: A,
-          withPlayers: [B],
+          partner1: B,
           infoEntry: InfoEntryBean(
             points: 36,
             nbBouts: 3,
@@ -161,7 +161,7 @@ void main() {
     test('Petite de A, appel de B, chutée de 3 (1 bout)', () {
       entry = InfoEntryPlayerBean(
           player: A,
-          withPlayers: [B],
+          partner1: B,
           infoEntry: InfoEntryBean(
             points: 48,
             nbBouts: 1,
@@ -173,7 +173,7 @@ void main() {
     test('Garde de D, appel de C, faite de 0 (2 bouts)', () {
       entry = InfoEntryPlayerBean(
           player: D,
-          withPlayers: [C],
+          partner1: C,
           infoEntry: InfoEntryBean(
             points: 41,
             nbBouts: 2,
@@ -186,7 +186,7 @@ void main() {
     test('Garde-sans de C, tout seul, faite de 0 (3 bouts)', () {
       entry = InfoEntryPlayerBean(
           player: C,
-          withPlayers: [C],
+          partner1: C,
           infoEntry: InfoEntryBean(
             prise: Prise.gardeSans,
             points: 36,
@@ -212,7 +212,8 @@ void main() {
     test('Petite de A, appel de B et C, faite de 0 (0 bouts)', () {
       entry = InfoEntryPlayerBean(
           player: A,
-          withPlayers: [B, C],
+          partner1: B,
+          partner2: C,
           infoEntry: InfoEntryBean(
             points: 106,
             nbBouts: 0,

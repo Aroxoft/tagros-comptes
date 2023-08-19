@@ -36,6 +36,7 @@
     },
     "addModifyPetitAuBout": "Petit au bout",
     "addModifyPoignee": "Poignée",
+    "addModifyPoigneeError": "{count, plural, one{Impossible d'ajouter une nouvelle {newPoignee} à la poignée existante} other{Impossible d'ajouter une nouvelle {newPoignee} aux poignées existantes}}",
     "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ atouts)}}",
     "@addModifyPoigneeNbTrumps": {
         "description": "A poignee corresponds to how many trumps",

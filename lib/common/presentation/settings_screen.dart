@@ -50,7 +50,6 @@ class SettingsScreen extends StatelessWidget {
                     applicationName: S.of(context).appTitle,
                     applicationLegalese: '© 2023 Tagros',
                   );
-
                 }
               },
             ),

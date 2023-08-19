@@ -32,6 +32,14 @@ class NewAddModify extends HookConsumerWidget {
           .read(entryViewModelProvider(roundId: roundId).notifier)
           .setPage(pageController.page!.round());
     });
+    ref.listen(_messageProvider, (previous, next) {
+      if (next != null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(next),
+          duration: const Duration(seconds: 2),
+        ));
+      }
+    });
     return BackgroundGradient(
       child: Scaffold(
         body: SafeArea(
@@ -81,103 +89,62 @@ class NewAddModify extends HookConsumerWidget {
                                 players: data.allPlayers,
                               ),
                               if (data.showPartnerPage)
-                                WhoStep(
-                                  taker: data.partner1,
-                                  onTakerSelected: (selected) {
-                                    ref
-                                        .read(entryViewModelProvider(
-                                                roundId: roundId)
-                                            .notifier)
-                                        .setPartner1(selected);
-                                    _nextPage(pageController);
-                                  },
-                                  title: 'Roi ?',
-                                  players: data.allPlayers,
-                                ),
-                              if (data.showPartner2Page)
-                                WhoStep(
-                                  taker: data.partner2,
-                                  onTakerSelected: (selected) {
-                                    ref
-                                        .read(entryViewModelProvider(
-                                                roundId: roundId)
-                                            .notifier)
-                                        .setPartner2(selected);
-                                    _nextPage(pageController);
-                                  },
-                                  title: 'Partner 2',
-                                  players: data.allPlayers,
-                                ),
+                                KingStep(
+                                    title: "King(s)?",
+                                    onKing1Selected: (king1) {
+                                      ref
+                                          .read(entryViewModelProvider(
+                                                  roundId: roundId)
+                                              .notifier)
+                                          .setPartner1(king1);
+                                      _nextPage(pageController);
+                                    },
+                                    onKing2Selected: (king2) {
+                                      ref
+                                          .read(entryViewModelProvider(
+                                                  roundId: roundId)
+                                              .notifier)
+                                          .setPartner2(king2);
+                                      _nextPage(pageController);
+                                    },
+                                    players: data.allPlayers,
+                                    king1: data.mapOrNull(fivePlayers: (five) {
+                                      return five.partner1;
+                                    }, tagros: (tagros) {
+                                      return tagros.partner1;
+                                    }),
+                                    king2: data.mapOrNull(tagros: (tagros) {
+                                      return tagros.partner2;
+                                    })),
                               PointsStep(
-                                nbPlayers: data.allPlayers.length,
-                                points: data.points,
-                                petit: data.petit,
-                                vingtEtUn: data.vingtEtUn,
-                                excuse: data.excuse,
-                                petit2: data.petit2,
-                                vingtEtUn2: data.vingtEtUn2,
-                                excuse2: data.excuse2,
-                                forAttack: data.pointsForAttack,
-                                poignees: data.poignees,
-                                petitAuBout: data.petitsAuBout,
+                                data: data,
                                 onPointsUpdated: (double points) {
-                                  double correctPoints = points;
-                                  if (points < 0) {
-                                    correctPoints = 0;
-                                  } else if (data.allPlayers.length <= 5 &&
-                                      points > 91) {
-                                    correctPoints = 91;
-                                  } else if (points > 182) {
-                                    correctPoints = 182;
-                                  }
-
                                   ref
                                       .read(entryViewModelProvider(
                                               roundId: roundId)
                                           .notifier)
-                                      .setPointsDouble(correctPoints);
+                                      .setPointsDouble(points);
                                 },
-                                onPetitClicked: (bool on) {
+                                onPetitClicked: (bool on, int index) {
                                   ref
                                       .read(entryViewModelProvider(
                                               roundId: roundId)
                                           .notifier)
-                                      .setPetit(on);
+                                      .setPetit(on, index);
                                 },
-                                onVingtEtUnClicked: (bool on) {
+                                onVingtEtUnClicked: (bool on, int index) {
                                   ref
                                       .read(entryViewModelProvider(
                                               roundId: roundId)
                                           .notifier)
-                                      .setVingtEtUn(on);
+                                      .setVingtEtUn(on, index);
                                 },
-                                onExcuseClicked: (bool on) {
+                                onExcuseClicked: (bool on, int index) {
                                   ref
                                       .read(entryViewModelProvider(
                                               roundId: roundId)
                                           .notifier)
-                                      .setExcuse(on);
-                                },
-                                onPetit2Clicked: (bool on) {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .setPetit2(on);
-                                },
-                                onVingtEtUn2Clicked: (bool on) {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .setVingtEtUn2(on);
-                                },
-                                onExcuse2Clicked: (bool on) {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .setExcuse2(on);
+                                      .setExcuse(on, index);
                                 },
                                 onForAttackChanged: (bool forAttack) {
                                   ref
@@ -193,19 +160,19 @@ class NewAddModify extends HookConsumerWidget {
                                           .notifier)
                                       .setPetitAuBout(camp, index);
                                 },
-                                onPoigneeAdded: (PoigneeType poignee) {
-                                  ref
+                                onSetPoignee:
+                                    (PoigneeType? poignee, int index) {
+                                  if (!ref
                                       .read(entryViewModelProvider(
                                               roundId: roundId)
                                           .notifier)
-                                      .addPoignee(poignee);
-                                },
-                                onPoigneeRemoved: (PoigneeType poignee) {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .removePoignee(poignee);
+                                      .setPoignee(poignee, index)) {
+                                    ref.watch(_messageProvider.notifier).state =
+                                        S.of(context).addModifyPoigneeError(
+                                              data.poignees.length,
+                                              poignee?.name ?? '',
+                                            );
+                                  }
                                 },
                               ),
                             ],
@@ -313,3 +280,7 @@ class _ArrowBar extends StatelessWidget {
     );
   }
 }
+
+final _messageProvider = StateProvider<String?>((ref) {
+  return null;
+});

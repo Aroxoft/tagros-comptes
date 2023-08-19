@@ -36,6 +36,18 @@
     },
     "addModifyPetitAuBout": "One at the End",
     "addModifyPoignee": "Handful",
+    "addModifyPoigneeError": "{count, plural, one{Cannot add a new {newPoignee} to the already existing handful} other{Cannot add a new {newPoignee} to the already existing handfuls}}",
+    "@addModifyPoigneeError": {
+        "description": "Error when adding a poignee",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            },
+            "newPoignee": {
+                "type": "String"
+            }
+        }
+    },
     "addModifyPoigneeNbTrumps": "{count, plural, zero{{poigneeName}} other{{poigneeName} ({count}+ trumps)}}",
     "@addModifyPoigneeNbTrumps": {
         "description": "A poignee corresponds to how many trumps",

@@ -120,11 +120,11 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       {required int gameId}) async {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
-    if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
-      with1 = Value(infoEntry.withPlayers![0]!.id!);
-      if (infoEntry.withPlayers!.length > 1) {
-        with2 = Value(infoEntry.withPlayers![1]!.id!);
-      }
+    if (infoEntry.partner1 != null) {
+      with1 = Value(infoEntry.partner1!.id!);
+    }
+    if (infoEntry.partner2 != null) {
+      with2 = Value(infoEntry.partner2!.id!);
     }
     return transaction(() async {
       await updateGameDate(gameId: gameId);
@@ -194,11 +194,11 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       {required int gameId}) async {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
-    if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
-      with1 = Value(infoEntry.withPlayers![0]!.id!);
-      if (infoEntry.withPlayers!.length > 1) {
-        with2 = Value(infoEntry.withPlayers![1]!.id!);
-      }
+    if (infoEntry.partner1 != null) {
+      with1 = Value(infoEntry.partner1!.id!);
+    }
+    if (infoEntry.partner2 != null) {
+      with2 = Value(infoEntry.partner2!.id!);
     }
     return transaction(() async {
       await updateGameDate(gameId: gameId);
@@ -256,11 +256,11 @@ extension InfoExt on EntryInGameResult {
             pointsForAttack: pointsForAttack,
             prise: fromDbPrise(prise)),
         player: PlayerBean(name: playerName ?? '', id: playerId),
-        withPlayers: [
-          if (with1Id != null && with1Name != null)
-            PlayerBean(name: with1Name!, id: with1Id),
-          if (with2Id != null && with2Name != null)
-            PlayerBean(name: with2Name!, id: with2Id)
-        ]);
+        partner1: with1Id != null && with1Name != null
+            ? PlayerBean(name: with1Name!, id: with1Id)
+            : null,
+        partner2: with2Id != null && with2Name != null
+            ? PlayerBean(name: with2Name!, id: with2Id)
+            : null);
   }
 }

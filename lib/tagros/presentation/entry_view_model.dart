@@ -40,32 +40,70 @@ class EntryViewModel extends _$EntryViewModel {
 
     if (roundId != null) {
       final entry = await ref.watch(gamesDaoProvider).fetchEntry(roundId);
-      return EntryUIState(
+      if (allPlayers.length == 5) {
+        return EntryUIState.fivePlayers(
+          allPlayers: allPlayers.map((e) => PlayerBean.fromDb(e)).toList(),
+          id: entry.infoEntry.id,
+          taker: entry.player,
+          partner1: entry.partner1,
+          points: entry.infoEntry.points,
+          petit: entry.infoEntry.nbBouts >= 1,
+          vingtEtUn: entry.infoEntry.nbBouts >= 2,
+          excuse: entry.infoEntry.nbBouts >= 3,
+          prise: entry.infoEntry.prise,
+          pointsForAttack: entry.infoEntry.pointsForAttack,
+          petitAuBout: entry.infoEntry.petitsAuBout.firstOrNull,
+          poignees: entry.infoEntry.poignees,
+        );
+      }
+      if (allPlayers.length > 5) {
+        return EntryUIState.tagros(
+          allPlayers: allPlayers.map((e) => PlayerBean.fromDb(e)).toList(),
+          id: entry.infoEntry.id,
+          taker: entry.player,
+          partner1: entry.partner1,
+          partner2: entry.partner2,
+          points: entry.infoEntry.points,
+          petit: entry.infoEntry.nbBouts >= 1,
+          vingtEtUn: entry.infoEntry.nbBouts >= 2,
+          excuse: entry.infoEntry.nbBouts >= 3,
+          petit2: entry.infoEntry.nbBouts >= 4,
+          vingtEtUn2: entry.infoEntry.nbBouts >= 5,
+          excuse2: entry.infoEntry.nbBouts >= 6,
+          prise: entry.infoEntry.prise,
+          pointsForAttack: entry.infoEntry.pointsForAttack,
+          petitsAuBout: entry.infoEntry.petitsAuBout,
+          poignees: entry.infoEntry.poignees,
+        );
+      }
+      return EntryUIState.classic(
         allPlayers: allPlayers.map((e) => PlayerBean.fromDb(e)).toList(),
         id: entry.infoEntry.id,
         taker: entry.player,
-        partner1: entry.withPlayers?.firstOrNull,
-        partner2: entry.withPlayers?.length == 2
-            ? entry.withPlayers?.lastOrNull
-            : null,
         points: entry.infoEntry.points,
         petit: entry.infoEntry.nbBouts >= 1,
         vingtEtUn: entry.infoEntry.nbBouts >= 2,
         excuse: entry.infoEntry.nbBouts >= 3,
-        petit2: entry.infoEntry.nbBouts >= 4,
-        vingtEtUn2: entry.infoEntry.nbBouts >= 5,
-        excuse2: entry.infoEntry.nbBouts >= 6,
         prise: entry.infoEntry.prise,
         pointsForAttack: entry.infoEntry.pointsForAttack,
-        petitsAuBout: entry.infoEntry.petitsAuBout,
+        petitAuBout: entry.infoEntry.petitsAuBout.firstOrNull,
         poignees: entry.infoEntry.poignees,
       );
     }
-
-    return EntryUIState(
-      allPlayers:
-          allPlayers.map((e) => PlayerBean.fromDb(e)).whereNotNull().toList(),
-    );
+    final players = allPlayers.map((e) => PlayerBean.fromDb(e)).toList();
+    if (allPlayers.length <= 4) {
+      return EntryUIState.classic(
+        allPlayers: players,
+      );
+    } else if (allPlayers.length == 5) {
+      return EntryUIState.fivePlayers(
+        allPlayers: players,
+      );
+    } else {
+      return EntryUIState.tagros(
+        allPlayers: players,
+      );
+    }
   }
 
   void setTaker(PlayerBean? player) {
@@ -77,13 +115,22 @@ class EntryViewModel extends _$EntryViewModel {
   void setPartner1(PlayerBean? player) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(partner1: player));
+    state = uiState.maybeMap(
+      tagros: (tagros) => AsyncData(tagros.copyWith(partner1: player)),
+      fivePlayers: (fivePlayers) =>
+          AsyncData(fivePlayers.copyWith(partner1: player)),
+      orElse: () => throw StateError("We cannot set partner1 on classic game"),
+    );
   }
 
   void setPartner2(PlayerBean? player) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(partner2: player));
+    state = uiState.maybeMap(
+      tagros: (tagros) => AsyncData(tagros.copyWith(partner2: player)),
+      orElse: () =>
+          throw StateError("We cannot set partner2 when not in tagros"),
+    );
   }
 
   void setPoints(String value) {
@@ -97,15 +144,16 @@ class EntryViewModel extends _$EntryViewModel {
   void setPointsDouble(double value) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    double points = value;
-    points = (points * 2).round() / 2;
-    state = AsyncData(uiState.copyWith(points: points));
-  }
-
-  void setNbBouts(int nbBouts) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(nbBouts: nbBouts));
+    double correctPoints = value;
+    if (value < 0) {
+      correctPoints = 0;
+    } else if (uiState.allPlayers.length <= 5 && value > 91) {
+      correctPoints = 91;
+    } else if (value > 182) {
+      correctPoints = 182;
+    }
+    correctPoints = (correctPoints * 2).round() / 2;
+    state = AsyncData(uiState.copyWith(points: correctPoints));
   }
 
   void setPrise(Prise prise) {
@@ -123,38 +171,52 @@ class EntryViewModel extends _$EntryViewModel {
   void setPetitAuBout(Camp? camp, int index) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    final p = uiState.petitsAuBout.toList();
-    p[index] = camp;
-    state = AsyncData(uiState.copyWith(petitsAuBout: p));
+    state = AsyncData(uiState.map(
+      classic: (classic) => classic.copyWith(petitAuBout: camp),
+      fivePlayers: (fivePlayers) => fivePlayers.copyWith(petitAuBout: camp),
+      tagros: (tagros) {
+        final p = tagros.petitsAuBout.toList();
+        p[index] = camp;
+        return tagros.copyWith(petitsAuBout: p);
+      },
+    ));
   }
 
-  void switchPoignee(bool on) {
+  bool setPoignee(PoigneeType? poignee, int index) {
     final uiState = state.valueOrNull;
-    if (uiState == null) return;
+    if (uiState == null) return false;
     final p = uiState.poignees.toList();
-    if (p.isEmpty) {
-      p.add(PoigneeType.simple);
-    }
-    p[0] = on ? PoigneeType.simple : PoigneeType.none;
-    setPoignees(p);
-  }
-
-  void setPoignee(PoigneeType poignee) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    final p = uiState.poignees.toList();
-    if (p.isEmpty) {
-      p.add(poignee);
+    if (poignee == null) {
+      p.removeAt(index);
     } else {
-      p[0] = poignee;
+      p[index] = poignee;
     }
-    setPoignees(p);
-  }
+    final nbTrumpsInPoignees = p
+        .whereNotNull()
+        .map((e) => getNbAtouts(e, uiState.allPlayers.length))
+        .sum;
+    if (nbTrumpsInPoignees > uiState.totalNbTrumps) {
+      // Do not allow more trumps than total number of trumps in the game
+      return false;
+    }
+    // Adjust the number of displayed poignees
+    if (nbTrumpsInPoignees +
+            getNbAtouts(PoigneeType.simple, uiState.allPlayers.length) >
+        uiState.totalNbTrumps) {
+      // Remove all null poignees
+      state = AsyncData(uiState.copyWith(poignees: p.whereNotNull().toList()));
+      return true;
+    }
+    final List<PoigneeType?> newPoignees = [...p.whereNotNull(), null];
+    // We can allow the user to add a simple poignee
+    // if (p.isEmpty || p.last != null) {
+    //   newPoignees = [...p.whereNotNull(), null];
+    // } else {
+    //   newPoignees = [...p.whereNotNull()];
+    // }
 
-  void setPoignees(List<PoigneeType> poignees) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(poignees: poignees));
+    state = AsyncData(uiState.copyWith(poignees: newPoignees));
+    return true;
   }
 
   void incrementPage() {
@@ -167,12 +229,6 @@ class EntryViewModel extends _$EntryViewModel {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(page: uiState.page - 1));
-  }
-
-  void clear() {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = AsyncData(EntryUIState(allPlayers: uiState.allPlayers));
   }
 
   bool showPartnerPage() {
@@ -206,16 +262,22 @@ class EntryViewModel extends _$EntryViewModel {
         nbBouts: uiState.nbBoutsCalc,
         prise: uiState.prise!,
         pointsForAttack: uiState.pointsForAttack,
-        petitsAuBout: uiState.petitsAuBout.whereNotNull().toList(),
-        poignees: uiState.poignees,
+        petitsAuBout: uiState
+            .map(
+              classic: (classic) => [classic.petitAuBout],
+              fivePlayers: (fivePlayers) => [fivePlayers.petitAuBout],
+              tagros: (tagros) => tagros.petitsAuBout,
+            )
+            .whereNotNull()
+            .toList(),
+        poignees: uiState.poignees.whereNotNull().toList(),
         id: uiState.id,
       ),
       player: uiState.taker!,
-      withPlayers: uiState.partner1 == null
-          ? null
-          : uiState.partner2 == null
-              ? [uiState.partner1]
-              : [uiState.partner1, uiState.partner2],
+      partner1: uiState.mapOrNull(
+          fivePlayers: (fivePlayers) => fivePlayers.partner1,
+          tagros: (tagros) => tagros.partner1),
+      partner2: uiState.mapOrNull(tagros: (tagros) => tagros.partner2),
     );
     if (uiState.id != null) {
       ref.read(tableauViewModelProvider)?.modifyEntry(entry);
@@ -234,56 +296,70 @@ class EntryViewModel extends _$EntryViewModel {
     }
   }
 
-  void setPetit(bool on) {
+  void setPetit(bool on, int index) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(petit: on));
+    state = AsyncData(uiState.map(
+      classic: (classic) {
+        assert(index == 0);
+        return classic.copyWith(petit: on);
+      },
+      fivePlayers: (fivePlayers) {
+        assert(index == 0);
+        return fivePlayers.copyWith(petit: on);
+      },
+      tagros: (tagros) {
+        if (index == 0) {
+          return tagros.copyWith(petit: on);
+        } else {
+          return tagros.copyWith(petit2: on);
+        }
+      },
+    ));
   }
 
-  void setVingtEtUn(bool on) {
+  void setVingtEtUn(bool on, int index) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(vingtEtUn: on));
+    state = AsyncData(uiState.map(
+      classic: (classic) {
+        assert(index == 0);
+        return classic.copyWith(vingtEtUn: on);
+      },
+      fivePlayers: (fivePlayers) {
+        assert(index == 0);
+        return fivePlayers.copyWith(vingtEtUn: on);
+      },
+      tagros: (tagros) {
+        if (index == 0) {
+          return tagros.copyWith(vingtEtUn: on);
+        } else {
+          return tagros.copyWith(vingtEtUn2: on);
+        }
+      },
+    ));
   }
 
-  void setExcuse(bool on) {
+  void setExcuse(bool on, int index) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(excuse: on));
-  }
-
-  void setPetit2(bool on) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(petit2: on));
-  }
-
-  void setVingtEtUn2(bool on) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(vingtEtUn2: on));
-  }
-
-  void setExcuse2(bool on) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(excuse2: on));
-  }
-
-  void addPetitAuBout(Camp camp) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    final p = uiState.petitsAuBout.toList();
-    p.add(camp);
-    state = AsyncData(uiState.copyWith(petitsAuBout: p));
-  }
-
-  void removePetitAuBout(Camp camp) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    final p = uiState.petitsAuBout.toList();
-    p.remove(camp);
-    state = AsyncData(uiState.copyWith(petitsAuBout: p));
+    state = AsyncData(uiState.map(
+      classic: (classic) {
+        assert(index == 0);
+        return classic.copyWith(excuse: on);
+      },
+      fivePlayers: (fivePlayers) {
+        assert(index == 0);
+        return fivePlayers.copyWith(excuse: on);
+      },
+      tagros: (tagros) {
+        if (index == 0) {
+          return tagros.copyWith(excuse: on);
+        } else {
+          return tagros.copyWith(excuse2: on);
+        }
+      },
+    ));
   }
 
   void addPoignee(PoigneeType poignee) {
@@ -305,7 +381,38 @@ class EntryViewModel extends _$EntryViewModel {
 
 @freezed
 class EntryUIState with _$EntryUIState {
-  factory EntryUIState({
+  factory EntryUIState.classic({
+    required List<PlayerBean> allPlayers,
+    PlayerBean? taker,
+    @Default(0) double points,
+    @Default(false) bool petit,
+    @Default(false) bool vingtEtUn,
+    @Default(false) bool excuse,
+    Prise? prise,
+    @Default(true) bool pointsForAttack,
+    @Default(null) Camp? petitAuBout,
+    @Default(<PoigneeType?>[null]) List<PoigneeType?> poignees,
+    @Default(0) int page,
+    int? id,
+  }) = _EntryClassic;
+
+  factory EntryUIState.fivePlayers({
+    required List<PlayerBean> allPlayers,
+    PlayerBean? taker,
+    PlayerBean? partner1,
+    @Default(0) double points,
+    @Default(false) bool petit,
+    @Default(false) bool vingtEtUn,
+    @Default(false) bool excuse,
+    Prise? prise,
+    @Default(true) bool pointsForAttack,
+    @Default(null) Camp? petitAuBout,
+    @Default(<PoigneeType?>[null]) List<PoigneeType?> poignees,
+    @Default(0) int page,
+    int? id,
+  }) = _EntryFivePlayers;
+
+  factory EntryUIState.tagros({
     required List<PlayerBean> allPlayers,
     PlayerBean? taker,
     PlayerBean? partner1,
@@ -321,24 +428,46 @@ class EntryUIState with _$EntryUIState {
     Prise? prise,
     @Default(true) bool pointsForAttack,
     @Default(<Camp?>[null]) List<Camp?> petitsAuBout,
-    @Default(<PoigneeType>[]) List<PoigneeType> poignees,
+    @Default(<PoigneeType?>[null]) List<PoigneeType?> poignees,
     @Default(0) int page,
     int? id,
   }) = _EntryUIState;
 
   EntryUIState._();
 
-  int get nbBoutsCalc =>
-      (petit ? 1 : 0) +
-      (vingtEtUn ? 1 : 0) +
-      (excuse ? 1 : 0) +
-      (petit2 ? 1 : 0) +
-      (vingtEtUn2 ? 1 : 0) +
-      (excuse2 ? 1 : 0);
+  int get nbBoutsCalc {
+    final sum1 = (petit ? 1 : 0) + (vingtEtUn ? 1 : 0) + (excuse ? 1 : 0);
+    return map(
+        classic: (classic) => sum1,
+        fivePlayers: (fivePlayers) => sum1,
+        tagros: (tagros) =>
+            sum1 +
+            (tagros.petit2 ? 1 : 0) +
+            (tagros.vingtEtUn2 ? 1 : 0) +
+            (tagros.excuse2 ? 1 : 0));
+  }
 
-  bool get showPartnerPage => allPlayers.length >= 5;
+  int get totalNbTrumps {
+    return map(
+        classic: (classic) => 21,
+        fivePlayers: (fivePlayers) => 21,
+        tagros: (tagros) => 42);
+  }
 
-  bool get showPartner2Page => allPlayers.length >= 7;
+  bool get tagros => map(
+      classic: (classic) => false,
+      fivePlayers: (fivePlayers) => false,
+      tagros: (tagros) => true);
+
+  bool get showPartnerPage => map(
+      classic: (classic) => false,
+      fivePlayers: (fivePlayers) => true,
+      tagros: (tagros) => true);
+
+  bool get showPartner2Page => map(
+      classic: (classic) => false,
+      fivePlayers: (fivePlayers) => false,
+      tagros: (tagros) => true);
 
   bool get nextPageEnabled {
     switch (page) {
@@ -347,11 +476,15 @@ class EntryUIState with _$EntryUIState {
       case 1:
         return taker != null;
       case 2:
-        return partner1 != null ||
-            !showPartnerPage; // todo to complete with other cases
+        return map(
+            classic: (classic) => true,
+            fivePlayers: (fivePlayers) => fivePlayers.partner1 != null,
+            tagros: (tagros) => tagros.partner1 != null);
       case 3:
-        return partner2 != null ||
-            !showPartner2Page; // todo to complete with other cases
+        return map(
+            classic: (classic) => true,
+            fivePlayers: (fivePlayers) => true,
+            tagros: (tagros) => tagros.partner2 != null);
       default:
         return false;
     }
@@ -363,18 +496,13 @@ class EntryUIState with _$EntryUIState {
     if (points < 0) return false;
     if (nbBoutsCalc < 0) return false;
 
-    if (allPlayers.length <= 5) {
-      // tarot
-      if (points > 91) return false;
-      if (nbBoutsCalc > 3) return false;
-      if (allPlayers.length == 5 && partner1 == null) return false;
-    } else {
-      // tagros
-      if (points > 182) return false;
-      if (nbBoutsCalc > 6) return false;
-      if (partner1 == null) return false;
-      if (partner2 == null) return false;
-    }
-    return true;
+    return map(
+        classic: (classic) => points <= 91,
+        fivePlayers: (fivePlayers) =>
+            points <= 91 && fivePlayers.partner1 != null,
+        tagros: (tagros) =>
+            points <= 182 &&
+            tagros.partner1 != null &&
+            tagros.partner2 != null);
   }
 }

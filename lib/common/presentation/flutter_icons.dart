@@ -29,11 +29,18 @@ class FlutterIcons {
   static const _kFontFam = 'FlutterIcons';
   static const String? _kFontPkg = null;
 
-  static const IconData cloversCard = IconData(0xe96b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData attack = IconData(0xe97d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData diamondsCard = IconData(0xe993, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData heartsCard = IconData(0xe9f9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData defense = IconData(0xea96, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData spadesCard = IconData(0xeaa9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData idBadge = IconData(0xf2c1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData cloversCard =
+      IconData(0xe96b, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData attack =
+      IconData(0xe97d, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData diamondsCard =
+      IconData(0xe993, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData heartsCard =
+      IconData(0xe9f9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData defense =
+      IconData(0xea96, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData spadesCard =
+      IconData(0xeaa9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData idBadge =
+      IconData(0xf2c1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -22,28 +22,92 @@ class WhoStep extends StatelessWidget {
       children: [
         Headline(text: title),
         Expanded(
-          child: BoundedSeparatedListView(
-            children: List.generate(players.length, (index) {
-              final player = players[index];
-              return ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: player == taker
-                          ? Theme.of(context).colorScheme.secondary
-                          : Theme.of(context).colorScheme.surface),
-                  onPressed: () {
-                    onTakerSelected(player);
-                  },
-                  child: Text(
-                    player.name,
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: player == taker
-                            ? Theme.of(context).colorScheme.onSecondary
-                            : Theme.of(context).colorScheme.onSurface),
-                  ));
-            }),
+          child: SelectPlayerInList(
+            players: players,
+            selected: taker,
+            onPlayerSelected: onTakerSelected,
           ),
         ),
       ],
+    );
+  }
+}
+
+class KingStep extends StatelessWidget {
+  final String title;
+  final PlayerBean? king1;
+  final PlayerBean? king2;
+  final void Function(PlayerBean player) onKing1Selected;
+  final void Function(PlayerBean player) onKing2Selected;
+  final List<PlayerBean> players;
+
+  const KingStep({
+    super.key,
+    required this.title,
+    required this.king1,
+    required this.king2,
+    required this.onKing1Selected,
+    required this.onKing2Selected,
+    required this.players,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (players.length == 5) {
+      return SelectPlayerInList(
+          players: players, selected: king1, onPlayerSelected: onKing1Selected);
+    } else {
+      return Row(
+        children: [
+          SelectPlayerInList(
+            players: players,
+            selected: king1,
+            onPlayerSelected: onKing1Selected,
+          ),
+          SelectPlayerInList(
+            players: players,
+            selected: king2,
+            onPlayerSelected: onKing2Selected,
+          ),
+        ],
+      );
+    }
+  }
+}
+
+class SelectPlayerInList extends StatelessWidget {
+  const SelectPlayerInList({
+    super.key,
+    required this.players,
+    required this.selected,
+    required this.onPlayerSelected,
+  });
+
+  final List<PlayerBean> players;
+  final PlayerBean? selected;
+  final void Function(PlayerBean player) onPlayerSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return BoundedSeparatedListView(
+      children: List.generate(players.length, (index) {
+        final player = players[index];
+        return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: player == selected
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.surface),
+            onPressed: () {
+              onPlayerSelected(player);
+            },
+            child: Text(
+              player.name,
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  color: player == selected
+                      ? Theme.of(context).colorScheme.onSecondary
+                      : Theme.of(context).colorScheme.onSurface),
+            ));
+      }),
     );
   }
 }

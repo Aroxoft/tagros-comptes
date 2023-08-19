@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry.dart';
@@ -9,10 +8,12 @@ part 'info_entry_player.freezed.dart';
 
 @freezed
 class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
-  factory InfoEntryPlayerBean(
-      {required PlayerBean player,
-      required InfoEntryBean infoEntry,
-      List<PlayerBean?>? withPlayers}) = _InfoEntryPlayerBean;
+  factory InfoEntryPlayerBean({
+    required PlayerBean player,
+    required InfoEntryBean infoEntry,
+    PlayerBean? partner1,
+    PlayerBean? partner2,
+  }) = _InfoEntryPlayerBean;
 
   InfoEntryPlayerBean._();
 
@@ -21,15 +22,15 @@ class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
     final String campDesPoints =
         infoEntry.pointsForAttack ? S.current.theAttack : S.current.theDefense;
     return S.current.infoEntryString(
-      withPlayers?.length == 2
+      (partner1 != null && partner2 != null)
           ? 'twoPlayers'
-          : withPlayers?.length == 1
+          : (partner1 != null)
               ? 'onePlayer'
               : 'none',
       player.name,
       infoEntry.prise.displayName,
-      withPlayers?.firstOrNull?.name ?? '',
-      withPlayers?.length == 2 ? withPlayers?.lastOrNull?.name ?? '' : '',
+      partner1?.name ?? '',
+      partner2?.name ?? '',
       infoEntry.points,
       campDesPoints,
       infoEntry.nbBouts,

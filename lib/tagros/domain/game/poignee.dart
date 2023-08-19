@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 
-enum PoigneeType { simple, double, triple, none }
+enum PoigneeType { simple, double, triple }
 
 int getPoigneePoints(PoigneeType poigneeType) {
   switch (poigneeType) {
@@ -11,8 +11,6 @@ int getPoigneePoints(PoigneeType poigneeType) {
       return 30;
     case PoigneeType.triple:
       return 40;
-    case PoigneeType.none:
-      return 0;
   }
 }
 
@@ -69,8 +67,6 @@ int getNbAtouts(PoigneeType poigneeType, int nbPlayers) {
         case 10:
           return 11;
       }
-    case PoigneeType.none:
-      return 0;
   }
   return 0;
 }
@@ -84,8 +80,6 @@ extension PoigneExtension on PoigneeType {
         return S.current.poigneTypeDouble;
       case PoigneeType.triple:
         return S.current.poigneTypeTriple;
-      case PoigneeType.none:
-        return S.current.poigneTypeNone;
     }
   }
 }
@@ -106,8 +100,6 @@ String? toDbPoignees(List<PoigneeType> poignees) => poignees.isEmpty
               return _double;
             case PoigneeType.triple:
               return _triple;
-            case PoigneeType.none:
-              return null;
           }
         })
         .whereNotNull()

@@ -186,12 +186,12 @@ class NewAddModify extends HookConsumerWidget {
                                           .notifier)
                                       .setPointsForAttack(forAttack);
                                 },
-                                onPetitAuBoutAdded: (Camp camp) {
+                                onSetPetitAuBout: (Camp? camp, int index) {
                                   ref
                                       .read(entryViewModelProvider(
                                               roundId: roundId)
                                           .notifier)
-                                      .addPetitAuBout(camp);
+                                      .setPetitAuBout(camp, index);
                                 },
                                 onPoigneeAdded: (PoigneeType poignee) {
                                   ref
@@ -199,13 +199,6 @@ class NewAddModify extends HookConsumerWidget {
                                               roundId: roundId)
                                           .notifier)
                                       .addPoignee(poignee);
-                                },
-                                onPetitAuBoutRemoved: (Camp camp) {
-                                  ref
-                                      .read(entryViewModelProvider(
-                                              roundId: roundId)
-                                          .notifier)
-                                      .removePetitAuBout(camp);
                                 },
                                 onPoigneeRemoved: (PoigneeType poignee) {
                                   ref

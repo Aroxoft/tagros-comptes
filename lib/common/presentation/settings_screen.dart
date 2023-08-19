@@ -35,6 +35,26 @@ class SettingsScreen extends StatelessWidget {
               onTap: () => const SubscriptionRoute().push(context),
             ),
             ListTile(
+              title: Text(S.of(context).settingsAbout),
+              onTap: () async {
+                final version = (await PackageInfo.fromPlatform()).version;
+                if (context.mounted) {
+                  showAboutDialog(
+                    context: context,
+                    applicationVersion: version,
+                    applicationIcon: Image.asset(
+                      'images/logo_small.png',
+                      width: 64,
+                      height: 64,
+                    ),
+                    applicationName: S.of(context).appTitle,
+                    applicationLegalese: '© 2023 Tagros',
+                  );
+
+                }
+              },
+            ),
+            ListTile(
               title: Center(
                 child: FutureBuilder(
                   future: PackageInfo.fromPlatform(),

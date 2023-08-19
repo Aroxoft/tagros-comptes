@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
 import 'package:tagros_comptes/tagros/presentation/entry/entry_components.dart';
+import 'package:tagros_comptes/tagros/presentation/entry/step_points_components.dart';
 
 class PointsStep extends StatelessWidget {
   final double points;
@@ -13,7 +15,7 @@ class PointsStep extends StatelessWidget {
   final bool excuse2;
   final bool forAttack;
   final List<PoigneeType> poignees;
-  final List<Camp> petitAuBout;
+  final List<Camp?> petitAuBout;
   final int nbPlayers;
 
   final void Function(double points) onPointsUpdated;
@@ -26,10 +28,9 @@ class PointsStep extends StatelessWidget {
   final void Function(bool on) onExcuse2Clicked;
   final void Function(bool forAttack) onForAttackChanged;
 
-  final void Function(Camp camp) onPetitAuBoutAdded;
+  final void Function(Camp? camp, int index) onSetPetitAuBout;
   final void Function(PoigneeType poignee) onPoigneeAdded;
   final void Function(PoigneeType poignee) onPoigneeRemoved;
-  final void Function(Camp camp) onPetitAuBoutRemoved;
 
   const PointsStep({
     super.key,
@@ -52,10 +53,9 @@ class PointsStep extends StatelessWidget {
     required this.excuse2,
     required this.nbPlayers,
     required this.onPointsUpdated,
-    required this.onPetitAuBoutAdded,
     required this.onPoigneeAdded,
-    required this.onPetitAuBoutRemoved,
     required this.onPoigneeRemoved,
+    required this.onSetPetitAuBout,
   });
 
   @override
@@ -74,7 +74,7 @@ class PointsStep extends StatelessWidget {
               onForAttackChanged(changed.first);
             },
           ),
-          Headline(text: 'Points'),
+          Headline(text: S.of(context).points),
           SizedBox(
             height: 100,
             child: PointsComponent(
@@ -139,27 +139,8 @@ class PointsStep extends StatelessWidget {
                     }),
               ),
             ),
-          AddBonus(
-            onAddPoignee: (PoigneeType poignee) {
-              // add poignee
-              onPoigneeAdded(poignee);
-            },
-            onAddPetitAuBout: (Camp camp) {
-              // add petit au bout
-              onPetitAuBoutAdded(camp);
-            },
-            onRemovePoignee: (PoigneeType poignee) {
-              // remove poignee
-              onPoigneeRemoved(poignee);
-            },
-            onRemovePetitAuBout: (Camp camp) {
-              // remove petit au bout
-              onPetitAuBoutRemoved(camp);
-            },
-            poignees: poignees,
-            petitAuBout: petitAuBout,
-            nbPlayers: nbPlayers,
-          ),
+          PetitsAuBoutBonus(
+              petitAuBout: petitAuBout, onSetPetitAuBout: onSetPetitAuBout),
         ],
       ),
     );

@@ -28,3 +28,6 @@ const Color kColorDark3 = Color(0xFF98AFBA);
 const Color kColorDark4 = Color(0xFF344A53);
 const Color kColorDark5 = Color(0xFF4A3626);
 const Color kColorDark6 = Color(0xFF7B6553);
+
+const Color kColorAttack = Color(0xFF960707);
+const Color kColorDefense = Color(0xFF1C779F);

@@ -120,32 +120,11 @@ class EntryViewModel extends _$EntryViewModel {
     state = AsyncData(uiState.copyWith(pointsForAttack: pointsForAttack));
   }
 
-  void setPetitsAuBout(List<Camp> petitsAuBout) {
+  void setPetitAuBout(Camp? camp, int index) {
     final uiState = state.valueOrNull;
     if (uiState == null) return;
-    state = AsyncData(uiState.copyWith(petitsAuBout: petitsAuBout));
-  }
-
-  void switchPetitAuBout(bool on) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    var p = uiState.petitsAuBout.toList();
-    if (p.isEmpty) {
-      p = [Camp.attack];
-    }
-    p[0] = on ? Camp.attack : Camp.none;
-    state = AsyncData(uiState.copyWith(petitsAuBout: p));
-  }
-
-  void setPetitAuBout(Camp camp) {
-    final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    var p = uiState.petitsAuBout.toList();
-    if (p.isEmpty) {
-      p = [camp];
-    } else {
-      p[0] = camp;
-    }
+    final p = uiState.petitsAuBout.toList();
+    p[index] = camp;
     state = AsyncData(uiState.copyWith(petitsAuBout: p));
   }
 
@@ -227,7 +206,7 @@ class EntryViewModel extends _$EntryViewModel {
         nbBouts: uiState.nbBoutsCalc,
         prise: uiState.prise!,
         pointsForAttack: uiState.pointsForAttack,
-        petitsAuBout: uiState.petitsAuBout,
+        petitsAuBout: uiState.petitsAuBout.whereNotNull().toList(),
         poignees: uiState.poignees,
         id: uiState.id,
       ),
@@ -341,7 +320,7 @@ class EntryUIState with _$EntryUIState {
     @Deprecated("do not use anymore") @Default(0) int nbBouts,
     Prise? prise,
     @Default(true) bool pointsForAttack,
-    @Default(<Camp>[]) List<Camp> petitsAuBout,
+    @Default(<Camp?>[null]) List<Camp?> petitsAuBout,
     @Default(<PoigneeType>[]) List<PoigneeType> poignees,
     @Default(0) int page,
     int? id,

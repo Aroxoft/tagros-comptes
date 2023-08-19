@@ -340,6 +340,19 @@ preset: true,);''';
           .toList();
 
   ThemeData get toDataTheme {
+    ColorScheme colorScheme;
+    if (ThemeData.estimateBrightnessForColor(averageBackgroundColor) ==
+        Brightness.light) {
+      colorScheme = ColorScheme.fromSeed(
+          seedColor: buttonColor,
+          brightness: Brightness.light,
+          primary: buttonColor);
+    } else {
+      colorScheme = ColorScheme.fromSeed(
+          seedColor: buttonColor,
+          brightness: Brightness.dark,
+          primary: buttonColor);
+    }
     return ThemeData(
         useMaterial3: true,
         appBarTheme: AppBarTheme(
@@ -408,7 +421,7 @@ preset: true,);''';
             fillColor: MaterialStateProperty.all(sliderColor)),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: fabColor, foregroundColor: onFabColor),
-        colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor),
+        colorScheme: colorScheme,
         scaffoldBackgroundColor: backgroundColor,
         listTileTheme: ListTileThemeData(textColor: textColor),
         primaryTextTheme: const TextTheme()

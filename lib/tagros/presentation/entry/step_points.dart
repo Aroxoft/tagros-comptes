@@ -3,8 +3,8 @@ import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
 import 'package:tagros_comptes/tagros/presentation/entry/entry_components.dart';
+import 'package:tagros_comptes/tagros/presentation/entry/entry_ui_state.dart';
 import 'package:tagros_comptes/tagros/presentation/entry/step_points_components.dart';
-import 'package:tagros_comptes/tagros/presentation/entry_view_model.dart';
 
 class PointsStep extends StatelessWidget {
   final void Function(double points) onPointsUpdated;
@@ -38,9 +38,11 @@ class PointsStep extends StatelessWidget {
         children: [
           Headline(text: 'Combien ?'),
           SegmentedButton(
-            segments: const [
-              ButtonSegment(value: true, label: Text('Attaque')),
-              ButtonSegment(value: false, label: Text('Défense'))
+            segments: [
+              ButtonSegment(
+                  value: true, label: Text(S.of(context).campTypeAttack)),
+              ButtonSegment(
+                  value: false, label: Text(S.of(context).campTypeDefense))
             ],
             selected: {data.pointsForAttack},
             onSelectionChanged: (changed) {

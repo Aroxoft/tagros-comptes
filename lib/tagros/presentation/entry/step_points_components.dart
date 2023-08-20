@@ -5,7 +5,7 @@ import 'package:tagros_comptes/common/presentation/flutter_icons.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
 import 'package:tagros_comptes/tagros/presentation/entry/entry_components.dart';
-import 'package:tagros_comptes/tagros/presentation/entry_view_model.dart';
+import 'package:tagros_comptes/tagros/presentation/entry/entry_ui_state.dart';
 import 'package:tagros_comptes/tagros/presentation/number_format.dart';
 import 'package:tagros_comptes/theme/data/colors.dart';
 

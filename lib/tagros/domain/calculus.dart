@@ -79,8 +79,6 @@ Map<String, double> calculateGains(
         petitPoints += won ? 10 : -10;
       case Camp.defense:
         petitPoints += won ? -10 : 10;
-      case Camp.none:
-        break;
     }
   }
 

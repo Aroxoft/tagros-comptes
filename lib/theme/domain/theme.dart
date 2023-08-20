@@ -346,7 +346,9 @@ preset: true,);''';
       colorScheme = ColorScheme.fromSeed(
           seedColor: buttonColor,
           brightness: Brightness.light,
-          primary: buttonColor);
+          primary: buttonColor,
+          secondary: accentColor,
+          tertiary: chipColor);
     } else {
       colorScheme = ColorScheme.fromSeed(
           seedColor: buttonColor,

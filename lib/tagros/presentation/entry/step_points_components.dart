@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -8,6 +10,7 @@ import 'package:tagros_comptes/tagros/presentation/entry/entry_components.dart';
 import 'package:tagros_comptes/tagros/presentation/entry/entry_ui_state.dart';
 import 'package:tagros_comptes/tagros/presentation/number_format.dart';
 import 'package:tagros_comptes/theme/data/colors.dart';
+import 'package:tagros_comptes/theme/domain/theme.dart';
 
 class PointsComponent extends HookWidget {
   final void Function() onPlus1PointClicked;
@@ -137,24 +140,34 @@ class _PetitAuBoutComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 40,
-          height: 60,
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.onSurface,
-              width: 2,
+        GestureDetector(
+          onTap: () {
+            final nextCamp = switch (camp) {
+              Camp.attack => Camp.defense,
+              Camp.defense => null,
+              null => Camp.attack
+            };
+            onSetPetitAuBout(nextCamp);
+          },
+          child: Container(
+            width: 40,
+            height: 60,
+            margin: const EdgeInsets.only(bottom: 8),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.onSurface,
+                width: 2,
+              ),
             ),
-          ),
-          child: Center(
-            child: Text("1",
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    )),
+            child: Center(
+              child: Text("1",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      )),
+            ),
           ),
         ),
         AnimatedToggleSwitch<Camp?>.rolling(
@@ -270,59 +283,200 @@ class _PoigneeComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final gradientColors = [
+      Theme.of(context).colorScheme.primary.withOpacity(0.2),
+      Theme.of(context).colorScheme.primary.withOpacity(0.5),
+      Theme.of(context).colorScheme.primary.withOpacity(1),
+    ];
+    final gradient = LinearGradient(colors: gradientColors);
+    final gradient2 = LinearGradient(
+        colors: gradientColors.map((e) => e.lighten(0.7)).toList());
+    return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: 40,
-          height: 60,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Theme.of(context).colorScheme.secondary,
+        GestureDetector(
+          onTap: () {
+            final nextPoignee = switch (poignee) {
+              PoigneeType.simple => PoigneeType.double,
+              PoigneeType.double => PoigneeType.triple,
+              PoigneeType.triple => null,
+              null => PoigneeType.simple
+            };
+            onSetPoignee(nextPoignee);
+          },
+          child: IntrinsicWidth(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                IconPoignee(poignee: poignee, nbPlayers: nbPlayers),
+                Text(
+                  "poignée\n${poignee?.displayName ?? ''}",
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
-          child: Text(poignee?.displayName ?? ""),
         ),
-        AnimatedToggleSwitch.rolling(
-          allowUnlistedValues: true,
-          current: poignee,
-          iconBuilder: (poignee, selected) => IconPoignee(
-              size: Size(20, 20), selected: selected, poignee: poignee),
-          values: PoigneeType.values,
-          onChanged: (changed) {
-            if (changed != poignee) {
-              onSetPoignee(changed);
-            }
-          },
-          onTap: (tap) {
-            if (tap.tappedValue == poignee) {
-              onSetPoignee(null);
-            }
-          },
-        ),
+        RotatedBox(
+          quarterTurns: 1,
+          child: AnimatedToggleSwitch.rolling(
+            allowUnlistedValues: true,
+            current: poignee,
+            iconBuilder: (poignee, selected) {
+              if (poignee == null) return const SizedBox.shrink();
+              return RotatedBox(
+                quarterTurns: 3,
+                child: _IconIndicatorPoignee(
+                  size: Size(20, 20),
+                  selected: selected,
+                  poignee: poignee,
+                  nbPlayers: nbPlayers,
+                ),
+              );
+            },
+            styleBuilder: (poignee) {
+              switch (poignee) {
+                case PoigneeType.simple:
+                  return ToggleStyle(
+                    indicatorColor: Theme.of(context).colorScheme.secondary,
+                    borderColor: Theme.of(context).colorScheme.secondary,
+                    backgroundGradient: gradient,
+                  );
+                case PoigneeType.double:
+                  return ToggleStyle(
+                    indicatorColor: Theme.of(context).colorScheme.secondary,
+                    borderColor: Theme.of(context).colorScheme.secondary,
+                    backgroundGradient: gradient,
+                  );
+                case PoigneeType.triple:
+                  return ToggleStyle(
+                    indicatorColor: Theme.of(context).colorScheme.secondary,
+                    borderColor: Theme.of(context).colorScheme.secondary,
+                    backgroundGradient: gradient,
+                  );
+                default:
+                  return ToggleStyle(
+                    borderColor: Theme.of(context).colorScheme.onSurface,
+                    backgroundGradient: gradient2,
+                  );
+              }
+            },
+            values: PoigneeType.values,
+            onChanged: (changed) {
+              if (changed != poignee) {
+                onSetPoignee(changed);
+              }
+            },
+            onTap: (tap) {
+              if (tap.tappedValue == poignee) {
+                onSetPoignee(null);
+              }
+            },
+          ),
+        )
       ],
     );
   }
 }
 
 class IconPoignee extends StatelessWidget {
-  final Size size;
   final PoigneeType? poignee;
+  final int nbPlayers;
+
+  const IconPoignee(
+      {super.key, required this.poignee, required this.nbPlayers});
+
+  @override
+  Widget build(BuildContext context) {
+    final text =
+        poignee != null ? getNbAtouts(poignee!, nbPlayers).toString() : "";
+    return SizedBox(
+      width: 75,
+      height: 65,
+      child: Stack(
+        children: [
+          ...List.generate(4, (index) {
+            return Align(
+              alignment: Alignment(-0.3, 0),
+              child: Transform(
+                  transform: Matrix4.rotationZ(pi / 4 - (index * pi / 8)),
+                  // origin: const Offset(15, 50),
+                  alignment: Alignment(0.4, 1),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.red,
+                        border: Border.all(color: Colors.yellow),
+                        borderRadius: BorderRadius.circular(8)),
+                    width: 30,
+                    height: 50,
+                  )),
+            );
+          }),
+          if (poignee != null)
+            Positioned(
+              bottom: -5,
+              right: 0,
+              left: 0,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        foreground: Paint()
+                          ..color = Theme.of(context).colorScheme.surface
+                          ..strokeWidth = 10
+                          ..style = PaintingStyle.stroke),
+                  ),
+                  Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      foreground: Paint()
+                        ..color = Theme.of(context).colorScheme.onSurface
+                        ..strokeWidth = 3
+                        ..style = PaintingStyle.fill,
+                    ),
+                  )
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IconIndicatorPoignee extends StatelessWidget {
+  final Size size;
+  final PoigneeType poignee;
+  final int nbPlayers;
   final bool selected;
 
-  const IconPoignee({
+  const _IconIndicatorPoignee({
     super.key,
     required this.size,
     required this.poignee,
     required this.selected,
+    required this.nbPlayers,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder(
-      fallbackWidth: size.width,
-      fallbackHeight: size.height,
+    return Center(
+      child: Text(
+        getNbAtouts(poignee, nbPlayers).toString(),
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: selected
+                ? Theme.of(context).colorScheme.onPrimary
+                : Theme.of(context).colorScheme.onSurface),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 }

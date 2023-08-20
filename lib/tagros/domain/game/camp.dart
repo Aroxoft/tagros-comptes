@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 
-enum Camp { attack, defense, none }
+enum Camp { attack, defense }
 
 extension CampExt on Camp {
   String get displayName {
@@ -10,8 +10,6 @@ extension CampExt on Camp {
         return S.current.campTypeAttack;
       case Camp.defense:
         return S.current.campTypeDefense;
-      case Camp.none:
-        return S.current.campTypeNone;
     }
   }
 }
@@ -38,16 +36,12 @@ List<Camp> fromDbPetit(String? petits) {
 
 String? toDbPetits(List<Camp>? petits) {
   if (petits == null || petits.isEmpty) return null;
-  return (petits.map((e) {
+  return petits.map((e) {
     switch (e) {
       case Camp.attack:
         return _attack;
       case Camp.defense:
         return _defense;
-      case Camp.none:
-        return null;
     }
-  })
-        ..where((element) => element != null))
-      .join(",");
+  }).join(",");
 }

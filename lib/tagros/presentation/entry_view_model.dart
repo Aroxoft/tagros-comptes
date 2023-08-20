@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
+import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry.dart';
@@ -50,7 +51,9 @@ class EntryViewModel extends _$EntryViewModel {
           prise: entry.infoEntry.prise,
           pointsForAttack: entry.infoEntry.pointsForAttack,
           petitAuBout: entry.infoEntry.petitsAuBout.firstOrNull,
-          poignees: entry.infoEntry.poignees,
+          poignees:
+              entry.infoEntry.poignees.displayablePoignees(allPlayers.length) ??
+                  [null],
         );
       }
       if (allPlayers.length > 5) {
@@ -70,7 +73,9 @@ class EntryViewModel extends _$EntryViewModel {
           prise: entry.infoEntry.prise,
           pointsForAttack: entry.infoEntry.pointsForAttack,
           petitsAuBout: entry.infoEntry.petitsAuBout,
-          poignees: entry.infoEntry.poignees,
+          poignees:
+              entry.infoEntry.poignees.displayablePoignees(allPlayers.length) ??
+                  [null],
         );
       }
       return EntryUIState.classic(
@@ -84,7 +89,9 @@ class EntryViewModel extends _$EntryViewModel {
         prise: entry.infoEntry.prise,
         pointsForAttack: entry.infoEntry.pointsForAttack,
         petitAuBout: entry.infoEntry.petitsAuBout.firstOrNull,
-        poignees: entry.infoEntry.poignees,
+        poignees:
+            entry.infoEntry.poignees.displayablePoignees(allPlayers.length) ??
+                [null],
       );
     }
     final players = allPlayers.map((e) => PlayerBean.fromDb(e)).toList();
@@ -205,31 +212,13 @@ class EntryViewModel extends _$EntryViewModel {
     } else {
       p[index] = poignee;
     }
-    final nbTrumpsInPoignees = p
-        .whereNotNull()
-        .map((e) => getNbAtouts(e, uiState.allPlayers.length))
-        .sum;
-    if (nbTrumpsInPoignees > uiState.totalNbTrumps) {
-      // Do not allow more trumps than total number of trumps in the game
+
+    final displayable = p.displayablePoignees(uiState.nbPlayers);
+    if (displayable == null) {
       return false;
     }
-    // Adjust the number of displayed poignees
-    if (nbTrumpsInPoignees +
-            getNbAtouts(PoigneeType.simple, uiState.allPlayers.length) >
-        uiState.totalNbTrumps) {
-      // Remove all null poignees
-      state = AsyncData(uiState.copyWith(poignees: p.whereNotNull().toList()));
-      return true;
-    }
-    final List<PoigneeType?> newPoignees = [...p.whereNotNull(), null];
-    // We can allow the user to add a simple poignee
-    // if (p.isEmpty || p.last != null) {
-    //   newPoignees = [...p.whereNotNull(), null];
-    // } else {
-    //   newPoignees = [...p.whereNotNull()];
-    // }
 
-    state = AsyncData(uiState.copyWith(poignees: newPoignees));
+    state = AsyncData(uiState.copyWith(poignees: displayable));
     return true;
   }
 

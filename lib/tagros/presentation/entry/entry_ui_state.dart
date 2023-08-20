@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:tagros_comptes/tagros/domain/calculus.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
 import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
@@ -74,12 +75,7 @@ class EntryUIState with _$EntryUIState {
             (tagros.excuse2 ? 1 : 0));
   }
 
-  int get totalNbTrumps {
-    return map(
-        classic: (classic) => 21,
-        fivePlayers: (fivePlayers) => 21,
-        tagros: (tagros) => 42);
-  }
+  int get nbPlayers => allPlayers.length;
 
   bool get tagros => map(
       classic: (classic) => false,
@@ -118,6 +114,7 @@ class EntryUIState with _$EntryUIState {
 
     if (points < 0) return false;
     if (nbBoutsCalc < 0) return false;
+    if (!poignees.isValid(nbPlayers)) return false;
 
     return map(
         classic: (classic) => points <= 91,

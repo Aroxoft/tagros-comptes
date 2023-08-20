@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
@@ -163,6 +164,31 @@ Map<String, double> calculateSum(
   return sums;
 }
 
+int totalNbTrumps(int nbPlayers) => nbPlayers > 5 ? 44 : 22;
+
 List<double> transformGainsToList(
         Map<String, double> gains, List<PlayerBean> players) =>
     List.generate(players.length, (index) => gains[players[index].name]!);
+
+extension PoigneesValidation on List<PoigneeType?> {
+  int nbTrumpsInPoignees(int nbPlayers) =>
+      whereNotNull().map((e) => getNbAtouts(e, nbPlayers)).sum;
+
+  bool isValid(int nbPlayers) =>
+      nbTrumpsInPoignees(nbPlayers) <= totalNbTrumps(nbPlayers);
+
+  bool canHaveMorePoignees(int nbPlayers) {
+    return nbTrumpsInPoignees(nbPlayers) +
+            getNbAtouts(PoigneeType.simple, nbPlayers) <=
+        totalNbTrumps(nbPlayers);
+  }
+
+  List<PoigneeType?>? displayablePoignees(int nbPlayers) {
+    // Do not allow more trumps than total number of trumps in the game
+    if (!isValid(nbPlayers)) return null;
+
+    // Adjust the number of displayed poignees to the number of trumps left
+    if (!canHaveMorePoignees(nbPlayers)) return whereNotNull().toList();
+    return [...whereNotNull(), null];
+  }
+}

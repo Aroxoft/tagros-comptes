@@ -22,8 +22,8 @@ environment:
 dependencies:
   animated_toggle_switch:
     git:
-      url: https://github.com/OroshiX/animated_toggle_switch.git
-      ref: main
+      url: https://github.com/splashbyte/animated_toggle_switch.git
+      ref: 9de5e8216bf44c663a75c7e1905af0516cf0ea95
 
   another_flushbar: ^1.12.30 #Substitute for toasts and snackbars
   async: ^2.11.0

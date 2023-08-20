@@ -209,10 +209,14 @@ class _PetitAuBoutComponent extends StatelessWidget {
             }
           },
           onChanged: (changed) {
-            onSetPetitAuBout(changed);
+            if (changed != camp) {
+              onSetPetitAuBout(changed);
+            }
           },
-          onTap: () {
-            onSetPetitAuBout(null);
+          onTap: (tapped) {
+            if (tapped.tappedValue == camp) {
+              onSetPetitAuBout(null);
+            }
           },
         ),
       ],
@@ -287,10 +291,14 @@ class _PoigneeComponent extends StatelessWidget {
               size: Size(20, 20), selected: selected, poignee: poignee),
           values: PoigneeType.values,
           onChanged: (changed) {
-            onSetPoignee(changed);
+            if (changed != poignee) {
+              onSetPoignee(changed);
+            }
           },
-          onToggleOff: () {
-            onSetPoignee(null);
+          onTap: (tap) {
+            if (tap.tappedValue == poignee) {
+              onSetPoignee(null);
+            }
           },
         ),
       ],

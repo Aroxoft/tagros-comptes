@@ -29,9 +29,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: main
-      resolved-ref: "1381e468eea5e77e8186970890c8116e68afa200"
-      url: "https://github.com/OroshiX/animated_toggle_switch.git"
+      ref: "9de5e8216bf44c663a75c7e1905af0516cf0ea95"
+      resolved-ref: "9de5e8216bf44c663a75c7e1905af0516cf0ea95"
+      url: "https://github.com/splashbyte/animated_toggle_switch.git"
     source: git
     version: "0.8.0-beta.5"
   another_flushbar:

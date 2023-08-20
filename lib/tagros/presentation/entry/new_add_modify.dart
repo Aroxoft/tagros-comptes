@@ -17,7 +17,7 @@ import 'package:tuple/tuple.dart';
 
 const nbPages4Players = 3;
 const nbPages5Players = 4;
-const nbPages7Players = 5;
+const nbPages7Players = 4;
 
 class NewAddModify extends HookConsumerWidget {
   final int? roundId;
@@ -92,20 +92,24 @@ class NewAddModify extends HookConsumerWidget {
                                 KingStep(
                                     title: "King(s)?",
                                     onKing1Selected: (king1) {
-                                      ref
+                                      final canNext = ref
                                           .read(entryViewModelProvider(
                                                   roundId: roundId)
                                               .notifier)
                                           .setPartner1(king1);
-                                      _nextPage(pageController);
+                                      if (canNext) {
+                                        _nextPage(pageController);
+                                      }
                                     },
                                     onKing2Selected: (king2) {
-                                      ref
+                                      final canNext = ref
                                           .read(entryViewModelProvider(
                                                   roundId: roundId)
                                               .notifier)
                                           .setPartner2(king2);
-                                      _nextPage(pageController);
+                                      if (canNext) {
+                                        _nextPage(pageController);
+                                      }
                                     },
                                     players: data.allPlayers,
                                     king1: data.mapOrNull(fivePlayers: (five) {

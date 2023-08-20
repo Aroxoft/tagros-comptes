@@ -112,25 +112,42 @@ class EntryViewModel extends _$EntryViewModel {
     state = AsyncData(uiState.copyWith(taker: player));
   }
 
-  void setPartner1(PlayerBean? player) {
+  /// Returns true if we can go to the next page
+  bool setPartner1(PlayerBean? player) {
     final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = uiState.maybeMap(
-      tagros: (tagros) => AsyncData(tagros.copyWith(partner1: player)),
+    if (uiState == null) return false;
+    ({EntryUIState newState, bool nextPage}) record;
+
+    record = uiState.maybeMap(
+      tagros: (tagros) => (
+        newState: tagros.copyWith(partner1: player),
+        nextPage: tagros.partner2 != null
+      ),
       fivePlayers: (fivePlayers) =>
-          AsyncData(fivePlayers.copyWith(partner1: player)),
+          (newState: fivePlayers.copyWith(partner1: player), nextPage: true),
       orElse: () => throw StateError("We cannot set partner1 on classic game"),
     );
+
+    state = AsyncData(record.newState);
+    return record.nextPage;
   }
 
-  void setPartner2(PlayerBean? player) {
+  /// Returns true if we can go to the next page
+  bool setPartner2(PlayerBean? player) {
     final uiState = state.valueOrNull;
-    if (uiState == null) return;
-    state = uiState.maybeMap(
-      tagros: (tagros) => AsyncData(tagros.copyWith(partner2: player)),
+    if (uiState == null) return false;
+    ({EntryUIState newState, bool nextPage}) record;
+
+    record = uiState.maybeMap(
+      tagros: (tagros) => (
+        newState: tagros.copyWith(partner2: player),
+        nextPage: tagros.partner1 != null
+      ),
       orElse: () =>
           throw StateError("We cannot set partner2 when not in tagros"),
     );
+    state = AsyncData(record.newState);
+    return record.nextPage;
   }
 
   void setPoints(String value) {
@@ -427,7 +444,7 @@ class EntryUIState with _$EntryUIState {
     @Deprecated("do not use anymore") @Default(0) int nbBouts,
     Prise? prise,
     @Default(true) bool pointsForAttack,
-    @Default(<Camp?>[null]) List<Camp?> petitsAuBout,
+    @Default(<Camp?>[null, null]) List<Camp?> petitsAuBout,
     @Default(<PoigneeType?>[null]) List<PoigneeType?> poignees,
     @Default(0) int page,
     int? id,
@@ -479,12 +496,7 @@ class EntryUIState with _$EntryUIState {
         return map(
             classic: (classic) => true,
             fivePlayers: (fivePlayers) => fivePlayers.partner1 != null,
-            tagros: (tagros) => tagros.partner1 != null);
-      case 3:
-        return map(
-            classic: (classic) => true,
-            fivePlayers: (fivePlayers) => true,
-            tagros: (tagros) => tagros.partner2 != null);
+            tagros: (tagros) => tagros.partner1 != null && tagros.partner2 != null);
       default:
         return false;
     }

@@ -53,25 +53,36 @@ class KingStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (players.length == 5) {
-      return SelectPlayerInList(
-          players: players, selected: king1, onPlayerSelected: onKing1Selected);
-    } else {
-      return Row(
-        children: [
-          SelectPlayerInList(
-            players: players,
-            selected: king1,
-            onPlayerSelected: onKing1Selected,
-          ),
-          SelectPlayerInList(
-            players: players,
-            selected: king2,
-            onPlayerSelected: onKing2Selected,
-          ),
-        ],
-      );
-    }
+    return Column(
+      children: [
+        Headline(text: title),
+        Expanded(
+          child: (players.length == 5)
+              ? SelectPlayerInList(
+                  players: players,
+                  selected: king1,
+                  onPlayerSelected: onKing1Selected)
+              : Row(
+                  children: [
+                    Expanded(
+                      child: SelectPlayerInList(
+                        players: players,
+                        selected: king1,
+                        onPlayerSelected: onKing1Selected,
+                      ),
+                    ),
+                    Expanded(
+                      child: SelectPlayerInList(
+                        players: players,
+                        selected: king2,
+                        onPlayerSelected: onKing2Selected,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ],
+    );
   }
 }
 

@@ -33,7 +33,6 @@ class BoundedSeparatedListView extends StatelessWidget {
                       paddingTop -
                       paddingBottom) /
                   children.length));
-      print('maxHeight: $maxHeight, height: $height');
       return ListView.separated(
           padding: EdgeInsets.only(
               top: paddingTop, bottom: paddingBottom, left: 20, right: 20),
@@ -82,7 +81,6 @@ class BoundedSeparatedHorizontalListView extends StatelessWidget {
                       paddingLeft -
                       paddingRight) /
                   children.length));
-      print('maxWidth: $maxWidth, width: $width');
       return ListView.separated(
           scrollDirection: Axis.horizontal,
           padding: EdgeInsets.only(

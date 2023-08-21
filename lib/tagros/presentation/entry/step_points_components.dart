@@ -155,19 +155,31 @@ class _PetitAuBoutComponent extends StatelessWidget {
             height: 60,
             margin: const EdgeInsets.only(bottom: 8),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: camp != null
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: camp != null
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onSurface,
                 width: 2,
               ),
             ),
             child: Center(
-              child: Text("1",
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      )),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Text("1",
+                      textAlign: TextAlign.center,
+                      style:
+                          Theme.of(context).textTheme.displayMedium?.copyWith(
+                                color: camp != null
+                                    ? Theme.of(context).colorScheme.onPrimary
+                                    : Theme.of(context).colorScheme.onSurface,
+                              )),
+                ],
+              ),
             ),
           ),
         ),
@@ -251,8 +263,7 @@ class PoigneesBonus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 720,
-      height: 200,
+      height: 140,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: data.poignees.length,
@@ -285,9 +296,9 @@ class _PoigneeComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gradientColors = [
-      Theme.of(context).colorScheme.primary.withOpacity(0.2),
+      Theme.of(context).colorScheme.primary.withOpacity(0),
+      Theme.of(context).colorScheme.primary.withOpacity(0.25),
       Theme.of(context).colorScheme.primary.withOpacity(0.5),
-      Theme.of(context).colorScheme.primary.withOpacity(1),
     ];
     final gradient = LinearGradient(colors: gradientColors);
     final gradient2 = LinearGradient(
@@ -295,6 +306,7 @@ class _PoigneeComponent extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
           onTap: () {
@@ -330,7 +342,7 @@ class _PoigneeComponent extends StatelessWidget {
               return RotatedBox(
                 quarterTurns: 3,
                 child: _IconIndicatorPoignee(
-                  size: Size(20, 20),
+                  size: const Size(20, 20),
                   selected: selected,
                   poignee: poignee,
                   nbPlayers: nbPlayers,
@@ -485,7 +497,6 @@ class _IconIndicatorPoignee extends StatelessWidget {
   final bool selected;
 
   const _IconIndicatorPoignee({
-    super.key,
     required this.size,
     required this.poignee,
     required this.selected,
@@ -526,44 +537,70 @@ class SelectOudlers extends StatelessWidget {
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SegmentedButton(
-            multiSelectionEnabled: true,
-            emptySelectionAllowed: true,
-            segments: [
-              ButtonSegment(value: "1_1", label: Text("1")),
-              if (data.tagros) ButtonSegment(value: "1_2", label: Text("1")),
-              ButtonSegment(value: "21_1", label: Text("21")),
-              if (data.tagros) ButtonSegment(value: "21_2", label: Text("21")),
-              ButtonSegment(value: "0_1", label: Text("Excuse")),
-              if (data.tagros)
-                ButtonSegment(value: "0_2", label: Text("Excuse")),
-            ],
-            selected: {
-              if (data.petit) "1_1",
-              if (data.maybeMap(orElse: () => false, tagros: (t) => t.petit2))
-                "1_2",
-              if (data.vingtEtUn) "21_1",
-              if (data.maybeMap(
-                  orElse: () => false, tagros: (t) => t.vingtEtUn2))
-                "21_2",
-              if (data.excuse) "0_1",
-              if (data.maybeMap(orElse: () => false, tagros: (t) => t.excuse2))
-                "0_2",
-            },
-            onSelectionChanged: (changed) {
-              onPetitClicked(changed.contains("1_1"), 0);
-              if (data.tagros) {
-                onPetitClicked(changed.contains("1_2"), 1);
-              }
-              onVingtEtUnClicked(changed.contains("21_1"), 0);
-              if (data.tagros) {
-                onVingtEtUnClicked(changed.contains("21_2"), 1);
-              }
-              onExcuseClicked(changed.contains("0_1"), 0);
-              if (data.tagros) {
-                onExcuseClicked(changed.contains("0_2"), 1);
-              }
-            }),
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            segmentedButtonTheme: SegmentedButtonThemeData(
+                style: ButtonStyle(
+                  padding: MaterialStateProperty.all(
+                      const EdgeInsets.only(left: 4, right: 4)),
+                  backgroundColor: MaterialStateProperty.resolveWith((states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Theme.of(context).colorScheme.primary;
+                    }
+                    return null;
+                  }),
+                  overlayColor: MaterialStateProperty.all(
+                      Theme.of(context).colorScheme.primary),
+                  foregroundColor: MaterialStateProperty.all(
+                      Theme.of(context).colorScheme.onPrimaryContainer),
+                  surfaceTintColor: MaterialStateProperty.all(Colors.purple),
+                  splashFactory: InkRipple.splashFactory,
+                ),
+                selectedIcon: const Icon(Icons.check_circle_outline)),
+          ),
+          child: SegmentedButton(
+              multiSelectionEnabled: true,
+              emptySelectionAllowed: true,
+              showSelectedIcon: true,
+              segments: [
+                const ButtonSegment(value: "1_1", label: Text("1")),
+                if (data.tagros)
+                  const ButtonSegment(value: "1_2", label: Text("1")),
+                const ButtonSegment(value: "21_1", label: Text("21")),
+                if (data.tagros)
+                  const ButtonSegment(value: "21_2", label: Text("21")),
+                const ButtonSegment(value: "0_1", label: Text("*")),
+                if (data.tagros)
+                  const ButtonSegment(value: "0_2", label: Text("*")),
+              ],
+              selected: {
+                if (data.petit) "1_1",
+                if (data.maybeMap(orElse: () => false, tagros: (t) => t.petit2))
+                  "1_2",
+                if (data.vingtEtUn) "21_1",
+                if (data.maybeMap(
+                    orElse: () => false, tagros: (t) => t.vingtEtUn2))
+                  "21_2",
+                if (data.excuse) "0_1",
+                if (data.maybeMap(
+                    orElse: () => false, tagros: (t) => t.excuse2))
+                  "0_2",
+              },
+              onSelectionChanged: (changed) {
+                onPetitClicked(changed.contains("1_1"), 0);
+                if (data.tagros) {
+                  onPetitClicked(changed.contains("1_2"), 1);
+                }
+                onVingtEtUnClicked(changed.contains("21_1"), 0);
+                if (data.tagros) {
+                  onVingtEtUnClicked(changed.contains("21_2"), 1);
+                }
+                onExcuseClicked(changed.contains("0_1"), 0);
+                if (data.tagros) {
+                  onExcuseClicked(changed.contains("0_2"), 1);
+                }
+              }),
+        ),
       ),
     );
   }

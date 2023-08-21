@@ -346,14 +346,17 @@ preset: true,);''';
       colorScheme = ColorScheme.fromSeed(
           seedColor: buttonColor,
           brightness: Brightness.light,
-          primary: buttonColor,
-          secondary: accentColor,
-          tertiary: chipColor);
+          primary: accentColor,
+          secondary: frameColor,
+          tertiary: appBarColor);
     } else {
       colorScheme = ColorScheme.fromSeed(
-          seedColor: buttonColor,
-          brightness: Brightness.dark,
-          primary: buttonColor);
+        seedColor: buttonColor,
+        brightness: Brightness.dark,
+        primary: accentColor,
+        secondary: frameColor,
+        tertiary: appBarColor,
+      );
     }
     return ThemeData(
         useMaterial3: true,

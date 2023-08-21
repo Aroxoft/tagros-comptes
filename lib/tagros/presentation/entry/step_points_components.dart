@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:tagros_comptes/common/presentation/flutter_icons.dart';
@@ -382,70 +383,95 @@ class _PoigneeComponent extends StatelessWidget {
 }
 
 class IconPoignee extends StatelessWidget {
+  final double widthCard;
+  final double heightCard;
   final PoigneeType? poignee;
   final int nbPlayers;
 
   const IconPoignee(
-      {super.key, required this.poignee, required this.nbPlayers});
+      {super.key,
+      required this.poignee,
+      required this.nbPlayers,
+      this.widthCard = 30,
+      this.heightCard = 50});
 
   @override
   Widget build(BuildContext context) {
+    final heightWidget =
+        (widthCard + sqrt2 * sqrt(pow(widthCard, 2) + 4 * pow(heightCard, 2))) /
+            (2 * sqrt2);
+    final widthWidget = (2 * heightCard + widthCard) / sqrt2;
+    if (kDebugMode) {
+      print("heightWidget $heightWidget, widthWidget $widthWidget");
+    }
     final text =
-        poignee != null ? getNbAtouts(poignee!, nbPlayers).toString() : "";
+        poignee != null ? getNbAtouts(poignee!, nbPlayers).toString() : "0";
+    final nbCards = switch (poignee) {
+      PoigneeType.simple => 3,
+      PoigneeType.double => 4,
+      PoigneeType.triple => 5,
+      null => 3,
+    };
     return SizedBox(
-      width: 75,
-      height: 65,
+      width: widthWidget,
+      height: heightWidget,
       child: Stack(
+        alignment: Alignment.center,
         children: [
-          ...List.generate(4, (index) {
-            return Align(
-              alignment: Alignment(-0.3, 0),
+          ...List.generate(nbCards, (index) {
+            return Positioned(
+              bottom: widthCard / (2 * sqrt2),
+              left: (widthWidget - widthCard) / 2,
               child: Transform(
-                  transform: Matrix4.rotationZ(pi / 4 - (index * pi / 8)),
-                  // origin: const Offset(15, 50),
-                  alignment: Alignment(0.4, 1),
+                  transform: Matrix4.rotationZ(
+                      pi / 4 - (index * pi / (2 * (nbCards - 1)))),
+                  alignment: Alignment.bottomCenter,
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.red,
-                        border: Border.all(color: Colors.yellow),
+                        color: poignee != null
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.surface,
+                        border: Border.all(
+                            color: poignee != null
+                                ? Theme.of(context).colorScheme.onSecondary
+                                : Theme.of(context).colorScheme.onSurface),
                         borderRadius: BorderRadius.circular(8)),
-                    width: 30,
-                    height: 50,
+                    width: widthCard,
+                    height: heightCard,
                   )),
             );
           }),
-          if (poignee != null)
-            Positioned(
-              bottom: -5,
-              right: 0,
-              left: 0,
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Text(
-                    text,
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        foreground: Paint()
-                          ..color = Theme.of(context).colorScheme.surface
-                          ..strokeWidth = 10
-                          ..style = PaintingStyle.stroke),
-                  ),
-                  Text(
-                    text,
-                    style: TextStyle(
+          Positioned(
+            bottom: -5,
+            right: 0,
+            left: 0,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Text(
+                  text,
+                  style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
                       foreground: Paint()
-                        ..color = Theme.of(context).colorScheme.onSurface
-                        ..strokeWidth = 3
-                        ..style = PaintingStyle.fill,
-                    ),
-                  )
-                ],
-              ),
+                        ..color = Theme.of(context).colorScheme.surface
+                        ..strokeWidth = 10
+                        ..style = PaintingStyle.stroke),
+                ),
+                Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    foreground: Paint()
+                      ..color = Theme.of(context).colorScheme.onSurface
+                      ..strokeWidth = 3
+                      ..style = PaintingStyle.fill,
+                  ),
+                )
+              ],
             ),
+          ),
         ],
       ),
     );

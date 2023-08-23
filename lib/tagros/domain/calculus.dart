@@ -192,3 +192,15 @@ extension PoigneesValidation on List<PoigneeType?> {
     return [...whereNotNull(), null];
   }
 }
+
+extension Petits on List<Camp> {
+  List<Camp?> get displayablePetitsTagros {
+    if (length == 2) return this;
+    if (length == 1) {
+      return [...this, null];
+    }
+    return [null, null];
+  }
+
+  Camp? get displayablePetit => firstOrNull;
+}

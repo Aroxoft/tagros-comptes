@@ -50,7 +50,7 @@ class EntryViewModel extends _$EntryViewModel {
           excuse: entry.infoEntry.nbBouts >= 3,
           prise: entry.infoEntry.prise,
           pointsForAttack: entry.infoEntry.pointsForAttack,
-          petitAuBout: entry.infoEntry.petitsAuBout.firstOrNull,
+          petitAuBout: entry.infoEntry.petitsAuBout.displayablePetit,
           poignees:
               entry.infoEntry.poignees.displayablePoignees(allPlayers.length) ??
                   [null],
@@ -72,7 +72,7 @@ class EntryViewModel extends _$EntryViewModel {
           excuse2: entry.infoEntry.nbBouts >= 6,
           prise: entry.infoEntry.prise,
           pointsForAttack: entry.infoEntry.pointsForAttack,
-          petitsAuBout: entry.infoEntry.petitsAuBout,
+          petitsAuBout: entry.infoEntry.petitsAuBout.displayablePetitsTagros,
           poignees:
               entry.infoEntry.poignees.displayablePoignees(allPlayers.length) ??
                   [null],
@@ -88,7 +88,7 @@ class EntryViewModel extends _$EntryViewModel {
         excuse: entry.infoEntry.nbBouts >= 3,
         prise: entry.infoEntry.prise,
         pointsForAttack: entry.infoEntry.pointsForAttack,
-        petitAuBout: entry.infoEntry.petitsAuBout.firstOrNull,
+        petitAuBout: entry.infoEntry.petitsAuBout.displayablePetit,
         poignees:
             entry.infoEntry.poignees.displayablePoignees(allPlayers.length) ??
                 [null],

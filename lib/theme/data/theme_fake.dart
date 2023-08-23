@@ -2,10 +2,12 @@ import 'package:drift/drift.dart';
 import 'package:mockito/mockito.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 import 'package:tagros_comptes/tagros/data/source/db/games_dao.dart';
+import 'package:tagros_comptes/tagros/domain/game/camp.dart';
 import 'package:tagros_comptes/tagros/domain/game/game_with_players.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry.dart';
 import 'package:tagros_comptes/tagros/domain/game/info_entry_player.dart';
 import 'package:tagros_comptes/tagros/domain/game/player.dart';
+import 'package:tagros_comptes/tagros/domain/game/poignee.dart';
 import 'package:tagros_comptes/tagros/domain/game/prise.dart';
 import 'package:tagros_comptes/tagros/domain/repository/tableau_repository.dart';
 
@@ -17,9 +19,11 @@ const _fakePlayers = [
 final _fakeInfoEntries = [
   InfoEntryPlayerBean(
     infoEntry: InfoEntryBean(
-      points: 36,
-      nbBouts: 3,
+      points: 41,
+      nbBouts: 2,
       pointsForAttack: true,
+      petitsAuBout: [Camp.attack],
+      poignees: [PoigneeType.simple],
     ),
     player: PlayerBean(name: "Alice"),
   ),
@@ -54,6 +58,11 @@ class FakeGamesDao extends Fake implements GamesDao {
             id: Value(gameId),
             nbPlayers: Value(_fakePlayers.length),
             date: Value(DateTime.now()))));
+  }
+
+  @override
+  Future<InfoEntryPlayerBean> fetchEntry(int roundId) {
+    return Future.value(_fakeInfoEntries.first);
   }
 }
 

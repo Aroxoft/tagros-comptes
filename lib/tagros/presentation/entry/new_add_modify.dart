@@ -21,12 +21,14 @@ const nbPages7Players = 4;
 
 class NewAddModify extends HookConsumerWidget {
   final int? roundId;
+  final int initialPage;
 
-  const NewAddModify({super.key, required this.roundId});
+  const NewAddModify({super.key, required this.roundId, this.initialPage = 0});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pageController = usePageController(initialPage: 0, keepPage: true);
+    final pageController =
+        usePageController(initialPage: initialPage, keepPage: true);
     pageController.addListener(() {
       ref
           .read(entryViewModelProvider(roundId: roundId).notifier)

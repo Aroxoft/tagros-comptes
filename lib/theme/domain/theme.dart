@@ -403,9 +403,9 @@ preset: true,);''';
                 sliderColor.isLight ? Colors.black87 : Colors.white70,
             inactiveTrackColor: sliderColor.lighten(0.4)),
         checkboxTheme: CheckboxThemeData(
-            checkColor: MaterialStateProperty.all(
+            checkColor: WidgetStateProperty.all(
                 sliderColor.isLight ? Colors.black : Colors.white),
-            fillColor: MaterialStateProperty.all(sliderColor)),
+            fillColor: WidgetStateProperty.all(sliderColor)),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
             backgroundColor: fabColor, foregroundColor: onFabColor),
         colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor),

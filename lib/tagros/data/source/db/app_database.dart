@@ -11,7 +11,7 @@ part 'app_database.g.dart';
 const bool kDebuggingDatabase = false;
 
 class Players extends Table {
-  IntColumn get id => integer().autoIncrement().nullable()();
+  IntColumn get id => integer().autoIncrement()();
 
   TextColumn get pseudo => text()();
 }

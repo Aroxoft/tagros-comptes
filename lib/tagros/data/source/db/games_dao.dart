@@ -84,7 +84,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       // This method is called whenever the list of games changes. For each
       // game, now we want to load all the players in it
       // Create a map from id to game, for performance reasons
-      final idToGame = {for (var game in games) game.id: game};
+      final idToGame = {for (final game in games) game.id: game};
       final ids = idToGame.keys;
 
       // Select all players that are included in any game that we found
@@ -106,7 +106,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 
         // Finally, merge the map of games with the map of players
         return [
-          for (var id in ids)
+          for (final id in ids)
             GameWithPlayers(
                 game: idToGame[id]!.toCompanion(true),
                 players: idToPlayers[id] ?? [])

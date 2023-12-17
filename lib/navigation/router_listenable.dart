@@ -37,7 +37,7 @@ class RouterListenable extends _$RouterListenable implements Listenable {
     });
   }
 
-  String? redirect(BuildContext context, GoRouterState state) {
+  String? redirect(GoRouterState state) {
     if (state.error != null) {
       return '/error';
     }

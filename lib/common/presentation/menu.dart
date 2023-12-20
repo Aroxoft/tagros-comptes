@@ -41,7 +41,7 @@ class HomeScreen extends HookConsumerWidget {
                       data: (ad) => SizedBox(
                           width: ad.size.width.toDouble(),
                           height: ad.size.height.toDouble(),
-                          child: AdWidget(key: UniqueKey(), ad: ad)),
+                          child: AdWidget(ad: ad)),
                       error: (error, stackTrace) => const SupportWidget(),
                       loading: () => const CircularProgressIndicator())
             else if (_showAds &&

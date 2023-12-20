@@ -8,7 +8,6 @@ import 'package:tagros_comptes/state/providers.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/data/tableau_repository_impl.dart';
 import 'package:tagros_comptes/tagros/presentation/entry/new_add_modify.dart';
-import 'package:tagros_comptes/tagros/presentation/entry_view_model.dart';
 import 'package:tagros_comptes/tagros/presentation/game.dart';
 import 'package:tagros_comptes/tagros/presentation/game_view_model.dart';
 import 'package:tagros_comptes/theme/data/theme_fake.dart';

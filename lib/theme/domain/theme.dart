@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -38,6 +39,45 @@ abstract class ThemeColor with _$ThemeColor implements Comparable<ThemeColor> {
   }) = _ThemeColor;
 
   ThemeColor._();
+
+  ThemeColor lerp(ThemeColor themeColor, double t) {
+    return ThemeColor(
+      name: name + themeColor.name,
+      accentColor: Color.lerp(accentColor, themeColor.accentColor, t)!,
+      appBarColor: Color.lerp(appBarColor, themeColor.appBarColor, t)!,
+      buttonColor: Color.lerp(buttonColor, themeColor.buttonColor, t)!,
+      positiveEntryColor:
+          Color.lerp(positiveEntryColor, themeColor.positiveEntryColor, t)!,
+      negativeEntryColor:
+          Color.lerp(negativeEntryColor, themeColor.negativeEntryColor, t)!,
+      positiveSumColor:
+          Color.lerp(positiveSumColor, themeColor.positiveSumColor, t)!,
+      negativeSumColor:
+          Color.lerp(negativeSumColor, themeColor.negativeSumColor, t)!,
+      horizontalColor:
+          Color.lerp(horizontalColor, themeColor.horizontalColor, t)!,
+      playerNameColor:
+          Color.lerp(playerNameColor, themeColor.playerNameColor, t)!,
+      textColor: Color.lerp(textColor, themeColor.textColor, t)!,
+      frameColor: Color.lerp(frameColor, themeColor.frameColor, t)!,
+      chipColor: Color.lerp(chipColor, themeColor.chipColor, t)!,
+      backgroundColor:
+          Color.lerp(backgroundColor, themeColor.backgroundColor, t)!,
+      textButtonColor:
+          Color.lerp(textButtonColor, themeColor.textButtonColor, t)!,
+      appBarTextColor:
+          Color.lerp(appBarTextColor, themeColor.appBarTextColor, t)!,
+      appBarTextSize: lerpDouble(appBarTextSize, themeColor.appBarTextSize, t)!,
+      fabColor: Color.lerp(fabColor, themeColor.fabColor, t)!,
+      onFabColor: Color.lerp(onFabColor, themeColor.onFabColor, t)!,
+      sliderColor: Color.lerp(sliderColor, themeColor.sliderColor, t)!,
+      backgroundGradient1:
+          Color.lerp(backgroundGradient1, themeColor.backgroundGradient1, t)!,
+      backgroundGradient2:
+          Color.lerp(backgroundGradient2, themeColor.backgroundGradient2, t)!,
+      preset: false,
+    );
+  }
 
   factory ThemeColor.fromDb({required ThemeDb theme}) => _ThemeColor(
         accentColor: Color(theme.accentColor),

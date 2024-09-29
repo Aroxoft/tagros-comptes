@@ -22,10 +22,10 @@ class SettingsScreen extends StatelessWidget {
               title: Text(S.of(context).settingsCleanUnusedPlayers),
               onTap: () => const CleanupRoute().push(context),
             ),
-            ListTile(
-              title: Text(S.of(context).settingsGuide),
-              onTap: () => const GuideRoute().push(context),
-            ),
+            // ListTile(
+            //   title: Text(S.of(context).settingsGuide),
+            //   onTap: () => const GuideRoute().push(context),
+            // ),
             ListTile(
               title: Text(S.of(context).settingsTheme),
               onTap: () => const ThemeRoute().push(context),

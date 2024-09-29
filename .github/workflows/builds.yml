@@ -41,6 +41,9 @@ jobs:
       BUNDLE_GEMFILE: ${{ github.workspace }}/android/Gemfile
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+          token: ${{ secrets.PAT_TOKEN }}
       - name: Ruby setup
         uses: ruby/setup-ruby@v1
         with:

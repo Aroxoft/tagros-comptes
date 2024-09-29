@@ -10,7 +10,20 @@ Future<void> main() async {
     onScreenshot: (String screenshotName, List<int> screenshotBytes,
         [Map<String, Object?>? args]) async {
       try {
-        final screenshotPath = 'screenshots/$screenshotName.png';
+        final splits = screenshotName.split('_');
+        final String locale;
+        switch (splits[1]) {
+          case 'fr':
+            locale = 'fr-FR';
+          case 'en':
+            locale = 'en-US';
+          default:
+            locale = 'unknown';
+        }
+        final deviceFolder = splits[2];
+        final name = splits[0];
+        final screenshotPath =
+            'android/fastlane/metadata/android/$locale/images/$deviceFolder/${name}_$locale.png';
         final file = await File(screenshotPath).create(recursive: true);
         await file.writeAsBytes(screenshotBytes);
         return true;

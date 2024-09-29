@@ -49,7 +49,7 @@ class MyApp extends HookConsumerWidget {
           initialLocation: HomeRoute.path,
           debugLogDiagnostics: true,
           routes: $appRoutes,
-          redirect: notifier.redirect),
+          redirect: (context, state) => notifier.redirect(state)),
       [notifier],
     );
     return MaterialApp.router(

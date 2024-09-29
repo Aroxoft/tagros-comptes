@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  flutter_version: '3.10.0'
+  flutter_version: '3.24.3'
   java_version: '11'
 
 jobs:

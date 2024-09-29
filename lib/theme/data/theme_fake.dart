@@ -10,9 +10,9 @@ import 'package:tagros_comptes/tagros/domain/game/prise.dart';
 import 'package:tagros_comptes/tagros/domain/repository/tableau_repository.dart';
 
 const _fakePlayers = [
-  Player(pseudo: "Alice"),
-  Player(pseudo: "Bob"),
-  Player(pseudo: "Charline")
+  Player(pseudo: "Alice", id: 1),
+  Player(pseudo: "Bob", id: 2),
+  Player(pseudo: "Charline", id: 3),
 ];
 final _fakeInfoEntries = [
   InfoEntryPlayerBean(

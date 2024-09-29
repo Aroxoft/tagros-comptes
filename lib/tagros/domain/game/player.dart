@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 
@@ -19,5 +20,8 @@ class PlayerBean with _$PlayerBean {
     return "$name ($id)";
   }
 
-  Player get toDb => Player(pseudo: name, id: id);
+  PlayersCompanion get toDbInsert => PlayersCompanion.insert(pseudo: name);
+
+  PlayersCompanion get toDbUpdate =>
+      PlayersCompanion(id: Value(id!), pseudo: Value(name));
 }

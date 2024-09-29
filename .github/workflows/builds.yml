@@ -41,6 +41,19 @@ jobs:
       BUNDLE_GEMFILE: ${{ github.workspace }}/android/Gemfile
     steps:
       - uses: actions/checkout@v3
+      - name: Ruby setup
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+          bundler-cache: true
+      - name: Fastlane testing beta build
+        working-directory: ./android
+        run: |
+          pwd
+          ls -l
+          ls -l fastlane
+          bundle exec fastlane beta
+      #          Remove before this line
       - name: Cache Flutter installation
         uses: actions/cache@v3
         with:

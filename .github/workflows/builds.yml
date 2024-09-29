@@ -114,7 +114,7 @@ jobs:
           echo "version_name: $version_name"
           flutter build appbundle --release --build-name $version_name --build-number $version_code
       - name: Upload app bundle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
           path: |
@@ -126,9 +126,7 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true # runs `bundle install` and caches installed gems automatically
       - name: Deploy to Google Play - alpha track
-        run: |
-          cd android
-          bundle exec fastlane deploy
+        run: cd ${{ github.workspace }}/android && bundle exec fastlane deploy
 
   build-ios:
     runs-on: macos-latest
@@ -184,7 +182,7 @@ jobs:
           echo "version_name: $version_name"
           flutter build ios --release --no-codesign --build-name $version_name --build-number $version_code
       - name: Upload ios app
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-release-ipa
           path: build/ios/iphoneos/Runner.app

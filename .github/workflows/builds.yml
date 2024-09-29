@@ -48,15 +48,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3
-          bundler-cache: true
-      - name: Fastlane testing beta build
-        working-directory: ./android
-        run: |
-          pwd
-          ls -l
-          ls -l fastlane
-          bundle exec fastlane beta
-      #          Remove before this line
+          bundler-cache: true # runs `bundle install` and caches installed gems automatically
       - name: Cache Flutter installation
         uses: actions/cache@v3
         with:
@@ -136,16 +128,9 @@ jobs:
           path: |
             build/app/outputs/bundle/release/app-release.aab
             build/app/outputs/mapping/release/mapping.txt
-      - name: Use Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.3
-          bundler-cache: true # runs `bundle install` and caches installed gems automatically
       - name: Deploy to Google Play - alpha track
         working-directory: ./android
         run: |
-          pwd
-          ls -l
           bundle exec fastlane deploy
 
   build-ios:

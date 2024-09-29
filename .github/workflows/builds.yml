@@ -126,7 +126,11 @@ jobs:
           ruby-version: 3.3
           bundler-cache: true # runs `bundle install` and caches installed gems automatically
       - name: Deploy to Google Play - alpha track
-        run: cd ${{ github.workspace }}/android && bundle exec fastlane deploy
+        working-directory: ./android
+        run: |
+          pwd
+          ls -l
+          bundle exec fastlane deploy
 
   build-ios:
     runs-on: macos-latest

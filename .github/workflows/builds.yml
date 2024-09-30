@@ -49,6 +49,11 @@ jobs:
         with:
           ruby-version: 3.3
           bundler-cache: true # runs `bundle install` and caches installed gems automatically
+      #          TODO: to be removed
+      - name: Fastlane directory
+        working-directory: ./android
+        run: bundle exec fastlane tmp
+      #        end todo to be removed
       - name: Cache Flutter installation
         uses: actions/cache@v3
         with:

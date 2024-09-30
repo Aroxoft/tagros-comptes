@@ -8,7 +8,7 @@ PODS:
     - Flutter
     - Google-Mobile-Ads-SDK (~> 11.2.0)
     - webview_flutter_wkwebview
-  - GoogleUserMessagingPlatform (2.5.0)
+  - GoogleUserMessagingPlatform (2.6.0)
   - integration_test (0.0.1):
     - Flutter
   - package_info_plus (0.4.5):
@@ -93,7 +93,7 @@ SPEC CHECKSUMS:
   flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
   Google-Mobile-Ads-SDK: 5a6d005a6cb5b5e8f4c7b69ca05cdea79c181139
   google_mobile_ads: 9379c80fdfa9988fb0e105a407890ff8deb3cf86
-  GoogleUserMessagingPlatform: 6b4f48a370e77ce121d034c908cc6ee4fdafaf13
+  GoogleUserMessagingPlatform: 0c3a08353e53ce8c2feab7addd0b652cde522450
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
@@ -105,6 +105,6 @@ SPEC CHECKSUMS:
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
   webview_flutter_wkwebview: 0982481e3d9c78fd5c6f62a002fcd24fc791f1e4
 
-PODFILE CHECKSUM: 775997f741c536251164e3eacf6e34abf2eb7a17
+PODFILE CHECKSUM: 1994ccaaddf16a6dd5a6dac91c56c5b82eb2fd56
 
 COCOAPODS: 1.15.2

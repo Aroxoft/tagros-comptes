@@ -168,11 +168,11 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       final single = await (select(players)
             ..where((tbl) => players.pseudo.equals(player.pseudo.value)))
           .getSingleOrNull();
-      if (single == null) {
+      if (single == null || single.id == null) {
         final id = await _newPlayer(playersCompanion: player);
         playersIds.add(id);
       } else {
-        playersIds.add(single.id);
+        playersIds.add(single.id!);
       }
     }
     return playersIds;

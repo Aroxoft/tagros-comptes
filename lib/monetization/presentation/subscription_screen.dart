@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 import 'package:purchases_flutter/models/package_wrapper.dart';
 import 'package:tagros_comptes/common/presentation/component/background_gradient.dart';
 import 'package:tagros_comptes/common/presentation/component/message_inline.dart';
@@ -24,7 +25,7 @@ class SubscriptionScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final buyVM = ref.watch(buyViewModelProvider.notifier);
     final errorAction = ref.watch(
-        buyViewModelProvider.select((value) => value.valueOrNull?.errorAction));
+        buyViewModelProvider.select((value) => value.value?.errorAction));
     useEffect(() {
       Future.microtask(
           () => ref.read(_messageProvider.notifier).state = errorAction);

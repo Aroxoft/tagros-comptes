@@ -66,7 +66,7 @@ class MyApp extends HookConsumerWidget {
       ],
       supportedLocales: S.delegate.supportedLocales,
       locale: locale,
-      theme: ref.watch(themeDataProvider).valueOrNull,
+      theme: ref.watch(themeDataProvider).value,
     );
   }
 }

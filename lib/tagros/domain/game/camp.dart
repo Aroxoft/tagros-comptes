@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 
 enum Camp { attack, defense, none }
@@ -32,7 +31,7 @@ List<Camp> fromDbPetit(String? petits) {
         }
         return null;
       })
-      .whereNotNull()
+      .nonNulls
       .toList();
 }
 

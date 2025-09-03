@@ -1,11 +1,10 @@
-import 'package:collection/collection.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/nb_players.dart';
 
-class ChoosePlayer extends AutoDisposeNotifier<(String?, List<Player>)> {
+class ChoosePlayer extends Notifier<(String?, List<Player>)> {
   ChoosePlayer();
 
   /// The view model for the choose player screen
@@ -32,9 +31,9 @@ class ChoosePlayer extends AutoDisposeNotifier<(String?, List<Player>)> {
     addPlayer(player);
   }
 
-  Future<List<Player>> updateSuggestions({required String query}) async {
+  Future<List<Player>> updateSuggestions({required String query}) {
     return ref.read(playerDaoProvider).searchForPlayer(query,
-        notIn: state.$2.map((e) => e.id).whereNotNull().toList());
+        notIn: state.$2.map((e) => e.id).nonNulls.toList());
   }
 
   bool validatePlayers() {
@@ -57,6 +56,9 @@ class ChoosePlayer extends AutoDisposeNotifier<(String?, List<Player>)> {
 }
 
 final choosePlayerProvider =
-    NotifierProvider.autoDispose<ChoosePlayer, (String?, List<Player>)>(() {
-  return ChoosePlayer();
-});
+    NotifierProvider.autoDispose<ChoosePlayer, (String?, List<Player>)>(
+  () {
+    return ChoosePlayer();
+  },
+  dependencies: [playerDaoProvider],
+);

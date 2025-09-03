@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 import 'package:tagros_comptes/tagros/domain/game/camp.dart';
@@ -59,8 +60,7 @@ class EntryViewModel extends _$EntryViewModel {
     final player1 = allPlayers.firstOrNull;
     final playerBean = player1 != null ? PlayerBean.fromDb(player1) : null;
     return EntryUIState(
-      allPlayers:
-          allPlayers.map((e) => PlayerBean.fromDb(e)).whereNotNull().toList(),
+      allPlayers: allPlayers.map((e) => PlayerBean.fromDb(e)).nonNulls.toList(),
       taker: playerBean,
       partner1: allPlayers.length >= 5 ? playerBean : null,
       partner2: allPlayers.length >= 7 ? playerBean : null,
@@ -68,25 +68,25 @@ class EntryViewModel extends _$EntryViewModel {
   }
 
   void setTaker(PlayerBean? player) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(taker: player));
   }
 
   void setPartner1(PlayerBean? player) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(partner1: player));
   }
 
   void setPartner2(PlayerBean? player) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(partner2: player));
   }
 
   void setPoints(String value) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     double points = value.isEmpty ? 0 : double.tryParse(value) ?? 0;
     points = (points * 2).round() / 2;
@@ -94,31 +94,31 @@ class EntryViewModel extends _$EntryViewModel {
   }
 
   void setNbBouts(int nbBouts) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(nbBouts: nbBouts));
   }
 
   void setPrise(Prise prise) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(prise: prise));
   }
 
   void setPointsForAttack(bool pointsForAttack) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(pointsForAttack: pointsForAttack));
   }
 
   void setPetitsAuBout(List<Camp> petitsAuBout) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(petitsAuBout: petitsAuBout));
   }
 
   void switchPetitAuBout(bool on) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     var p = uiState.petitsAuBout.toList();
     if (p.isEmpty) {
@@ -129,7 +129,7 @@ class EntryViewModel extends _$EntryViewModel {
   }
 
   void setPetitAuBout(Camp camp) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     var p = uiState.petitsAuBout.toList();
     if (p.isEmpty) {
@@ -141,7 +141,7 @@ class EntryViewModel extends _$EntryViewModel {
   }
 
   void switchPoignee(bool on) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     final p = uiState.poignees.toList();
     if (p.isEmpty) {
@@ -152,7 +152,7 @@ class EntryViewModel extends _$EntryViewModel {
   }
 
   void setPoignee(PoigneeType poignee) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     final p = uiState.poignees.toList();
     if (p.isEmpty) {
@@ -164,43 +164,43 @@ class EntryViewModel extends _$EntryViewModel {
   }
 
   void setPoignees(List<PoigneeType> poignees) {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(poignees: poignees));
   }
 
   void incrementPage() {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(page: uiState.page + 1));
   }
 
   void decrementPage() {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(uiState.copyWith(page: uiState.page - 1));
   }
 
   void clear() {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return;
     state = AsyncData(EntryUIState(allPlayers: uiState.allPlayers));
   }
 
   bool showPartnerPage() {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return false;
     return uiState.allPlayers.length >= 5;
   }
 
   bool showPartner2Page() {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return false;
     return uiState.allPlayers.length >= 7;
   }
 
   bool _validate() {
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return false;
     if (uiState.taker == null) return false;
 
@@ -223,7 +223,7 @@ class EntryViewModel extends _$EntryViewModel {
   /// - second bool: added - if the entry was added or modified
   (InfoEntryPlayerBean?, bool) saveEntry() {
     if (!_validate()) return (null, false);
-    final uiState = state.valueOrNull;
+    final uiState = state.value;
     if (uiState == null) return (null, false);
     final entry = InfoEntryPlayerBean(
       infoEntry: InfoEntryBean(
@@ -253,7 +253,7 @@ class EntryViewModel extends _$EntryViewModel {
 }
 
 @freezed
-class EntryUIState with _$EntryUIState {
+sealed class EntryUIState with _$EntryUIState {
   factory EntryUIState({
     required List<PlayerBean> allPlayers,
     PlayerBean? taker,

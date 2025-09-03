@@ -5,7 +5,7 @@ import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 part 'player.freezed.dart';
 
 @freezed
-class PlayerBean with _$PlayerBean {
+sealed class PlayerBean with _$PlayerBean {
   factory PlayerBean({required String name, int? id}) = _PlayerBean;
 
   PlayerBean._();

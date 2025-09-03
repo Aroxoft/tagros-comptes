@@ -30,8 +30,7 @@ class RouterListenable extends _$RouterListenable implements Listenable {
   @override
   Future<void> build() async {
     // we can add some logic here to check if the user is logged in
-
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       if (state.isLoading) return;
       _routerListener?.call();
     });

@@ -1,8 +1,8 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 import 'package:tagros_comptes/tagros/data/source/db/db_providers.dart';
 
-class CleanPlayer extends AutoDisposeNotifier<Stream<List<Player>>> {
+class CleanPlayer extends Notifier<Stream<List<Player>>> {
   @override
   Stream<List<Player>> build() {
     return ref.read(playerDaoProvider).unusedPlayers().watch();
@@ -18,6 +18,9 @@ class CleanPlayer extends AutoDisposeNotifier<Stream<List<Player>>> {
 }
 
 final cleanPlayerProvider =
-    NotifierProvider.autoDispose<CleanPlayer, Stream<List<Player>>>(() {
-  return CleanPlayer();
-});
+    NotifierProvider.autoDispose<CleanPlayer, Stream<List<Player>>>(
+  () {
+    return CleanPlayer();
+  },
+  dependencies: [playerDaoProvider],
+);

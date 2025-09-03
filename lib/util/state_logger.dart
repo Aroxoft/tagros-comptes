@@ -8,15 +8,14 @@ class StateLogger extends ProviderObserver {
 
   @override
   void didUpdateProvider(
-    ProviderBase<dynamic> provider,
+    ProviderObserverContext context,
     Object? previousValue,
     Object? newValue,
-    ProviderContainer container,
   ) {
     if (kDebugMode) {
       log('''
 {
-  provider: ${provider.name ?? provider.runtimeType},
+  provider: ${context.provider.name ?? context.provider.runtimeType},
 <-- oldValue: $previousValue,
 --> newValue: $newValue
 }

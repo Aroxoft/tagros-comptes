@@ -25,7 +25,7 @@ class ErrorInline extends StatelessWidget {
         child: Ink(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.error.withOpacity(0.9),
+            color: Theme.of(context).colorScheme.error.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(

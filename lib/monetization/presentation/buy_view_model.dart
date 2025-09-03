@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:purchases_flutter/models/customer_info_wrapper.dart';
 import 'package:purchases_flutter/models/package_wrapper.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,7 +9,6 @@ import 'package:tagros_comptes/monetization/presentation/error_mapper.dart';
 import 'package:tagros_comptes/util/logger.dart';
 
 part 'buy_view_model.freezed.dart';
-
 part 'buy_view_model.g.dart';
 
 @riverpod
@@ -34,7 +34,7 @@ class BuyViewModel extends _$BuyViewModel {
   }
 
   Future<void> restorePurchase() async {
-    final buyState = state.valueOrNull;
+    final buyState = state.value;
     if (buyState == null) return;
     state = AsyncData(buyState.copyWith(
       loadingAction: true,
@@ -60,7 +60,7 @@ class BuyViewModel extends _$BuyViewModel {
   }
 
   Future<void> buy(Package package) async {
-    final buyState = state.valueOrNull;
+    final buyState = state.value;
     if (buyState == null) return;
     final purchaseResult =
         await ref.read(subscriptionRepositoryProvider.notifier).buy(package);
@@ -81,7 +81,7 @@ class BuyViewModel extends _$BuyViewModel {
   }
 
   void select(Package package) {
-    final buyState = state.valueOrNull;
+    final buyState = state.value;
     if (buyState == null) return;
     state = AsyncData(buyState.copyWith(selectedPackage: package));
   }
@@ -92,7 +92,7 @@ class BuyViewModel extends _$BuyViewModel {
 }
 
 @freezed
-class InfoBuyScreenState with _$InfoBuyScreenState {
+sealed class InfoBuyScreenState with _$InfoBuyScreenState {
   factory InfoBuyScreenState({
     required bool loadingAction,
     required String? errorAction,

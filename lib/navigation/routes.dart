@@ -13,7 +13,7 @@ import 'package:tagros_comptes/theme/presentation/theme_screen.dart';
 part 'routes.g.dart';
 
 @TypedGoRoute<HomeRoute>(path: HomeRoute.path)
-class HomeRoute extends GoRouteData {
+class HomeRoute extends GoRouteData with $HomeRoute {
   const HomeRoute();
 
   static const path = '/home';
@@ -25,7 +25,7 @@ class HomeRoute extends GoRouteData {
 }
 
 @TypedGoRoute<SettingsRoute>(path: SettingsRoute.path)
-class SettingsRoute extends GoRouteData {
+class SettingsRoute extends GoRouteData with $SettingsRoute {
   const SettingsRoute();
 
   static const path = '/settings';
@@ -37,7 +37,7 @@ class SettingsRoute extends GoRouteData {
 }
 
 @TypedGoRoute<ThemeRoute>(path: ThemeRoute.path)
-class ThemeRoute extends GoRouteData {
+class ThemeRoute extends GoRouteData with $ThemeRoute {
   const ThemeRoute();
 
   static const path = '/theme';
@@ -49,7 +49,7 @@ class ThemeRoute extends GoRouteData {
 }
 
 @TypedGoRoute<GuideRoute>(path: GuideRoute.path)
-class GuideRoute extends GoRouteData {
+class GuideRoute extends GoRouteData with $GuideRoute {
   const GuideRoute();
 
   static const path = '/guide';
@@ -61,7 +61,7 @@ class GuideRoute extends GoRouteData {
 }
 
 @TypedGoRoute<SubscriptionRoute>(path: SubscriptionRoute.path)
-class SubscriptionRoute extends GoRouteData {
+class SubscriptionRoute extends GoRouteData with $SubscriptionRoute {
   const SubscriptionRoute();
 
   static const path = '/subscription';
@@ -73,7 +73,7 @@ class SubscriptionRoute extends GoRouteData {
 }
 
 @TypedGoRoute<CleanupRoute>(path: CleanupRoute.path)
-class CleanupRoute extends GoRouteData {
+class CleanupRoute extends GoRouteData with $CleanupRoute {
   const CleanupRoute();
 
   static const path = '/cleanup';
@@ -85,7 +85,7 @@ class CleanupRoute extends GoRouteData {
 }
 
 @TypedGoRoute<GameRoute>(path: GameRoute.path)
-class GameRoute extends GoRouteData {
+class GameRoute extends GoRouteData with $GameRoute {
   const GameRoute();
 
   static const path = '/game';
@@ -97,7 +97,7 @@ class GameRoute extends GoRouteData {
 }
 
 @TypedGoRoute<EntryRoute>(path: EntryRoute.path)
-class EntryRoute extends GoRouteData {
+class EntryRoute extends GoRouteData with $EntryRoute {
   const EntryRoute(this.roundId);
 
   final int? roundId;
@@ -111,7 +111,7 @@ class EntryRoute extends GoRouteData {
 }
 
 @TypedGoRoute<ErrorRoute>(path: ErrorRoute.path)
-class ErrorRoute extends GoRouteData {
+class ErrorRoute extends GoRouteData with $ErrorRoute {
   const ErrorRoute();
 
   static const path = '/error';

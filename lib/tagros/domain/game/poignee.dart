@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:tagros_comptes/generated/l10n.dart';
 
 enum PoigneeType { simple, double, triple, none }
@@ -110,7 +109,7 @@ String? toDbPoignees(List<PoigneeType> poignees) => poignees.isEmpty
               return null;
           }
         })
-        .whereNotNull()
+        .nonNulls
         .join(",");
 
 List<PoigneeType> fromDbPoignee(String? poignees) {
@@ -130,6 +129,6 @@ List<PoigneeType> fromDbPoignee(String? poignees) {
         }
         return null;
       })
-      .whereNotNull()
+      .nonNulls
       .toList();
 }

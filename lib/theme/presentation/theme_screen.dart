@@ -30,7 +30,7 @@ class ThemeScreen extends HookConsumerWidget {
             title: Text(S.of(context).themeScreenTitle),
             bottom: TabBar(
                 indicatorColor: ref.watch(themeColorProvider
-                    .select((value) => value.valueOrNull?.sliderColor)),
+                    .select((value) => value.value?.sliderColor)),
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 4,
                 tabs: [
@@ -43,7 +43,7 @@ class ThemeScreen extends HookConsumerWidget {
                       children: [
                         Text(S.of(context).themeTabCustomize),
                         if (ref.watch(isPremiumProvider
-                            .select((value) => value.valueOrNull != true)))
+                            .select((value) => value.value != true)))
                           Padding(
                             padding: const EdgeInsets.only(bottom: 20),
                             child: Icon(Icons.diamond_outlined,

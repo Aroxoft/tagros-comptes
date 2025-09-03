@@ -1,4 +1,4 @@
-import 'package:collection/collection.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tagros_comptes/tagros/data/game_provider.dart';
@@ -34,7 +34,7 @@ class TableauRepositoryImpl implements TableauRepository {
           event.item1,
           event.item2.players
               .map((e) => PlayerBean.fromDb(e))
-              .whereNotNull()
+              .nonNulls
               .toList()));
 
   @override
@@ -54,7 +54,7 @@ class TableauRepositoryImpl implements TableauRepository {
 }
 
 @Riverpod(keepAlive: true, dependencies: [CurrentGameId, gamesDao])
-TableauRepository? tableauRepository(TableauRepositoryRef ref) {
+TableauRepository? tableauRepository(Ref ref) {
   final gamesDao = ref.watch(gamesDaoProvider);
   return ref.watch(currentGameIdProvider.select((value) => value.whenOrNull(
         data: (gameId) {

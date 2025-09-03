@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/.env.dart';
 import 'package:tagros_comptes/config/env_configuration.dart';
@@ -15,7 +16,7 @@ import 'package:tuple/tuple.dart';
 part 'providers.g.dart';
 
 @Riverpod(dependencies: [])
-String navigationPrefix(NavigationPrefixRef ref) => "";
+String navigationPrefix(Ref ref) => "";
 
 final adsCalculatorProvider = Provider<AdsCalculator>((ref) {
   return AdsCalculator(

@@ -11,16 +11,17 @@ on:
   workflow_dispatch:
 
 env:
-  flutter_version: '3.24.3'
-  java_version: '11'
+  flutter_version: '3.35.2'
+  java_version: '17'
 
 jobs:
   format:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v3
-      - name: Cache Flutter installation
+      - name: "Checkout repository code ⤵️"
+        uses: actions/checkout@v3
+      - name: "Cache Flutter installation 💾"
         uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/flutter
@@ -38,10 +39,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-cache-
       - run: flutter config --no-analytics
+      - run: flutter pub get
       - name: Format code
         run: dart format . --set-exit-if-changed
-      - name: Install dependencies
-        run: flutter pub get
   test:
     runs-on: ubuntu-latest
     steps:

@@ -8,7 +8,7 @@ import 'package:tagros_comptes/tagros/domain/game/prise.dart';
 part 'info_entry_player.freezed.dart';
 
 @freezed
-class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
+sealed class InfoEntryPlayerBean with _$InfoEntryPlayerBean {
   factory InfoEntryPlayerBean(
       {required PlayerBean player,
       required InfoEntryBean infoEntry,

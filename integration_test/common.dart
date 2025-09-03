@@ -30,7 +30,7 @@ Future<void> createApp(WidgetTester widgetTester,
         });
         return appDatabase;
       }),
-      isPremiumProvider.overrideWith((ref) => true),
+      isPremiumProvider.overrideWithBuild((_, __) => true),
       showAdsProvider.overrideWith((ref) => ShowAds.hide),
       bannerAdsProvider.overrideWith((ref, arg) => Future.error('')),
     ],

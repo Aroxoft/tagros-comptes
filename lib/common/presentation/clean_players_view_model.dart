@@ -18,8 +18,9 @@ class CleanPlayer extends Notifier<Stream<List<Player>>> {
 }
 
 final cleanPlayerProvider =
-    NotifierProvider.autoDispose<CleanPlayer, Stream<List<Player>>>(() {
-  return CleanPlayer();
-    },
+    NotifierProvider.autoDispose<CleanPlayer, Stream<List<Player>>>(
+  () {
+    return CleanPlayer();
+  },
   dependencies: [playerDaoProvider],
 );

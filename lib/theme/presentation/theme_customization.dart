@@ -22,7 +22,8 @@ class ThemeCustomization extends ConsumerWidget {
         themeVM: ref.watch(themeViewModelProvider),
         themeOpt: ref.watch(themeColorProvider).value);
     return PaywallOverlay(
-      isPremium: ref.watch(isPremiumProvider.select((value) => value.value == true)),
+      isPremium:
+          ref.watch(isPremiumProvider.select((value) => value.value == true)),
       child: ListView.builder(
           itemBuilder: (context, index) => tiles[index],
           itemCount: tiles.length),

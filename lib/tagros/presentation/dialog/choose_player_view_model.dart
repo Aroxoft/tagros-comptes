@@ -56,8 +56,9 @@ class ChoosePlayer extends Notifier<(String?, List<Player>)> {
 }
 
 final choosePlayerProvider =
-    NotifierProvider.autoDispose<ChoosePlayer, (String?, List<Player>)>(() {
-  return ChoosePlayer();
+    NotifierProvider.autoDispose<ChoosePlayer, (String?, List<Player>)>(
+  () {
+    return ChoosePlayer();
   },
   dependencies: [playerDaoProvider],
 );

@@ -15,6 +15,7 @@ import 'package:tagros_comptes/monetization/presentation/display_advantages.dart
 import 'package:tagros_comptes/monetization/presentation/display_packages.dart';
 import 'package:tagros_comptes/monetization/presentation/error_mapper.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 class SubscriptionScreen extends HookConsumerWidget {
   const SubscriptionScreen({super.key});
 

@@ -44,7 +44,7 @@ class GameScreen extends ConsumerWidget {
         ),
         floatingActionButton: FloatingActionButton(
             heroTag: UniqueKey(),
-            onPressed: () async {
+            onPressed: () {
               tableauVM?.navigateToAddModify(context, roundId: null);
             },
             child: const Icon(Icons.add)),

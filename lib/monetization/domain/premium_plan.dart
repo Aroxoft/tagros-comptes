@@ -1,10 +1,15 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tagros_comptes/monetization/data/subscription_repository.dart';
 
-final isPremiumProvider = FutureProvider<bool>((ref) async {
-  return ref.watch(
-      subscriptionRepositoryProvider.selectAsync((value) => value.isPremium));
-});
+class IsPremium extends AsyncNotifier<bool> {
+  @override
+  Future<bool> build() async {
+    return ref.watch(
+        subscriptionRepositoryProvider.selectAsync((value) => value.isPremium));
+  }
+}
+
+final isPremiumProvider = AsyncNotifierProvider<IsPremium, bool>(IsPremium.new);
 
 final showAdsProvider = Provider<ShowAds>((ref) {
   return ref

@@ -26,16 +26,16 @@ class EntryScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final add = ref.watch(entryViewModelProvider(roundId: roundId)
-        .select((value) => value.valueOrNull?.id == null));
+        .select((value) => value.value?.id == null));
     final textPointsController = useTextEditingController(text: "0");
     useEffect(() {
-      textPointsController.text = ref.read(
-          entryViewModelProvider(roundId: roundId).select(
-              (value) => value.valueOrNull?.points.toStringAsFixed(1) ?? "0"));
+      textPointsController.text = ref.read(entryViewModelProvider(
+              roundId: roundId)
+          .select((value) => value.value?.points.toStringAsFixed(1) ?? "0"));
       return null;
     }, [
       ref.watch(entryViewModelProvider(roundId: roundId)
-          .select((value) => value.valueOrNull == null))
+          .select((value) => value.value == null))
     ]);
     if (kDebugMode) {
       print("So we ${roundId == null ? "add" : "modify"} an entry");
@@ -55,8 +55,7 @@ class EntryScreen extends HookConsumerWidget {
                   .saveEntry();
               if (saved != null) {
                 context.pop();
-                SchedulerBinding.instance
-                    .addPostFrameCallback((timeStamp) async {
+                SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
                   ref.read(messageObserverProvider.notifier).state =
                       Tuple2(added, saved);
                 });

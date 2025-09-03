@@ -70,27 +70,27 @@ abstract class ThemeColor with _$ThemeColor implements Comparable<ThemeColor> {
       id: id,
       name: name,
       preset: preset,
-      accentColor: accentColor.value,
-      appBarColor: appBarColor.value,
-      buttonColor: buttonColor.value,
-      positiveEntryColor: positiveEntryColor.value,
-      negativeEntryColor: negativeEntryColor.value,
-      positiveSumColor: positiveSumColor.value,
-      negativeSumColor: negativeSumColor.value,
-      horizontalColor: horizontalColor.value,
-      playerNameColor: playerNameColor.value,
-      textColor: textColor.value,
-      frameColor: frameColor.value,
-      chipColor: chipColor.value,
-      backgroundColor: backgroundColor.value,
-      textButtonColor: textButtonColor.value,
-      appBarTextColor: appBarTextColor.value,
+      accentColor: accentColor.toARGB32(),
+      appBarColor: appBarColor.toARGB32(),
+      buttonColor: buttonColor.toARGB32(),
+      positiveEntryColor: positiveEntryColor.toARGB32(),
+      negativeEntryColor: negativeEntryColor.toARGB32(),
+      positiveSumColor: positiveSumColor.toARGB32(),
+      negativeSumColor: negativeSumColor.toARGB32(),
+      horizontalColor: horizontalColor.toARGB32(),
+      playerNameColor: playerNameColor.toARGB32(),
+      textColor: textColor.toARGB32(),
+      frameColor: frameColor.toARGB32(),
+      chipColor: chipColor.toARGB32(),
+      backgroundColor: backgroundColor.toARGB32(),
+      textButtonColor: textButtonColor.toARGB32(),
+      appBarTextColor: appBarTextColor.toARGB32(),
       appBarTextSize: appBarTextSize,
-      fabColor: fabColor.value,
-      onFabColor: onFabColor.value,
-      sliderColor: sliderColor.value,
-      backgroundGradient1: backgroundGradient1.value,
-      backgroundGradient2: backgroundGradient2.value);
+      fabColor: fabColor.toARGB32(),
+      onFabColor: onFabColor.toARGB32(),
+      sliderColor: sliderColor.toARGB32(),
+      backgroundGradient1: backgroundGradient1.toARGB32(),
+      backgroundGradient2: backgroundGradient2.toARGB32());
 
   factory ThemeColor.defaultTheme() =>
       _ThemeColor(name: S.current.themeNameClassic);
@@ -335,8 +335,8 @@ preset: true,);''';
         backgroundGradient1,
         backgroundGradient2
       ]
-          .where((element) => element.opacity > 0)
-          .unique(toId: (element) => element.value)
+          .where((element) => element.a > 0)
+          .unique(toId: (element) => element.toARGB32())
           .toList();
 
   ThemeData get toDataTheme {
@@ -373,7 +373,7 @@ preset: true,);''';
                 borderRadius: BorderRadius.circular(20))),
         inputDecorationTheme: InputDecorationTheme(
           focusColor: accentColor,
-          hintStyle: TextStyle(color: textColor.withOpacity(0.7)),
+          hintStyle: TextStyle(color: textColor.withValues(alpha: 0.7)),
           border: OutlineInputBorder(
               borderSide: BorderSide(color: textColor),
               borderRadius: BorderRadius.circular(5)),
@@ -413,7 +413,7 @@ preset: true,);''';
         listTileTheme: ListTileThemeData(textColor: textColor),
         primaryTextTheme: const TextTheme()
             .apply(bodyColor: textColor, displayColor: textColor),
-        dividerTheme: DividerThemeData(color: textColor.withOpacity(0.8)),
+        dividerTheme: DividerThemeData(color: textColor.withValues(alpha: 0.8)),
         chipTheme: ChipThemeData(
             backgroundColor: chipColor,
             brightness: Brightness.dark,
@@ -442,7 +442,7 @@ preset: true,);''';
   }
 
   Color get averageBackgroundColor {
-    if (backgroundColor.opacity != 0) return backgroundColor;
+    if (backgroundColor.a != 0) return backgroundColor;
     return Color.lerp(backgroundGradient1, backgroundGradient2, 0.5)!;
   }
 
@@ -477,38 +477,38 @@ preset: true,);''';
 class ColorAdapter {
   Color read(int serialized) => Color(serialized);
 
-  int write(Color color) => color.value;
+  int write(Color color) => color.toARGB32();
 }
 
 extension ColorUtil on Color {
   Color darken([double amount = 0.1]) {
     assert(amount >= 0 && amount <= 1);
     final factor = 1 - amount;
-    return Color.fromARGB(
-      alpha,
-      (red * factor).round(),
-      (green * factor).round(),
-      (blue * factor).round(),
+    return Color.from(
+      alpha: a,
+      red: r * factor,
+      green: g * factor,
+      blue: b * factor,
     );
   }
 
   Color lighten([double amount = 0.1]) {
     assert(amount >= 0 && amount <= 1);
-    return Color.fromARGB(
-        alpha,
-        red + ((255 - red) * amount).round(),
-        green + ((255 - green) * amount).round(),
-        blue + ((255 - blue) * amount).round());
+    return Color.from(
+        alpha: a,
+        red: r + (1 - r) * amount,
+        green: g + (1 - g) * amount,
+        blue: b + (1 - b) * amount);
   }
 
   /// HSP color model, as seen in http://alienryderflex.com/hsp.html
   double get brightnessSqr =>
-      0.299 * pow(red, 2) + 0.587 * pow(green, 2) + 0.114 * pow(blue, 2);
+      0.299 * pow(r, 2) + 0.587 * pow(g, 2) + 0.114 * pow(b, 2);
 
   /// The color is bright if the brightness is > 127.5 (so with the square, it
   /// corresponds to 127.5*127.5 (16256.25)
-  bool get isLight => brightnessSqr > 16256.25;
+  bool get isLight => brightnessSqr > .25;
 
   /// is brightness < 63 ?
-  bool get isVeryDark => brightnessSqr < 4032;
+  bool get isVeryDark => brightnessSqr < 0.0625;
 }

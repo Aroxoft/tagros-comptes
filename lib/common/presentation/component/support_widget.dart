@@ -17,7 +17,7 @@ class SupportWidget extends StatelessWidget {
           decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                     spreadRadius: 1,
                     blurRadius: 10,
                     offset: const Offset(0, -3)),

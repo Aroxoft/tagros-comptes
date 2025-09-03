@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/legacy.dart';
 import 'package:tagros_comptes/theme/domain/theme.dart';
 import 'package:tagros_comptes/theme/domain/theme_providers.dart';
 import 'package:tagros_comptes/theme/domain/theme_repository.dart';
@@ -16,7 +16,7 @@ class ThemeScreenViewModel extends ChangeNotifier {
         print("newTheme!\n${event.toCodeString}");
       }
       _currentTheme = event;
-      _isBackgroundGradient = event.backgroundColor.opacity == 0;
+      _isBackgroundGradient = event.backgroundColor.a == 0;
       notifyListeners();
     });
     _themeRepository.allThemes().listen((event) {
@@ -62,13 +62,13 @@ class ThemeScreenViewModel extends ChangeNotifier {
         value1: _currentTheme.backgroundGradient1,
         value2: _currentTheme.backgroundColor,
         defaultValue: Colors.white,
-        isForbidden: (value) => value.opacity == 0,
+        isForbidden: (value) => value.a == 0,
       );
       final g2 = _fallback<Color>(
         value1: _currentTheme.backgroundGradient2,
         value2: _currentTheme.backgroundColor,
         defaultValue: Colors.white,
-        isForbidden: (value) => value.opacity == 0,
+        isForbidden: (value) => value.a == 0,
       );
       _themeRepository.updateTheme(
           newTheme: _currentTheme.copyWith(
@@ -81,7 +81,7 @@ class ThemeScreenViewModel extends ChangeNotifier {
         value1: _currentTheme.backgroundGradient1,
         value2: _currentTheme.backgroundGradient2,
         defaultValue: Colors.white,
-        isForbidden: (value) => value.opacity == 0,
+        isForbidden: (value) => value.a == 0,
       );
       _themeRepository.updateTheme(
           newTheme: _currentTheme.copyWith(backgroundColor: bg));
@@ -111,4 +111,6 @@ class ThemeScreenViewModel extends ChangeNotifier {
 }
 
 final themeViewModelProvider = ChangeNotifierProvider<ThemeScreenViewModel>(
-    (ref) => ThemeScreenViewModel(ref.watch(themeRepositoryProvider)));
+  (ref) => ThemeScreenViewModel(ref.watch(themeRepositoryProvider)),
+  dependencies: const [themeRepositoryProvider],
+);

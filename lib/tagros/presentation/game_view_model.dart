@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tagros_comptes/navigation/routes.dart';
 import 'package:tagros_comptes/tagros/data/game_provider.dart';
@@ -49,21 +48,20 @@ class TableauViewModel {
 }
 
 @Riverpod(dependencies: [tableauRepository])
-TableauViewModel? tableauViewModel(TableauViewModelRef ref) {
+TableauViewModel? tableauViewModel(Ref ref) {
   final repository = ref.watch(tableauRepositoryProvider);
   if (repository == null) return null;
   return TableauViewModel(repository, ref);
 }
 
 @Riverpod(dependencies: [gamesDao])
-Future<GameWithPlayers> fetchGameWithPlayers(
-    FetchGameWithPlayersRef ref, int gameId) async {
+Future<GameWithPlayers> fetchGameWithPlayers(Ref ref, int gameId) {
   final gameDao = ref.watch(gamesDaoProvider);
   return gameDao.fetchGameWithPlayers(gameId: gameId);
 }
 
 @Riverpod(dependencies: [CurrentGameId, fetchGameWithPlayers])
-AsyncValue<GameWithPlayers> currentGame(CurrentGameRef ref) {
+AsyncValue<GameWithPlayers> currentGame(Ref ref) {
   return ref.watch(currentGameIdProvider).maybeMap(data: (id) {
     final asyncValue = ref.watch(fetchGameWithPlayersProvider(id.value));
     return asyncValue;

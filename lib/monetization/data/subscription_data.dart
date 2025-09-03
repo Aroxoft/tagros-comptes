@@ -6,7 +6,7 @@ import 'package:tagros_comptes/monetization/data/subscription_repository.dart';
 part 'subscription_data.freezed.dart';
 
 @freezed
-class SubscriptionData with _$SubscriptionData {
+sealed class SubscriptionData with _$SubscriptionData {
   factory SubscriptionData(
     List<Package>? packages,
     CustomerInfo customerInfo,

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:tagros_comptes/tagros/data/source/db/app_database.dart';
 
@@ -13,12 +12,11 @@ class PlayersDao extends DatabaseAccessor<AppDatabase> with _$PlayersDaoMixin {
 
   /// Deletes all unused players (not in any game), and returns the number of
   /// rows affected
-  Future<int> deleteAllUnused() async {
+  Future<int> deleteAllUnused() {
     return transaction(() async {
       final unused = await unusedPlayers().get();
       final deleted = await (delete(players)
-            ..where(
-                (tbl) => tbl.id.isIn(unused.map((e) => e.id).whereNotNull())))
+            ..where((tbl) => tbl.id.isIn(unused.map((e) => e.id).nonNulls)))
           .go();
       return deleted;
     });

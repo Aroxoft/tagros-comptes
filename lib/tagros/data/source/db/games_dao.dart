@@ -22,7 +22,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
         .map((event) => event.map((row) => row.toInfoEntryPlayerBean).toList());
   }
 
-  Future<InfoEntryPlayerBean> fetchEntry(int roundId) async {
+  Future<InfoEntryPlayerBean> fetchEntry(int roundId) {
     return entryById(entryId: roundId)
         .getSingle()
         .then((value) => value.toInfoEntryPlayerBean);
@@ -116,8 +116,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
   }
 
 // region Insert
-  Future<int> newEntry(InfoEntryPlayerBean infoEntry,
-      {required int gameId}) async {
+  Future<int> newEntry(InfoEntryPlayerBean infoEntry, {required int gameId}) {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
@@ -168,11 +167,11 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
       final single = await (select(players)
             ..where((tbl) => players.pseudo.equals(player.pseudo.value)))
           .getSingleOrNull();
-      if (single == null || single.id == null) {
+      if (single == null) {
         final id = await _newPlayer(playersCompanion: player);
         playersIds.add(id);
       } else {
-        playersIds.add(single.id!);
+        playersIds.add(single.id);
       }
     }
     return playersIds;
@@ -191,7 +190,7 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 
 // region update
   Future<int> updateEntry(InfoEntryPlayerBean infoEntry,
-      {required int gameId}) async {
+      {required int gameId}) {
     Value<int> with1 = const Value.absent();
     Value<int> with2 = const Value.absent();
     if (infoEntry.withPlayers != null && infoEntry.withPlayers!.isNotEmpty) {
@@ -221,14 +220,14 @@ class GamesDao extends DatabaseAccessor<AppDatabase> with _$GamesDaoMixin {
 // endregion
 
 // region Delete
-  Future<int> deleteEntry(int entryId, {required int gameId}) async {
+  Future<int> deleteEntry(int entryId, {required int gameId}) {
     return transaction(() async {
       await updateGameDate(gameId: gameId);
       return (delete(infoEntries)..where((tbl) => tbl.id.equals(entryId))).go();
     });
   }
 
-  Future<void> deleteGame(GameWithPlayers gameWithPlayers) async {
+  Future<void> deleteGame(GameWithPlayers gameWithPlayers) {
     return transaction(() async {
       await (delete(infoEntries)
             ..where((tbl) => tbl.game.equals(gameWithPlayers.game.id.value)))

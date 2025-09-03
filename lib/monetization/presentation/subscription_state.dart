@@ -7,7 +7,7 @@ import 'package:tagros_comptes/monetization/domain/subscribe_model.dart';
 part 'subscription_state.freezed.dart';
 
 @freezed
-class SubscriptionState with _$SubscriptionState {
+sealed class SubscriptionState with _$SubscriptionState {
   factory SubscriptionState({
     required bool isLoading,
     required List<Package>? packages,

@@ -24,7 +24,7 @@ class PaywallOverlay extends StatelessWidget {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 2, sigmaY: 3),
               child: ColoredBox(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   child: Center(
                     child: FractionallySizedBox(
                       widthFactor: 0.7,
@@ -32,7 +32,7 @@ class PaywallOverlay extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Column(

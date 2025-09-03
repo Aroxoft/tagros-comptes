@@ -3,7 +3,15 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:purchases_flutter/purchases_flutter.dart';
+import 'package:purchases_flutter/purchases_flutter.dart'
+    show
+        CustomerInfo,
+        LogInResult,
+        LogLevel,
+        Package,
+        Purchases,
+        PurchasesConfiguration,
+        PurchasesErrorHelper;
 import 'package:tagros_comptes/config/platform_configuration.dart';
 import 'package:tagros_comptes/monetization/domain/error_purchase_mapper.dart';
 import 'package:tagros_comptes/monetization/domain/subscribe_model.dart';
@@ -67,12 +75,12 @@ class SubscriptionService {
     }
   }
 
-  Future<PurchaseResult<CustomerInfo>> buy(Package package) async {
+  Future<PurchaseResult<CustomerInfo>> buy(Package package) {
     return _safeCall<PurchaseResult<CustomerInfo>>(
       () async {
         final info = await Purchases.purchasePackage(package);
         _logger.log('purchase: $info');
-        return PurchaseResult.value(info);
+        return PurchaseResult.value(info.customerInfo);
       },
       onError: (e, stack) {
         final errorCode = PurchasesErrorHelper.getErrorCode(e);
@@ -81,7 +89,7 @@ class SubscriptionService {
     );
   }
 
-  Future<PurchaseResult<CustomerInfo>> restore() async {
+  Future<PurchaseResult<CustomerInfo>> restore() {
     return _safeCall(() async {
       final purchaserInfo = await Purchases.restorePurchases();
       _logger.log('restore: $purchaserInfo');
@@ -93,7 +101,7 @@ class SubscriptionService {
     });
   }
 
-  Future<PurchaseResult<List<Package>>> getPackages() async {
+  Future<PurchaseResult<List<Package>>> getPackages() {
     return _safeCall(() async {
       final offerings = await Purchases.getOfferings();
       if (offerings.current != null &&
@@ -109,7 +117,7 @@ class SubscriptionService {
     });
   }
 
-  Future<PurchaseResult<void>> login(String userId) async {
+  Future<PurchaseResult<void>> login(String userId) {
     return _safeCall(() async {
       _loginResult = await Purchases.logIn(userId);
       _logger.log('identify: $_loginResult');

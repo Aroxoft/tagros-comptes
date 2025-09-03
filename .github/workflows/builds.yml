@@ -32,7 +32,7 @@ jobs:
           major=${tag_array[0]}
           minor=${tag_array[1]}
           patch=${tag_array[2]}
-          version_code=$((major * 1000000 + minor * 1000 + patch))
+          version_code=$((major * 10000 + minor * 100 + patch))
           echo "versionCode=$version_code" >> $GITHUB_OUTPUT
   build-android:
     runs-on: ubuntu-latest

@@ -351,9 +351,9 @@ preset: true,);''';
         ),
         // for background of dropdown buttons
         canvasColor: averageBackgroundColor,
-        tabBarTheme: TabBarTheme(
+        tabBarTheme: TabBarThemeData(
             labelColor: appBarTextColor,
-            unselectedLabelColor: appBarTextColor.withOpacity(0.8)),
+            unselectedLabelColor: appBarTextColor.withValues(alpha: 0.8)),
         iconTheme: IconThemeData(color: textColor),
         primaryIconTheme: IconThemeData(color: textColor),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -365,7 +365,7 @@ preset: true,);''';
         ),
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(foregroundColor: textColor)),
-        dialogTheme: DialogTheme(
+        dialogTheme: DialogThemeData(
             backgroundColor: averageBackgroundColor,
             titleTextStyle:
                 TextStyle(color: textColor, fontSize: appBarTextSize),
